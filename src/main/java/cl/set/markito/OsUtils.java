@@ -16,6 +16,11 @@ public final class OsUtils
     public final String  FIREFOX_EXE = "firefox.exe";
     public final String  FIREFOXDRIVER_EXE = "geckodriver.exe";
 
+    
+    /** 
+     * @param processName
+     * @return boolean
+     */
     public boolean isProcessRunning(String processName)
     {
         Process process;
@@ -46,6 +51,10 @@ public final class OsUtils
         return false;
     }
 
+    
+    /** 
+     * @param processName
+     */
     public void killProcessIfRunning(String processName)
     {
         System.out.println("Trying to kill process: " + processName);
