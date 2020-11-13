@@ -3,11 +3,12 @@
 A Selenium/Appium Webdriver wrapper written in Java to make coding easier and readable.
 ## Features so far
 1. Support for most common use cases.
-2. Written in Java, supporting Webdriver 4, Windows 10 and Chrome browser.
+2. Written in Java, supporting Selenium 3.141.59, Appium 6.0.0.  Tested in Windows 10, Chrome browser, Android and iOS.
 3. Inspired by Selenese.
 4. Adds garbage collection for browsers and webdrivers improving clean execution.
 ## Hello world
-With Markito you'll be writing code in seconds, creating a super readable code, making you productive and improving code maintainability. This is the way your Hello World code will look like with Markito:
+With Markito you'll be writing code in seconds, creating a super readable code, making you productive and improving code maintainability. This is the way your Hello World code will look like this with Markito:
+### Web
 <pre><code>    public void HelloWorldTest() {
         OpenDriver();
         Get("http://www.google.com");
@@ -16,8 +17,20 @@ With Markito you'll be writing code in seconds, creating a super readable code, 
         CloseDriver();
     }
 </code></pre>
+### Mobile
+<pre><code> 
+    	OpenAndroidDriver( new URL("http://hub.browserstack.com/wd/hub"), caps );
+		Click( MobileBy.AccessibilityId("Search Wikipedia"));
+		SendKeys( MobileBy.id("org.wikipedia.alpha:id/search_src_text"), "BrowserStack");
+        List<WebElement> allProductsName = FindElements( MobileBy.className("android.widget.TextView"));
+		assert(allProductsName.size() > 0);
+		for (WebElement webElement : allProductsName) {
+			printf("[%s]\n", webElement.getText());
+		}
+		CloseAndroidDriver();
+</code></pre>
 ## Getting started
-So far there is no packed distribution, however, you can clone this repository and build using Java 15, and Maven 3.6.3. to produce <code>markito-0.1.jar</code> file with <code>mvn package</code>.
+So far there is no packed distribution, however, you can clone this repository and build using Java 15, and Maven 3.6.3. to produce <code>markito-0.2.jar</code> file with <code>mvn package</code>.
 <p>Create  <code>yourclass.java</code> file and add</p>
 <pre><code>import org.openqa.selenium.*;</code></pre>
 Now make your class to extend Markito as

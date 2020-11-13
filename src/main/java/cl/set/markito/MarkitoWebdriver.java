@@ -1,33 +1,33 @@
-// Markito main class.
+// Markito webdriver generic commands class.
 // Marcos Guerrero
 // 20-10-2020
 package cl.set.markito;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.*;
-import java.time.Duration;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class Markito {
-    public WebDriver driver = null;
+
+public class MarkitoWebdriver extends MarkitoBaseUtils {
+    public  WebDriver driver = null;
     // private Map<String, Object> vars;
-    private JavascriptExecutor js;
-    private long timeOutInSeconds = 60;
-    private boolean debug=true;
-    private boolean headless = false;
+    public JavascriptExecutor js;
+    public long timeOutInSeconds = 60;
+    public final int WEB=0, IOS=1, ANDROID=1;
+    public int platform = WEB;
 
-    public Markito() {
+    public MarkitoWebdriver() {
+        println("Markito has born.");
     }
-
-    public Markito(WebDriver driverObject) {
-        driver = driverObject;
-        js = (JavascriptExecutor) driver;
-    }
-
     /**
      * Establish a unified timeout parameter for implicit waits, page loads and javascripts.
      * @param timeOutInSeconds
@@ -37,39 +37,14 @@ public class Markito {
         driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
         driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de espera de página
         driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de ejecución javascript
-    }
-    /**
-     * Prints an string to console when debug mode is ON.
-     */
-    void println(String x){
-        if ( debug ) System.out.println(x);
-    }    /**
-    * Prints an string using format string to console when debug mode is ON.
-    */
-   void printf(String format, Object ... args){
-       if ( debug ) System.out.printf(format, args);
-   }
-    /**
-     * Close current webdriver session and collects possible garbage.
-     */
-    public void CloseDriver() {
-        if (driver != null)
-            driver.quit();
-        println("Markito is destroyed.");
-        OsUtils util = new OsUtils();
-        // Kill Windows processes if they are running.
-        util.killProcessIfRunning(util.CHROME_EXE);
-        util.killProcessIfRunning(util.EDGE_EXE);
-        util.killProcessIfRunning(util.FIREFOX_EXE);
-        util.killProcessIfRunning(util.CHROMEDRIVER_EXE);
-        util.killProcessIfRunning(util.EDGEDRIVER_EXE);
-        util.killProcessIfRunning(util.FIREFOXDRIVER_EXE);
+        printf("SetTimeouts in %ld.\n", timeOutInSeconds);
     }
     /**Close the selected window.
      * Please refer to <a href="#
      * {@webdriver}">"https://www.selenium.dev/selenium/docs/api/java/com/thoughtworks/selenium/webdriven/commands/Close.html"</a>
      */
     public void CloseCurrentWindow() {
+        println("CloseCurrentWindow.");
         driver.close();
     }
     /**
@@ -82,7 +57,6 @@ public class Markito {
     public void ExecuteJsScript(String script, java.lang.Object... args) {
         js.executeScript(script, args);
     }
-
     /**
      * @param script
      * @param args
@@ -91,37 +65,30 @@ public class Markito {
         js.executeAsyncScript(script, args);
     }
     /**
-     * Default webdriver constructor that uses headless property.
-     */
-    public void OpenDriver() {
-        if (headless) {
-            ChromeOptions opciones = new ChromeOptions();
-            opciones.addArguments("--headless", "--no-sandbox");
-            driver = new ChromeDriver(opciones);
-        } else
-            driver = new ChromeDriver();
-        js = (JavascriptExecutor) driver;
-        // vars = new HashMap<String, Object>();
-        driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
-        driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // TImeout de espera de página
-        driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de ejecución
-                                                                                         // javascript
-    }
-    /**
      * @param url
      */
     public void Get(String url) {
+        printf("Get [%s]\n", url);
         driver.get(url);
     }
-
     /**
+     * GetText of an element located by.
+     * @param by
+     */
+    public String GetText(By by) {
+        String text =  new WebDriverWait(driver, timeOutInSeconds).until(
+            ExpectedConditions.elementToBeClickable(by)).getText();
+        printf("GetText [%s] in object %s\n", text, by);
+        return text;
+    }
+  /**
      * Switch to default content and waits for a frame using a frame handle.
      * @param frameHandle
      * @throws InterruptedException
      */
     public void SelectFrameByLocator(int frameHandle) throws InterruptedException {
         driver.switchTo().defaultContent();
-        new WebDriverWait(driver, Duration.ofSeconds(timeOutInSeconds)).ignoring(StaleElementReferenceException.class)
+        new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                 .ignoring(WebDriverException.class)
                 .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameHandle));
         Thread.sleep(3000);
@@ -134,7 +101,7 @@ public class Markito {
      */
     public void SelectFrameBy(By by) throws InterruptedException {
         driver.switchTo().defaultContent();
-        new WebDriverWait(driver, Duration.ofSeconds(timeOutInSeconds)).ignoring(StaleElementReferenceException.class)
+        new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                 .ignoring(WebDriverException.class)
                 .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt((driver.findElement(by))));
         Thread.sleep(3000);
@@ -144,8 +111,8 @@ public class Markito {
      * Click in a clickable element located using By.
      * @param by
      */
-    public void Click(By by) {
-        new WebDriverWait(driver, Duration.ofSeconds(timeOutInSeconds)).ignoring(StaleElementReferenceException.class)
+    public void Click(org.openqa.selenium.By by) {
+        new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                 .ignoring(WebDriverException.class).until(ExpectedConditions.elementToBeClickable(by));
         driver.findElement(by).click();
         printf("Click %s\n", by);
@@ -155,17 +122,19 @@ public class Markito {
      * @param by
      */
     public void ClickAt(By by, int x, int y) {
-        new WebDriverWait(driver, Duration.ofSeconds(timeOutInSeconds)).ignoring(StaleElementReferenceException.class)
+        new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                 .ignoring(WebDriverException.class).until(ExpectedConditions.elementToBeClickable(by));
-        new Actions(driver).moveToElement(FindElement(by), x, y).click().perform();
+        new Actions(driver).moveToElement(driver.findElement(by), x, y).click().perform();
         printf("ClickAt %s x=%d y=%d\n", by, x, y);
     }
     /**
      * @param by
      */
     public void waitForElementVisible(By by) {
-        new WebDriverWait(driver, Duration.ofSeconds(timeOutInSeconds)).ignoring(StaleElementReferenceException.class)
+        printf("Waiting for element %s...", by.toString());
+        new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                 .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOfElementLocated(by));
+        printf("visible!!!");
     }
     /**
      * Simulates typing Keys over an editable element located By.
@@ -173,7 +142,8 @@ public class Markito {
      * @param keys
      */
     public void SendKeys(By by, String keys) {
-        new WebDriverWait(driver, Duration.ofSeconds(timeOutInSeconds)).ignoring(StaleElementReferenceException.class)
+        printf("SendKeys %s to object %s\n", keys, by);
+        new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                 .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOfElementLocated(by));
         driver.findElement(by).sendKeys(keys);
     }
@@ -185,38 +155,10 @@ public class Markito {
         System.out.flush();
     }
     /** 
-     * Find an element in DOM using By locator.  When debug mode is ON highlights the element to help visual debug.
-     * @param by
-     * @return WebElement
-     */
-    WebElement FindElement(By by) {
-        WebElement element = driver.findElement(by);
-        highLightElement(element);
-        return element;
-    }    
-    /** 
-    * Find elements in DOM using By locator.  When debug mode is ON highlights the element to help visual debug.
-    * @param by
-    * @return WebElement
-    */
-    List <WebElement> FindElements(By by) {
-        List <WebElement> elements = driver.findElements(by);
-        elements.forEach(element -> { highLightElement(element);} ); // Highlights on debug mode.
-        return elements;
-    }
-    /** 
-     * Highlights an element id debug mode is ON.   
-     * @param driver
-     * @param element
-     */
-    public void highLightElement(WebElement element) {
-        if (debug)
-            ExecuteJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');", element);
-    }
-    /** 
      * Waits for alert present and Clicks OK if present during timeout period.   
      */
     public void ClickOKOnAlert() {
+        println("Clicking OK on alert.");
         WaitForAlertPresent();
         Alert alert = driver.switchTo().alert();
         alert.accept();
@@ -225,6 +167,7 @@ public class Markito {
      * Waits for alert present and Clicks CANCEL if present during timeout period.   
      */
     public void ClickCancelOnAlert() {
+        println("Clicking CANCEL on alert.");
         WaitForAlertPresent();
         Alert alert = driver.switchTo().alert();
         alert.dismiss();
@@ -234,24 +177,41 @@ public class Markito {
      * @return String
      */
     public String GetTextOfAlert() {
+        printf("GetTextOfAlert: Waiting for alert present...");
         WaitForAlertPresent();
+        printf("Present!  Now getting text!!");
         Alert alert = driver.switchTo().alert();
-        return alert.getText();
+        String text = alert.getText();
+        printf("Text retrieved=%s\n", text);
+        return text;
     }
     /** 
      * Writes an string on the alert msg.
      * @param text
      */
     public void TypeTextOnAlert(String text) {
+        printf("TypeTextOnAlert: Waiting for alert present...");
         WaitForAlertPresent();
         Alert alert = driver.switchTo().alert();
         alert.sendKeys(text);
+        printf("Text sent=%s\n", text);
     }
     /** 
      * Waits for alert present during timeOutInSeconds period.
      */ 
     public void WaitForAlertPresent(){
-        WebDriverWait wdWait = new WebDriverWait(driver, Duration.ofSeconds(timeOutInSeconds));
+        printf("WaitForAlertPresent: Waiting for alert present...");
+        WebDriverWait wdWait = new WebDriverWait(driver, timeOutInSeconds);
         wdWait.until(ExpectedConditions.alertIsPresent());
+        printf("Alert is present.\n");
+    }
+    /** 
+     * Highlights an element id debug mode is ON.   
+     * @param driver
+     * @param element
+     */
+    public void highLightElement(WebElement element) {
+        if (debug && platform==WEB)
+            ExecuteJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');", element);
     }
 }
