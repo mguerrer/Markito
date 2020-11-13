@@ -35,7 +35,9 @@ So far there is no packed distribution, however, you can clone this repository a
 <p>Create  <code>yourclass.java</code> file and add</p>
 <pre><code>import org.openqa.selenium.*;</code></pre>
 Now make your class to extend Markito as
-<pre><code>public class HelloWorld extends Markito</code></pre>
+<pre><code>public class HelloWorld extends MarkitoWeb</code></pre> or
+<pre><code>public class HelloWorld extends MarkitoAndroid</code></pre> or
+<pre><code>public class HelloWorld extends MarkitoiOS</code></pre> or
 You are ready to start coding.
 
 ## Contributing
