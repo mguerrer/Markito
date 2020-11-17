@@ -60,7 +60,7 @@ public class MarkitoAndroid extends MarkitoWebdriver {
      */
     public AndroidElement FindElement(By by) {
         AndroidElement element = (AndroidElement) ((AndroidDriver<WebElement>) driver).findElement(by);
-        highLightElement(element);
+        HighLightElement(element);
         return element;
     }    
     /** 
@@ -73,7 +73,7 @@ public class MarkitoAndroid extends MarkitoWebdriver {
         List<WebElement> WebElements = AndroidDriver.findElements(by);
         WebElements.forEach(element -> 
         { 
-            highLightElement(element);
+            HighLightElement(element);
         } ); // Highlights on debug mode.
         return WebElements;
     }

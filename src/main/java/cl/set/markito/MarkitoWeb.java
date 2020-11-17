@@ -72,7 +72,7 @@ public class MarkitoWeb extends MarkitoWebdriver{
      */
     public WebElement FindElement(By by) {
         WebElement element = driver.findElement(by);
-        highLightElement(element);
+        HighLightElement(element);
         return element;
     }    
     /** 
@@ -82,7 +82,7 @@ public class MarkitoWeb extends MarkitoWebdriver{
     */
     public List <WebElement> FindElements(By by) {
         List <WebElement> elements = driver.findElements(by);
-        elements.forEach(element -> { highLightElement(element);} ); // Highlights on debug mode.
+        elements.forEach(element -> { HighLightElement(element);} ); // Highlights on debug mode.
         return elements;
     }
  }

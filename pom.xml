@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cl.set.markito</groupId>
   <artifactId>markito</artifactId>
-  <version>0.2</version>
+  <version>0.2.2</version>
   <properties>
     <maven.compiler.source>15</maven.compiler.source>
     <maven.compiler.target>15</maven.compiler.target>
@@ -70,6 +70,19 @@
         <version>${appium.version}</version>
     </dependency>
   </dependencies>
+  <developers>
+    <developer>
+      <name>Marcos Guerrero Wilson</name>
+      <email>marcosguerrerow@hotmail.com</email>
+      <organization>SET</organization>
+      <organizationUrl>http://www.set.cl</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git://github.com/mguerrer/markito.git</connection>
+    <developerConnection>scm:git:ssh://github.com:mguerrer/markito.git</developerConnection>
+    <url>https://github.com/mguerrer/Markito</url>
+  </scm>
   <build>
     <plugins>
       <plugin>

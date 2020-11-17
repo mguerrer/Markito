@@ -36,12 +36,12 @@ public class MarkitoBaseUtils
     /**
      * Prints an string to console when debug mode is ON.
      */
-    void println(String x){
+    public void println(String x){
         if ( debug ) System.out.println(x);
     }    /**
     * Prints an string using format string to console when debug mode is ON.
     */
-    void printf(String format, Object ... args){
+    public void printf(String format, Object ... args){
         if ( debug ) System.out.printf(format, args);
     }
     /** 

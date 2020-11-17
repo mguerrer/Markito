@@ -14,6 +14,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 
@@ -130,11 +131,11 @@ public class MarkitoWebdriver extends MarkitoBaseUtils {
     /**
      * @param by
      */
-    public void waitForElementVisible(By by) {
+    public void WaitForElementVisible(By by) {
         printf("Waiting for element %s...", by.toString());
         new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                 .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOfElementLocated(by));
-        printf("visible!!!");
+        printf("visible!!!\n");
     }
     /**
      * Simulates typing Keys over an editable element located By.
@@ -179,7 +180,7 @@ public class MarkitoWebdriver extends MarkitoBaseUtils {
     public String GetTextOfAlert() {
         printf("GetTextOfAlert: Waiting for alert present...");
         WaitForAlertPresent();
-        printf("Present!  Now getting text!!");
+        printf("Present!  Now getting text!!..");
         Alert alert = driver.switchTo().alert();
         String text = alert.getText();
         printf("Text retrieved=%s\n", text);
@@ -210,8 +211,41 @@ public class MarkitoWebdriver extends MarkitoBaseUtils {
      * @param driver
      * @param element
      */
-    public void highLightElement(WebElement element) {
+    public void HighLightElement(WebElement element) {
         if (debug && platform==WEB)
             ExecuteJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');", element);
+    }
+    /**
+     * Selects an option from by using VisibleText.
+     * @param by
+     * @param VisibleText
+     */
+    public void SelectOptionByVisibleText( By by, String VisibleText){
+        Select dropdown = new Select(driver.findElement( by ));
+        HighLightElement(driver.findElement(by));
+        dropdown.selectByVisibleText(VisibleText);
+        printf("SelectOptionByVisibleText from %s option %s\n", by, VisibleText);
+    }
+    /**
+     * Selects an option from by using integer index.
+     * @param by
+     * @param index
+     */
+    public void SelectOptionByIndex( By by, int index ){
+        Select dropdown = new Select(driver.findElement( by ));
+        HighLightElement(driver.findElement(by));
+        dropdown.selectByIndex(index);
+        printf("SelectOptionByIndex from %s index %s\n", by, index);
+    }
+    /**
+     * Selects an option from by using current value.
+     * @param by
+     * @param value
+     */
+    public void SelectOptionByValue( By by, String value ){
+        Select dropdown = new Select(driver.findElement( by ));
+        HighLightElement(driver.findElement(by));
+        dropdown.selectByValue(value);
+        printf("SelectOptionByValue from %s value %s\n", by, value);
     }
 }
