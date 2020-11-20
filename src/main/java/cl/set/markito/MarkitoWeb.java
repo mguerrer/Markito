@@ -26,7 +26,7 @@ public class MarkitoWeb extends MarkitoWebdriver{
     public void OpenWebDriver() {
         if (headless) {
             ChromeOptions options = new ChromeOptions();
-            printf("Opening Android Session in Chrome with desired %s\n", options);
+            printf("Opening Chrome session with desired %s\n", options);
             options.addArguments("--headless", "--no-sandbox");
             driver = new ChromeDriver(options);
         } else {

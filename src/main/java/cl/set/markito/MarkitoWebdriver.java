@@ -38,7 +38,7 @@ public class MarkitoWebdriver extends MarkitoBaseUtils {
         driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
         driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de espera de página
         driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de ejecución javascript
-        printf("SetTimeouts in %ld.\n", timeOutInSeconds);
+        printf("SetTimeouts in %d seconds.\n", timeOutInSeconds);
     }
     /**Close the selected window.
      * Please refer to <a href="#
