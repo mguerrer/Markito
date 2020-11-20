@@ -1,5 +1,5 @@
 cl\set\markito\MarkitoAndroid.class
-cl\set\markito\MarkitoBaseUtils.class
 cl\set\markito\MarkitoiOS.class
 cl\set\markito\MarkitoWeb.class
+cl\set\markito\MarkitoBaseUtils.class
 cl\set\markito\MarkitoWebdriver.class
