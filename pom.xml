@@ -2,20 +2,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cl.set.markito</groupId>
   <artifactId>markito</artifactId>
-  <version>0.2.7</version>
+  <version>0.2.8</version>
   <properties>
     <maven.compiler.source>15</maven.compiler.source>
     <maven.compiler.target>15</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <junit.version>5.6.0</junit.version>
+    <maven.failsafe.version>2.22.2</maven.failsafe.version>
+    <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
     <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
-    <checkstyle.version>8.29</checkstyle.version>
-    <checkstyle-rules.version>4.0.1</checkstyle-rules.version>
-    <selenium.version>3.141.59</selenium.version>
-    <appium.version>6.0.0</appium.version>  
-    <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
-    <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
     <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
     <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
     <!-- JaCoCo thresholds. Increase gradually as you add tests. -->
@@ -23,6 +17,15 @@
     <jacoco.unit-tests.limit.branch-ratio>0%</jacoco.unit-tests.limit.branch-ratio>
     <jacoco.unit-tests.limit.class-complexity>20</jacoco.unit-tests.limit.class-complexity>
     <jacoco.unit-tests.limit.method-complexity>5</jacoco.unit-tests.limit.method-complexity>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <checkstyle.version>8.29</checkstyle.version>
+    <checkstyle-rules.version>4.0.1</checkstyle-rules.version>
+
+    <selenium.version>3.141.59</selenium.version>
+    <appium.version>6.0.0</appium.version>  
+    <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
+
   </properties>
   <repositories> 
     <repository>
@@ -49,11 +52,6 @@
     </repository>
   </distributionManagement> 
   <dependencies>
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter</artifactId>
-        <version>${junit.version}</version>
-    </dependency>
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-chrome-driver</artifactId>
