@@ -34,7 +34,7 @@ public class MarkitoAndroid extends MarkitoWebdriver {
             this.driver = new AndroidDriver<AndroidElement>(UrlAppiumServer, caps);
             if ( this.driver == null )
             {
-                println("Markito: ERROR on getting Android session, value is null.");
+                println("Markito: ERROR on getting Android session, value is null.\n");
                 System.exit(-1);                
             }
         } catch (Exception e) {

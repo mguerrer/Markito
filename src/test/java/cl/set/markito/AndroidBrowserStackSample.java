@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -13,6 +14,7 @@ import io.appium.java_client.MobileBy;
 
 public class AndroidBrowserStackSample extends MarkitoAndroid {
 
+	@Disabled
 	@Test
 	public void SampleAndroid() throws MalformedURLException, InterruptedException {
 		
