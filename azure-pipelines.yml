@@ -10,6 +10,18 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '15' 
+    jdkArchitectureOption: x86
+    #jdkSourceOption: LocalDirectory
+    #jdkFile: # Required when jdkSourceOption == LocalDirectory
+    #azureResourceManagerEndpoint: # Required when jdkSourceOption == AzureStorage
+    #azureStorageAccountName: # Required when jdkSourceOption == AzureStorage
+    #azureContainerName: # Required when jdkSourceOption == AzureStorage
+    #azureCommonVirtualFile: # Required when jdkSourceOption == AzureStorage
+    jdkDestinationDirectory: .
+    #cleanDestinationDirectory: true 
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
