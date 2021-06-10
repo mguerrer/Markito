@@ -4,21 +4,16 @@
 package cl.set.markito;
 
 import java.net.URL;
-
 import org.openqa.selenium.remote.DesiredCapabilities;
-
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
-
-
-public class MarkitoiOS extends MarkitoWebdriver{
-    //public  IOSDriver<IOSElement> driver = null;
+public class MarkitoiOS extends MarkitoBaseUtils{
+    public  IOSDriver<IOSElement> driver = null;
 
     /**
      * Default constructor indicates to Markito Webdriver that platform is ANDROID.
      */
     public MarkitoiOS() {
-        platform = ANDROID;
     }
     /**
      * Initialise the remote Webdriver using an Appium remote URL and desired

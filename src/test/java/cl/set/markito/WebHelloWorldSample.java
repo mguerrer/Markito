@@ -5,7 +5,7 @@ import org.openqa.selenium.*;
 public class WebHelloWorldSample extends MarkitoWeb {
     @Test
     public void HelloWorldTest() {
-        OpenWebDriver();
+        OpenChromeDriver(false);
         Get("http://www.google.com");
         SendKeys( By.name("q"), "Hello world!!");
         Click( By.name("btnK"));
