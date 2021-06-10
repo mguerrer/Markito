@@ -12,7 +12,7 @@ import io.appium.java_client.MobileBy;
 
 public class iOSBrowserStackSample extends MarkitoiOS{
 
-	@Disabled
+	@Disabled("not implemented yet")
 	@Test
 	public void SampleiOS() throws MalformedURLException, InterruptedException {
 		
@@ -40,13 +40,13 @@ public class iOSBrowserStackSample extends MarkitoiOS{
 
 		// Test case for the BrowserStack sample iOS app. 
 		// If you have uploaded your app, update the test case here. 
-		Click((MobileBy) MobileBy.AccessibilityId("Text Button"));
+		//Click((MobileBy) MobileBy.AccessibilityId("Text Button"));
 		String texts[] = { "hello@markito1.cl","hello@markito2.cl","hello@markito3.cl","hello@markito4.cl","hello@markito5.cl",
 						   "hello@markito6.cl","hello@markito7.cl","hello@markito8.cl","hello@markito9.cl","hello@markito10.cl"};
 		for (String text : texts) {
-			SendKeys((MobileBy) MobileBy.AccessibilityId("Text Input"), text);
+			//SendKeys((MobileBy) MobileBy.AccessibilityId("Text Input"), text);
 			Thread.sleep(5000);
-			String textOutput = GetText((MobileBy) MobileBy.AccessibilityId("Text Input"));
+			//String textOutput = GetText((MobileBy) MobileBy.AccessibilityId("Text Input"));
 			/*if(textOutput != null && textOutput.equals(text))
 				assert(true);
 			else
