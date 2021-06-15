@@ -224,4 +224,8 @@ public class MarkitoBaseUtils {
             return null;
         }
     }
+    public boolean DeleteFile( String filename) { 
+        File myObj = new File(filename); 
+        return myObj.delete();
+    } 
 }

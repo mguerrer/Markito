@@ -3,9 +3,30 @@
 // 20-10-2020
 package cl.set.markito;
 
+import java.io.File;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import com.google.common.base.Stopwatch;
+
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.html5.Location;
@@ -13,13 +34,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.io.File;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class MarkitoWeb extends MarkitoBaseUtils {
     public WebDriver driver = null;
@@ -57,7 +71,6 @@ public class MarkitoWeb extends MarkitoBaseUtils {
         driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // TImeout de espera de página
         driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de ejecución
     }
-
     /***
      * Default firefox constructor that can use headless execution mode.
      * 
@@ -139,20 +152,100 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public void SetTimeouts(long timeOutInSeconds) {
         this.timeOutInSeconds = timeOutInSeconds;
-        driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
         try {
+            driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
             driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de ejecución javascript
             driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de espera de página
         } catch ( Exception e) {
             printf( ANSI_YELLOW+"SetTimeouts in %d seconds. WARNING can not set pageLoadTimeout/setScriptTimeout.\n", timeOutInSeconds);
         }
-        printf( ANSI_YELLOW+"SetTimeouts in %d seconds.\n", timeOutInSeconds);
+        //printf( ANSI_YELLOW+"SetTimeouts in %d seconds.\n", timeOutInSeconds);
+    }
+    /**
+     * Get a unified timeout parameter for implicit waits, page loads and
+     * javascripts.
+     * 
+     * @param timeOutInSeconds
+     */
+    public long GetTimeouts() {
+        return this.timeOutInSeconds;
+    }
+
+    /**
+     * Select the window referred by the window handle.
+     * @param windowHandle
+     */
+    public void SelectWindow(String windowHandle) {
+        printf( ANSI_YELLOW+"SelectWindow...");
+        try {
+            driver.switchTo().window(windowHandle);
+            printf( ANSI_YELLOW+"done... Window title %s\n", driver.getTitle());
+        } catch (Exception e) {
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        }
+    }
+     /**
+     * Obtains the string handle be used to select the current window.
+     */
+    public String GetWindowHandle() {
+        printf( ANSI_YELLOW+"GetWindowHandle...");
+        try {
+            String ventanasPrevias = driver.getWindowHandle();
+            printf( ANSI_YELLOW+"done...");
+            return ventanasPrevias;
+        } catch (Exception e) {
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        }
+    }
+    /**
+     * Obtains a set of handles for all the current windows.
+     * @return
+     */
+    public Set<String> GetWindowHandles() {
+        printf( ANSI_YELLOW+"GetWindowHandles...");
+        try {
+            Set<String> ventanasPrevias = new HashSet<String>(driver.getWindowHandles());
+            printf( ANSI_YELLOW+"done...\n");
+            return ventanasPrevias;
+        } catch (Exception e) {
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        }
+    }
+    /**
+     * Waits for a new window to be opened and returns its handle.
+     * @return
+     */
+    public String WaitAndGetNewWindow(Set<String> priorWindows) {
+        printf( ANSI_YELLOW+"Waiting for new window...");
+        try {
+            Set<String> currentWindows = null;
+            Stopwatch stopwatch = Stopwatch.createStarted();
+            do {
+                currentWindows = driver.getWindowHandles();
+                if (stopwatch.elapsed(TimeUnit.SECONDS)>timeOutInSeconds)
+                    throw new WebDriverException("ERROR: New Window not found.");
+                printf( ANSI_YELLOW+".");
+            } while ( currentWindows.size() == priorWindows.size());
+            for (String window : currentWindows) {
+                if (! priorWindows.contains(window)) { // If not found is new.
+                    printf( ANSI_YELLOW+"found %s...\n", window );
+                    return window;
+                }
+            }
+            throw new WebDriverException( "ERROR: New window not found.\n");
+        } catch (Exception e) {
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        }
     }
     /**
      * Close the selected window. Please refer to "https://www.selenium.dev/selenium/docs/api/java/com/thoughtworks/selenium/webdriven/commands/Close.html"
      */
     public void CloseCurrentWindow() {
-        println("CloseCurrentWindow.");
+        println(ANSI_YELLOW+"CloseCurrentWindow.");
         driver.close();
     }
     /**
@@ -178,8 +271,14 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param url
      */
     public void Get(String url) {
-        printf( ANSI_YELLOW+"Get [%s]\n", url);
-        driver.get(url);
+        printf( ANSI_YELLOW+"Get [%s]", url);
+        try{
+            driver.get(url);
+            printf( ANSI_YELLOW+"done!!!\n");
+        } catch (Exception e) {
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        } 
     }
     /**
      * Get Text of an element located by.
@@ -187,11 +286,21 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param by
      */
     public String GetText(By by) {
-        String text = new WebDriverWait(driver, timeOutInSeconds)
+        long currentTimeout = GetTimeouts();
+        try {
+            HighLightElement( by );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            String text = new WebDriverWait(driver, timeOutInSeconds)
                             .until(ExpectedConditions.presenceOfElementLocated(by))
                             .getText();
-        printf( ANSI_YELLOW+"GetText [%s] in object %s\n", text, by);
-        return text;
+                            printf( ANSI_YELLOW+"done [%s] in object %s\n", text, by);
+            SetTimeouts(currentTimeout);
+            return text;
+        } catch (Exception e) {
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        } 
     }
     /**
      * Get Value of an element located by.
@@ -199,58 +308,134 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param by
      */
     public String GetValue(By by) {
-        String text = new WebDriverWait(driver, timeOutInSeconds)
-                          .until(ExpectedConditions.presenceOfElementLocated(by)).getAttribute("value");
-        printf( ANSI_YELLOW+"GetText [%s] in object %s\n", text, by);
-        return text;
+        printf( ANSI_YELLOW+"GetValue ");
+        long currentTimeout = GetTimeouts();
+        try {
+            HighLightElement( by );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            String text = new WebDriverWait(driver, timeOutInSeconds)
+                            .until(ExpectedConditions.presenceOfElementLocated(by))
+                            .getAttribute("value");
+                            printf( ANSI_YELLOW+"done [%s] in object %s\n", text, by);
+            SetTimeouts(currentTimeout);
+            return text;
+        } catch (Exception e) {
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        } 
     }
     /**
-     * Switch to default content and waits for a frame using a frame handle.
+     * Sets the value of an attribute.
+     * @param by
+     * @param attributeName
+     * @param value
+     * @return Fails on attribute not found or other condition.
+     */
+    public void SetAttributeValue(By by, String attributeName, String value) {
+        printf( ANSI_YELLOW+"SetAttributeValue ");
+        long currentTimeout = GetTimeouts();
+        try {
+            HighLightElement( by );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds).until(ExpectedConditions.presenceOfElementLocated(by)).getAttribute(attributeName);
+            SetTimeouts(currentTimeout);
+            ExecuteJsScript("arguments[0].setAttribute(arguments[1], arguments[2]);", driver.findElement(by), attributeName, value );
+            printf( ANSI_YELLOW+"done set attribute [%s] with value [%s] in object %s\n", attributeName, value, by);
+        } catch (Exception e) {
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        } 
+    }
+    /**
+     * Waits for a frame by handle is available and switch to it.
      * 
      * @param frameHandle
      * @throws InterruptedException
      */
-    public void SelectFrameByLocator(int frameHandle) throws InterruptedException {
-        driver.switchTo().defaultContent();
-        new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
-                .ignoring(WebDriverException.class)
-                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameHandle));
-        printf( ANSI_YELLOW+"SelectFrame %d\n", frameHandle);
+    public void SelectFrameByHandle(int frameHandle) throws InterruptedException {
+        printf( ANSI_YELLOW+"SelectFrameByHandle %d...", frameHandle);
+        long currentTimeout = GetTimeouts();
+        try {
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+            .ignoring(StaleElementReferenceException.class)
+            .ignoring(WebDriverException.class)
+            .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameHandle));
+            SetTimeouts(currentTimeout);
+        } catch (Exception e) {
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        } 
+
     }
     /**
-     * Switch to default content and waits for a frame using a frame locator By.
+     * Waits for a frame using By reference is available and switch to it.
      * 
      * @param by
      * @throws InterruptedException
      */
-    public void SelectFrameBy(By by) throws InterruptedException {
-        driver.switchTo().defaultContent();
-        new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
-                .ignoring(WebDriverException.class)
-                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt((driver.findElement(by))));
-        printf( ANSI_YELLOW+"SelectFrame %s\n", by);
+    public void SelectFrameByLocator(By by) throws InterruptedException {
+        printf( ANSI_YELLOW+"SelectFrameBy %s...", by);
+        long currentTimeout = GetTimeouts();
+        try {
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
+            .ignoring(WebDriverException.class)
+            .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(by));
+            SetTimeouts(currentTimeout);
+            printf( ANSI_YELLOW+"done...\n");
+        } catch (Exception e) {
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        }
+
+    }
+    public void SelectFrameById(String frameID)  {
+        printf( ANSI_YELLOW+"SelectFrameBy %s...", frameID);
+        long currentTimeout = GetTimeouts();
+        try {
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+            .ignoring(StaleElementReferenceException.class)
+            .ignoring(WebDriverException.class)
+            .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameID));
+            //driver.switchTo().frame( frameID );
+            SetTimeouts(currentTimeout);
+            printf( ANSI_YELLOW+"done...\n");
+        } catch (Exception e) {
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        }
     }
     /**
-     * Click in a clickable element located using By.
-     * 
+     * Waits for an element tobe clickable located using By and click in it.
      * @param locator
      */
     public void Click(By locator) {
         printf( ANSI_YELLOW+"Clicking %s...", locator);
+        long currentTimeout = GetTimeouts();
         try {
-            WebElement element = driver.findElement(locator);
-            if ( debug ) 
-                HighLightElement( element );
-            new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
-                .ignoring(WebDriverException.class).until(ExpectedConditions.elementToBeClickable(locator));
-            element.click();
+            HighLightElement( locator );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+                .ignoring(StaleElementReferenceException.class)
+                .ignoring(WebDriverException.class)
+                .until(ExpectedConditions.elementToBeClickable(locator));
+            driver.findElement(locator).click();
+            SetTimeouts(currentTimeout);
             printf( ANSI_YELLOW+"done.\n", locator);
         } catch (Exception e) {
+            SetTimeouts(currentTimeout);
             printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
             throw new WebDriverException( e.getMessage());
         }    
     }
-     /**
+    /**
      * Click in a clickable element located using By and bypassing webdriver.
      * 
      * @param locator
@@ -258,26 +443,33 @@ public class MarkitoWeb extends MarkitoBaseUtils {
     public void ClickJS(By locator) {
         printf( ANSI_YELLOW+"Clicking JS %s...", locator);
         try {
-            WebElement element = driver.findElement(locator);
-            if ( debug ) HighLightElement( element );
+            HighLightElement( locator );
             // Do not add waits.
-            ExecuteJsScript("arguments[0].click();", element);	
-            printf( ANSI_YELLOW+"done.\n", locator);
+            ExecuteJsScript("arguments[0].click();", driver.findElement(locator));	
+            printf( ANSI_YELLOW+"done.\n", driver.findElement(locator));
         } catch (Exception e) {
             printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
             throw new WebDriverException( e.getMessage());
         }    
     }
-     /**
+    /**
      * Click in a element located using webdriver Actions.
      * 
      * @param locator
      */
-    public void ClickSimulated(By locator) {
+    public void ClickUsingActions(By locator) {
         printf( ANSI_YELLOW+"Clicking simulated %s...", locator);
+        long currentTimeout = GetTimeouts();
         try {
+            HighLightElement( locator );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+                .ignoring(StaleElementReferenceException.class)
+                .ignoring(WebDriverException.class)
+                .until(ExpectedConditions.elementToBeClickable(locator));
+  
             WebElement element = driver.findElement(locator);
-            if ( debug ) HighLightElement( element );
+            HighLightElement( element );
             // Do not add waits.
             Actions builder = new Actions(driver);
             builder
@@ -285,12 +477,77 @@ public class MarkitoWeb extends MarkitoBaseUtils {
             .click(element)		
             .perform();
             printf( ANSI_YELLOW+"done.\n", locator);
+            SetTimeouts(currentTimeout);
         } catch (Exception e) {
+            SetTimeouts(currentTimeout);
             printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
             throw new WebDriverException( e.getMessage());
         }    
     }
+     /**
+     * MouseOver in a element located using webdriver Actions.
+     * 
+     * @param locator
+     */
+    public void MouseOver(By locator) {
+        printf( ANSI_YELLOW+"MouseOver sobre %s...", locator);
+        long currentTimeout = GetTimeouts();
+        try {
+            HighLightElement( locator );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+                .ignoring(StaleElementReferenceException.class)
+                .ignoring(WebDriverException.class)
+                .until(ExpectedConditions.elementToBeClickable(locator));
+  
+            WebElement element = driver.findElement(locator);
+            HighLightElement( element );
+            // Do not add waits.
+            Actions builder = new Actions(driver);
+            builder
+            .moveToElement(element)
+            .perform();
+            printf( ANSI_YELLOW+"done.\n", locator);
+            SetTimeouts(currentTimeout);
+        } catch (Exception e) {
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        }    
+    }
+    /**
+     * MouseOut in a element located using webdriver Actions.
+     * 
+     * @param locator
+     */
+    public void MouseOut(By locator) {
+    printf( ANSI_YELLOW+"MouseOut sobre %s...", locator);
+    long currentTimeout = GetTimeouts();
+    try {
+        HighLightElement( locator );
+        driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+        new WebDriverWait(driver, timeOutInSeconds)
+            .ignoring(StaleElementReferenceException.class)
+            .ignoring(WebDriverException.class)
+            .until(ExpectedConditions.elementToBeClickable(locator));
 
+        WebElement element = driver.findElement(locator);
+        HighLightElement( element );
+
+        // Do not add waits.
+        Actions builder = new Actions(driver);
+        builder
+        .moveToElement(element)
+        .release(element)
+        .perform();
+        printf( ANSI_YELLOW+"done.\n", locator);
+        SetTimeouts(currentTimeout);
+    } catch (Exception e) {
+        SetTimeouts(currentTimeout);
+        printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+        throw new WebDriverException( e.getMessage());
+    }    
+}
     /**
      * ClickAt in a clickable element located using By at position (x,y).
      * 
@@ -298,14 +555,18 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public void ClickAt(By locator, int x, int y) {
         printf( ANSI_YELLOW+"ClickAt %s x=%d y=%d", locator, x, y);
+        long currentTimeout = GetTimeouts();
         try {
-            WebElement element = driver.findElement(locator);
-            if ( debug ) HighLightElement( element );
+            HighLightElement( locator );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            HighLightElement( locator );
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                 .ignoring(WebDriverException.class).until(ExpectedConditions.elementToBeClickable(locator));
-            new Actions(driver).moveToElement( element, x, y).click().perform();
+            new Actions(driver).moveToElement( driver.findElement(locator), x, y).click().perform();
             printf( ANSI_YELLOW+"done.\n", locator);
+            SetTimeouts(currentTimeout);
         } catch (Exception e) {
+            SetTimeouts(currentTimeout);
             printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
             throw new WebDriverException( e.getMessage());
         }  
@@ -316,11 +577,15 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public void WaitForElementPresent(By locator) {
         printf( ANSI_YELLOW+"Waiting for element %s...", locator.toString());
+        long currentTimeout = GetTimeouts();
         try {
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.presenceOfElementLocated(locator));
-            printf( ANSI_YELLOW+"visible!!!\n");
+            printf( ANSI_YELLOW+"present!!!\n");
+            SetTimeouts(currentTimeout);
         } catch (Exception e) {
+            SetTimeouts(currentTimeout);
             printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
             throw new WebDriverException( e.getMessage());
         }
@@ -333,12 +598,17 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public boolean WaitForElementPresent(By locator, long timeout) {
         printf( ANSI_YELLOW+"Waiting for element %s on %d seconds...", locator.toString(), timeout);
+        long currentTimeout = GetTimeouts();
         try {
+            HighLightElement( locator );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
             new WebDriverWait(driver, timeout).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.presenceOfElementLocated(locator));
             printf( ANSI_YELLOW+"visible!!!\n");
+            SetTimeouts(currentTimeout);
             return true;
         } catch (Exception e) {
+            SetTimeouts(currentTimeout);
             printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
             return false;
         }
@@ -347,15 +617,19 @@ public class MarkitoWeb extends MarkitoBaseUtils {
     * Waits for an element to be visible and fail if not found on timeOutInSeconds.
     * @param locator
     */
-   public void WaitForElementVisible(By locator) {
+    public void WaitForElementVisible(By locator) {
        printf( ANSI_YELLOW+"Waiting for element %s...", locator.toString());
+       long currentTimeout = GetTimeouts();
        try {
-           new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                    .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOfElementLocated(locator));
-           printf( ANSI_YELLOW+"visible!!!\n");
+            printf( ANSI_YELLOW+"visible!!!\n");
+            SetTimeouts(currentTimeout);
        } catch (Exception e) {
-           printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
-           throw new WebDriverException( e.getMessage());
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
        }
    }
     /**
@@ -366,12 +640,16 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public boolean WaitForElementVisible(By locator, long timeout) {
         printf( ANSI_YELLOW+"Waiting for element %s on %d seconds...", locator.toString(), timeout);
+        long currentTimeout = GetTimeouts();
         try {
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
             new WebDriverWait(driver, timeout).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOfElementLocated(locator));
             printf( ANSI_YELLOW+"visible!!!\n");
+            SetTimeouts(currentTimeout);
             return true;
         } catch (Exception e) {
+            SetTimeouts(currentTimeout);
             printf( ANSI_RED+"no visible!!! %s\n", e.getMessage());
             return false;
         }
@@ -384,7 +662,9 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public void WaitForTextInElementVisible(String text, By locator) {
         printf( ANSI_YELLOW+"Waiting for text %s in element %s...", text, locator.toString());
+        long currentTimeout = GetTimeouts();
         try {
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
@@ -392,8 +672,10 @@ public class MarkitoWeb extends MarkitoBaseUtils {
                         ExpectedConditions.visibilityOfElementLocated(locator),
                         ExpectedConditions.textToBe(locator, text))
                     );
+            SetTimeouts(currentTimeout);
             printf( ANSI_YELLOW+"visible!!!\n");
         } catch(Exception e){
+            SetTimeouts(currentTimeout);
             printf( ANSI_YELLOW+"failed after %d seconds!!!\n", timeOutInSeconds);
             throw new WebDriverException( e.getMessage());
         }   
@@ -405,9 +687,11 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param timeout: Time to wait for.
      * @return true if text is found on element before timeout seconds.
      */
-    public boolean WaitForTextInElementVisible(String text, By locator, long timeout) {
+    public boolean WaitForTextInVisibleElement(String text, By locator, long timeout) {
         printf( ANSI_YELLOW+"Waiting for text %s in element %s...", text, locator.toString());
+        long currentTimeout = GetTimeouts();
         try {
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
             new WebDriverWait(driver, timeout)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
@@ -416,8 +700,10 @@ public class MarkitoWeb extends MarkitoBaseUtils {
                         ExpectedConditions.textToBe(locator, text))
                     );
             printf( ANSI_YELLOW+"visible!!!\n");
+            SetTimeouts(currentTimeout);
             return true;
         } catch(Exception e){
+            SetTimeouts(currentTimeout);
             printf( ANSI_YELLOW+"failed after %d seconds!!!\n", timeout);
             return false;
         }   
@@ -428,17 +714,20 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public void WaitForTextInPage(String text) {
         printf( ANSI_YELLOW+"Searching for text %s...", text);
+        long currentTimeout = GetTimeouts();
         try {
             By by = By.xpath("//*[@text='"+text+"']");
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
             .ignoring(WebDriverException.class)
             .until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
 
             if (driver.getPageSource().contains(text)){
                 printf( ANSI_YELLOW+"visible!!!\n");
-
             }
+            SetTimeouts(currentTimeout);
         } catch(Exception e){
+            SetTimeouts(currentTimeout);
             printf( ANSI_RED+"failed: %s\n", e.getMessage());
             throw new WebDriverException( e.getMessage());
         }
@@ -451,13 +740,17 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public void SendKeys(By locator, String keys) {
         printf( ANSI_YELLOW+"SendKeys %s to object %s...", keys, locator);
-        if ( debug ) HighLightElement(driver.findElement(locator));
+        long currentTimeout = GetTimeouts();
+        HighLightElement(driver.findElement(locator));
         try {
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
             .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOfElementLocated(locator));
             driver.findElement(locator).sendKeys(keys);
+            SetTimeouts(currentTimeout);
             println("done!");
         } catch (Exception e) {
+            SetTimeouts(currentTimeout);
             printf(ANSI_RED+"failed! %s\n", e.getMessage());
             throw new WebDriverException( e.getMessage());
         }
@@ -468,7 +761,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
     public void ClickOKOnAlert() {
         printf( ANSI_YELLOW+"Clicking OK on alert...");
         try {
-            //WaitForAlertPresent();
+            WaitForAlertPresent();
             Alert alert = driver.switchTo().alert();
             alert.accept();
             printf( ANSI_YELLOW+"done.\n");
@@ -533,22 +826,36 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public void WaitForAlertPresent() {
         printf( ANSI_YELLOW+"WaitForAlertPresent: Waiting for alert present...");
-        WebDriverWait wdWait = new WebDriverWait(driver, timeOutInSeconds);
+        long currentTimeout = GetTimeouts();
+
         try {
-            wdWait.until(ExpectedConditions.alertIsPresent());
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.alertIsPresent());
+            SetTimeouts(currentTimeout);
             printf( ANSI_YELLOW+"Alert is present.\n");
         } catch (Exception e) {
+            SetTimeouts(currentTimeout);
             printf( ANSI_RED+"Alert is not present.\n");
             throw new WebDriverException(e.getMessage());
         }
     }
     /**
-     * Highlights an element id debug mode is ON.
+     * Highlights WebElement if debug mode is ON.
      * 
      * @param element
      */
     public void HighLightElement(WebElement element) {
-        ExecuteJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');", element);
+        if (debug)
+            ExecuteJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');", element);
+    }
+     /**
+     * Highlights an element By if debug mode is ON.
+     * 
+     * @param element
+     */
+    public void HighLightElement(By element) {
+        if (debug)
+            ExecuteJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');", driver.findElement(element));
     }
     /**
      * Selects an option from by using VisibleText.
@@ -558,7 +865,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public void SelectOptionByVisibleText(By by, String VisibleText) {
         Select dropdown = new Select(driver.findElement(by));
-        if ( debug ) HighLightElement(driver.findElement(by));
+        HighLightElement(driver.findElement(by));
         dropdown.selectByVisibleText(VisibleText);
         printf( ANSI_YELLOW+"SelectOptionByVisibleText from %s option %s\n", by, VisibleText);
     }
@@ -570,7 +877,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public void SelectOptionByIndex(By by, int index) {
         Select dropdown = new Select(driver.findElement(by));
-        if ( debug ) HighLightElement(driver.findElement(by));
+        HighLightElement(driver.findElement(by));
         dropdown.selectByIndex(index);
         printf( ANSI_YELLOW+"SelectOptionByIndex from %s index %s\n", by, index);
     }
@@ -582,9 +889,20 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public void SelectOptionByValue(By by, String value) {
         Select dropdown = new Select(driver.findElement(by));
-        if ( debug ) HighLightElement(driver.findElement(by));
+        HighLightElement(driver.findElement(by));
         dropdown.selectByValue(value);
         printf( ANSI_YELLOW+"SelectOptionByValue from %s value %s\n", by, value);
+    }
+    public void SetLocation( double x, double y, double z ) {
+        printf(ANSI_YELLOW + "Set location to %f, %f, %f...", x,y,z);
+        try {
+            ((ChromeDriver) driver).setLocation(new Location(x, y, z));
+
+            printf(ANSI_YELLOW + "done!!!\n");
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
     }
     /**
      * Takes an screen snapshot and saves to a file.
@@ -600,7 +918,35 @@ public class MarkitoWeb extends MarkitoBaseUtils {
         // Copy file at destination
         FileUtils.copyFile(SrcFile, DestFile);
     }
-
+    protected boolean isElementPresent(By selector) {
+        printf(ANSI_YELLOW+"Is element present.???..." + selector );    
+        WaitForElementPresent(selector);         
+        boolean returnVal = true;
+        try{
+            driver.findElement(selector);
+            printf(ANSI_YELLOW+"yes.\n");
+        } catch (NoSuchElementException e){
+            printf(ANSI_YELLOW+"no.\n");  
+            returnVal = false;
+        } 
+        return returnVal;
+    }
+    /***
+   * Takes an screenshot and leaves it in file named TestResults\Name-Date.png
+   * @param Name: The name you want to recognize.
+   */
+    public void TakeScreenSnapshotWithDate(String Name) {
+        LocalDateTime ldt = LocalDateTime.now();
+        String date = ldt.toString().replaceAll("\\W+", "");
+        try {
+            TakeScreenSnapshot("TestResults\\"+Name + "-" + date + ".png");
+        } catch (Exception e) {
+            printf("ERROR al tomar snapshot. Stack:%s\n", e.getMessage());
+        }
+    }
+    /**
+     * Waits for a a full page load by reading document.readyState.
+     */
     public  void WaitForPageToLoad() {
         printf(ANSI_YELLOW+"WaitForPageToLoad...");
         try {
@@ -615,77 +961,52 @@ public class MarkitoWeb extends MarkitoBaseUtils {
             throw new WebDriverException(e.getMessage());
         }
     }
-    protected boolean isElementPresent(By selector) {
-        printf(ANSI_YELLOW+"Is element present.???..." + selector );    
-        WaitForElementPresent(selector);         
-        boolean returnVal = true;
-        try{
-            driver.findElement(selector);
-            printf(ANSI_YELLOW+"yes.\n");
-        } catch (NoSuchElementException e){
-            printf(ANSI_YELLOW+"no.\n");  
-            returnVal = false;
-        } 
-        return returnVal;
-    }
-  /***
-   * Takes an screenshot and leaves it in file named TestResults\Name-Date.png
-   * @param Name: The name you want to recognize.
-   */
-    public void TakeScreenSnapshotWithDate(String Name) {
-        LocalDateTime ldt = LocalDateTime.now();
-        String date = ldt.toString().replaceAll("\\W+", "");
-        try {
-            TakeScreenSnapshot("TestResults\\"+Name + "-" + date + ".png");
-        } catch (Exception e) {
-            printf("ERROR al tomar snapshot. Stack:%s\n", e.getMessage());
-        }
-    }
-
-
-    public void WaitForinvisibilityElement(WebElement element) {
+    /**
+     * 
+     * @param element
+     */
+    public void WaitForElementInvisibility(By element) {
         printf( ANSI_YELLOW+"Waiting for invisibility of element %s...", element.toString());
+        long currentTimeout = GetTimeouts();
         try {
-            new WebDriverWait(driver, timeOutInSeconds).until(ExpectedConditions.invisibilityOf(element));
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+            .until(ExpectedConditions.invisibilityOf(driver.findElement(element)));
             printf( ANSI_YELLOW+"invisible!!!\n");
+            SetTimeouts(currentTimeout);
         } catch (Exception e) {
             printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            SetTimeouts(currentTimeout);
             throw new WebDriverException( e.getMessage());
         }
     } 
-
-    public void WaitForElementInteractuable(WebElement element) {
+    public void WaitForElementToBeClickable(By element) {
         printf( ANSI_YELLOW+"Waiting for Clickeable of element %s...", element.toString());
+        long currentTimeout = GetTimeouts();
         try {
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).until(ExpectedConditions.elementToBeClickable(element));
             printf( ANSI_YELLOW+"Clickeable!!!\n");
+            SetTimeouts(currentTimeout);
         } catch (Exception e) {
             printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            SetTimeouts(currentTimeout);
             throw new WebDriverException( e.getMessage());
         }
     } 
-
-
-    public boolean  WaitForWebElementSelected(WebElement element, long timeOut) {
-        printf( ANSI_YELLOW+"Waiting for element %s...", element.toString());
+    public boolean WaitForWebElementSelected(By chkDO, long timeOut) {
+        printf( ANSI_YELLOW+"Waiting for element %s...", chkDO.toString());
+        long currentTimeout = GetTimeouts();
         try {
-            new WebDriverWait(driver, timeOut).until(ExpectedConditions.elementSelectionStateToBe(element,true));
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOut).until(ExpectedConditions.elementSelectionStateToBe(chkDO,true));
             printf( ANSI_YELLOW+"Seleccionado!!!\n");
+            SetTimeouts(currentTimeout);
             return true;
         } catch (Exception e) {
             printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            SetTimeouts(currentTimeout);
             return false;
         }
     } 
-    public void SetLocation( double x, double y, double z ) {
-        printf(ANSI_YELLOW + "Set location to %f, %f, %f...", x,y,z);
-        try {
-            ((ChromeDriver) driver).setLocation(new Location(x, y, z));
-
-            printf(ANSI_YELLOW + "done!!!\n");
-        } catch (Exception e) {
-            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
-            throw new WebDriverException(e.getMessage());
-        }
-    }
- }
+}
