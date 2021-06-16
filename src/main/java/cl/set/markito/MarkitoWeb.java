@@ -90,7 +90,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
             driver = new FirefoxDriver();
         }
         js = (JavascriptExecutor) driver;
-        // vars = new HashMap<String, Object>();
+        vars = new HashMap<String, Object>();
         driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
         driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // TImeout de espera de página
         driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de ejecución
@@ -121,10 +121,8 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @return the driver session.
      */
     public WebDriver OpenInternetExplorerDriver(InternetExplorerOptions options) {
-            //System.setProperty("webdriver.ie.driver", "src/test/resources/drivers/windows/IEDriverServer.exe");
-		//System.setProperty("webdriver.ie.driver.loglevel", "DEBUG");
-		//System.setProperty("webdriver.ie.driver.logfile", "test-output/IEDriverServer.log");
-		
+
+        vars = new HashMap<String, Object>();
 		try {
 			driver = new InternetExplorerDriver(options); 
 		}
@@ -137,6 +135,19 @@ public class MarkitoWeb extends MarkitoBaseUtils {
 
 		return driver;
 	}
+    /**
+     * This has to be used prior to OpenInternetExplorerDriver to set non standard configurations. 
+     * Markito assumes that IEDriverServer.exe is in PATH, with this call you can change that, also debug level.
+     * @param pathToIEDriverServerExe: Pathname for IEDriverServer.exe file.
+     * @param debugLevel: This indicates granularity of logs. Can be FATAL, ERROR, WARN, INFO, DEBUG, and TRACE. Defaults to FATAL.
+     * @param pathToIEDriverServerLog: Specifies the full path and file name of the log file.
+     * http://engineermehedizaman.blogspot.com/2015/03/internet-explorer-driver-for-selenium.html
+     */
+    public void SetInternetExplorerEnvironmentVariables(String pathToIEDriverServerExe, String debugLevel, String pathToIEDriverServerLog){
+        System.setProperty("webdriver.ie.driver", pathToIEDriverServerExe);
+		System.setProperty("webdriver.ie.driver.loglevel", debugLevel);
+		System.setProperty("webdriver.ie.driver.logfile", pathToIEDriverServerLog);
+    }
     /**
      * Close current webdriver session and collects possible garbage.
      */
