@@ -160,9 +160,11 @@ public class MarkitoWeb extends MarkitoBaseUtils {
         MarkitoBaseUtils util = new MarkitoBaseUtils();
         // Kill Windows processes if they are running.
         util.killProcessIfRunning(util.CHROME_EXE);
+        util.killProcessIfRunning(util.IE_EXE);
         util.killProcessIfRunning(util.EDGE_EXE);
         util.killProcessIfRunning(util.FIREFOX_EXE);
         util.killProcessIfRunning(util.CHROMEDRIVER_EXE);
+        util.killProcessIfRunning(util.IE_DRIVER_EXE);
         util.killProcessIfRunning(util.EDGEDRIVER_EXE);
         util.killProcessIfRunning(util.FIREFOXDRIVER_EXE);
     }

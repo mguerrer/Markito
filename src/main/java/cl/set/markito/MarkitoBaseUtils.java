@@ -16,6 +16,7 @@ public class MarkitoBaseUtils {
     private final String TASKLIST = "tasklist";
     private String KILL = "taskkill /F /IM ";
     public final String IE_EXE = "iexplore.exe";
+    public final String IE_DRIVER_EXE = "IEDriverServer.exe";
     public final String CHROME_EXE = "chrome.exe";
     public final String CHROMEDRIVER_EXE = "chromedriver.exe";
     public final String EDGE_EXE = "MicrosoftEdge.exe";
