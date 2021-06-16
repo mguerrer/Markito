@@ -30,7 +30,10 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.html5.Location;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -92,6 +95,48 @@ public class MarkitoWeb extends MarkitoBaseUtils {
         driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // TImeout de espera de página
         driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de ejecución
     }
+    /**
+     * A simple implementation of getting a webdriver server session for Internet Explorer.
+     * @return the driver session.
+     */
+    public WebDriver OpenInternetExplorerDriver() {
+        return OpenInternetExplorerDriver("");
+    }        
+    /**
+     * A simple implementation of getting a webdriver server session for Internet Explorer using an initial URL.  
+     * This is handy to improve performance.
+     * @return the driver session.
+     */
+    public WebDriver OpenInternetExplorerDriver(String initialURL) {
+        InternetExplorerOptions options = new InternetExplorerOptions();
+		options.ignoreZoomSettings();
+		options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+		if ( ! ((initialURL==null) || initialURL.equals("")))
+			options.withInitialBrowserUrl( initialURL ); // Esto ahorra segundos al inicio.
+        return OpenInternetExplorerDriver(options);
+    }
+     /**
+     * A simple implementation of getting a webdriver server session for Internet Explorer 
+     * using a more general approach of using InternetExplorerOptions.
+     * @return the driver session.
+     */
+    public WebDriver OpenInternetExplorerDriver(InternetExplorerOptions options) {
+            //System.setProperty("webdriver.ie.driver", "src/test/resources/drivers/windows/IEDriverServer.exe");
+		//System.setProperty("webdriver.ie.driver.loglevel", "DEBUG");
+		//System.setProperty("webdriver.ie.driver.logfile", "test-output/IEDriverServer.log");
+		
+		try {
+			driver = new InternetExplorerDriver(options); 
+		}
+		catch (Exception e) {
+			println(ANSI_RED+"ERROR: Fallo en abrir InternetExplorerDriver.   Stack:"+ e.getMessage());
+		}
+        driver.manage().timeouts().implicitlyWait(65, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(65, TimeUnit.SECONDS);
+		driver.manage().timeouts().setScriptTimeout(65, TimeUnit.SECONDS);
+
+		return driver;
+	}
     /**
      * Close current webdriver session and collects possible garbage.
      */
@@ -823,9 +868,11 @@ public class MarkitoWeb extends MarkitoBaseUtils {
     }
     /**
      * Waits for alert present during timeOutInSeconds period.
+     * @param timeOutInSeconds
+     * @return
      */
-    public void WaitForAlertPresent() {
-        printf( ANSI_YELLOW+"WaitForAlertPresent: Waiting for alert present...");
+     public boolean WaitForAlertPresent(long timeOutInSeconds) {
+        printf( ANSI_YELLOW+"WaitForAlertPresent: Waiting for alert present in %d seconds...", timeOutInSeconds );
         long currentTimeout = GetTimeouts();
 
         try {
@@ -833,10 +880,11 @@ public class MarkitoWeb extends MarkitoBaseUtils {
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.alertIsPresent());
             SetTimeouts(currentTimeout);
             printf( ANSI_YELLOW+"Alert is present.\n");
+            return true;
         } catch (Exception e) {
             SetTimeouts(currentTimeout);
             printf( ANSI_RED+"Alert is not present.\n");
-            throw new WebDriverException(e.getMessage());
+            return false;
         }
     }
     /**
