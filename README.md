@@ -1,5 +1,5 @@
 ![Markito logo](/images/Markito-100.png)
-# Markito
+# Markito v0.6
 A Selenium/Appium Webdriver wrapper written in Java to make coding easier and readable.
 ## Features so far
 1. Support for most common use cases.
@@ -22,7 +22,7 @@ public void HelloWorldTest() {
 </code></pre>
 ### Mobile
 <pre><code> 
-OpenAndroidDriver( new URL("http://hub.browserstack.com/wd/hub"), caps );
+    OpenAndroidDriver( new URL("http://hub.browserstack.com/wd/hub"), caps );
     Click( MobileBy.AccessibilityId("Search Wikipedia"));
     SendKeys( MobileBy.id("org.wikipedia.alpha:id/search_src_text"), "BrowserStack");
     List<WebElement> allProductsName = FindElements( MobileBy.className("android.widget.TextView"));
@@ -39,8 +39,8 @@ So far there is no packed distribution, however, you can clone this repository a
 Now make your class to extend Markito as
 <pre><code>public class HelloWorld extends MarkitoWeb</code></pre> or
 <pre><code>public class HelloWorld extends MarkitoAndroid</code></pre> or
-<pre><code>public class HelloWorld extends MarkitoiOS</code></pre> or
-You are ready to start coding.
+<pre><code>public class HelloWorld extends MarkitoiOS</code></pre> 
+You are ready to start coding!!.
 
 ## Contributing
 This is a Work In Progress, hence it could be nice that you can use and test, check compability on OSs other than Windows, add unit tests, etc.  Please feel free to add issues and PRs on contributions.   For further contact please write to [marcosguerrerow@hotmail.com](mailto:marcosguerrerow@hotmail.com).   Prior to add new issues consider the following criteria:
