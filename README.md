@@ -7,7 +7,7 @@ A Selenium/Appium Webdriver wrapper written in Java to make coding easier and re
 3. Inspired by Selenese commands style.
 4. Adds garbage collection for browsers and webdrivers improving clean execution.
 ## Sponsors
-![BrowserStack](/images/browserstacklogo.svg)
+![BrowserStack](/images/browserstacklogo.png)
 ## Hello world
 With Markito you'll be writing code in seconds, creating a super readable code, making you productive and improving code maintainability. This is the way your Hello World code will look like this with Markito:
 ### Web
