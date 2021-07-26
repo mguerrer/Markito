@@ -1,6 +1,8 @@
 ![Markito logo](/images/Markito-100.png)
-# Markito
+# Markito v0.6
 A Selenium/Appium Webdriver wrapper written in Java to make coding easier and readable.
+## Sponsors
+![BrowserStack](/images/browserstacklogo.png)
 ## Features so far
 1. Support for most common use cases.
 2. Written in Java, supporting Selenium 3.141.59, Appium 6.0.0.  Tested in Windows 10, Chrome browser, Android and iOS.
