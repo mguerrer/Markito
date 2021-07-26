@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import cl.set.markito.MarkitoiOS;
-import io.appium.java_client.MobileBy;
-
 
 public class iOSBrowserStackSample extends MarkitoiOS{
 

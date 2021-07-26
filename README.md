@@ -4,8 +4,10 @@ A Selenium/Appium Webdriver wrapper written in Java to make coding easier and re
 ## Features so far
 1. Support for most common use cases.
 2. Written in Java, supporting Selenium 3.141.59, Appium 6.0.0.  Tested in Windows 10, Chrome browser, Android and iOS.
-3. Inspired by Selenese.
+3. Inspired by Selenese commands style.
 4. Adds garbage collection for browsers and webdrivers improving clean execution.
+## Sponsors
+![BrowserStack](/images/browserstacklogo.svg)
 ## Hello world
 With Markito you'll be writing code in seconds, creating a super readable code, making you productive and improving code maintainability. This is the way your Hello World code will look like this with Markito:
 ### Web
@@ -21,14 +23,14 @@ public void HelloWorldTest() {
 ### Mobile
 <pre><code> 
 OpenAndroidDriver( new URL("http://hub.browserstack.com/wd/hub"), caps );
-Click( MobileBy.AccessibilityId("Search Wikipedia"));
-SendKeys( MobileBy.id("org.wikipedia.alpha:id/search_src_text"), "BrowserStack");
-List<WebElement> allProductsName = FindElements( MobileBy.className("android.widget.TextView"));
-assert(allProductsName.size() > 0);
-for (WebElement webElement : allProductsName) {
-    printf("[%s]\n", webElement.getText());
-}
-CloseAndroidDriver();
+    Click( MobileBy.AccessibilityId("Search Wikipedia"));
+    SendKeys( MobileBy.id("org.wikipedia.alpha:id/search_src_text"), "BrowserStack");
+    List<WebElement> allProductsName = FindElements( MobileBy.className("android.widget.TextView"));
+    assert(allProductsName.size() > 0);
+    for (WebElement webElement : allProductsName) {
+        printf("[%s]\n", webElement.getText());
+    }
+    CloseAndroidDriver();
 </code></pre>
 ## Getting started
 So far there is no packed distribution, however, you can clone this repository and build using Java 15, and Maven 3.6.3. to produce <code>markito-0.2.jar</code> file with <code>mvn package</code>.

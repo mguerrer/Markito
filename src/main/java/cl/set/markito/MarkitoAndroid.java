@@ -1,6 +1,6 @@
 /** Markito Android main class.
 * Marcos Guerrero
-* 16-12-2020
+* 16-07-2021
 **/
 package cl.set.markito;
 

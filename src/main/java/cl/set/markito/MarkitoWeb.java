@@ -1,6 +1,6 @@
 // Markito web main class.
 // Marcos Guerrero
-// 20-10-2020
+// 26-07-2021
 package cl.set.markito;
 
 import java.io.File;
@@ -150,23 +150,27 @@ public class MarkitoWeb extends MarkitoBaseUtils {
     }
     /**
      * Close current webdriver session and collects possible garbage.
+     * @throws Exception
      */
     public void CloseWebDriver() {
+        //Capabilities cap = ((RemoteWebDriver) driver).getCapabilities();
+        //String browserName = cap.getBrowserName().toLowerCase();
         if (driver != null) {
             driver.quit();
             driver=null;
-            println("Markito is destroyed.");
+            println(ANSI_YELLOW+"Markito is destroyed.");
         }
-        MarkitoBaseUtils util = new MarkitoBaseUtils();
+        else println(ANSI_YELLOW+"Markito is null.  Please check your teardown process.");
+
         // Kill Windows processes if they are running.
-        util.killProcessIfRunning(util.CHROME_EXE);
-        util.killProcessIfRunning(util.IE_EXE);
-        util.killProcessIfRunning(util.EDGE_EXE);
-        util.killProcessIfRunning(util.FIREFOX_EXE);
-        util.killProcessIfRunning(util.CHROMEDRIVER_EXE);
-        util.killProcessIfRunning(util.IE_DRIVER_EXE);
-        util.killProcessIfRunning(util.EDGEDRIVER_EXE);
-        util.killProcessIfRunning(util.FIREFOXDRIVER_EXE);
+        /*MarkitoBaseUtils.killProcessIfRunning(MarkitoBaseUtils.CHROME_EXE);
+        MarkitoBaseUtils.killProcessIfRunning(MarkitoBaseUtils.IE_EXE);
+        MarkitoBaseUtils.killProcessIfRunning(MarkitoBaseUtils.EDGE_EXE);
+        MarkitoBaseUtils.killProcessIfRunning(MarkitoBaseUtils.FIREFOX_EXE);
+        MarkitoBaseUtils.killProcessIfRunning(MarkitoBaseUtils.CHROMEDRIVER_EXE);
+        MarkitoBaseUtils.killProcessIfRunning(MarkitoBaseUtils.IE_DRIVER_EXE);
+        MarkitoBaseUtils.killProcessIfRunning(MarkitoBaseUtils.EDGEDRIVER_EXE);
+        MarkitoBaseUtils.killProcessIfRunning(MarkitoBaseUtils.FIREFOXDRIVER_EXE);*/
     }
      /** 
      * Find an element in DOM using By locator.  When debug mode is ON highlights the element to help visual debug.
@@ -243,19 +247,42 @@ public class MarkitoWeb extends MarkitoBaseUtils {
             throw new WebDriverException( e.getMessage());
         }
     }
-     /**
+    /**
      * Obtains the string handle be used to select the current window.
      */
     public String GetWindowHandle() {
         printf( ANSI_YELLOW+"GetWindowHandle...");
         try {
             String ventanasPrevias = driver.getWindowHandle();
-            printf( ANSI_YELLOW+"done...");
+            printf( ANSI_YELLOW+"done...\n");
             return ventanasPrevias;
         } catch (Exception e) {
             printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
             throw new WebDriverException( e.getMessage());
         }
+    }
+    /**
+     * Finds in current webdriver windows handles a window with "title" and returns the handle.     
+     * @param title: Expected window title.
+     * @return: A window handle or null if not found.
+     */
+    public String GetWindowsHandleByTitle(String title) {
+        Set<String> windowsHandles = driver.getWindowHandles();
+        String handle=null;
+        printf( ANSI_YELLOW+"GetWindowHandle...");
+        for (String windowHandle : windowsHandles){
+            driver.switchTo().window(windowHandle);
+            if (driver.getTitle().equals(title)){
+                handle = windowHandle;
+                break;
+            }
+        }
+        if (handle==null)
+            printf( ANSI_YELLOW+"not found.\n" );
+        else
+            printf( ANSI_YELLOW+"found.\n" );
+
+        return handle;
     }
     /**
      * Obtains a set of handles for all the current windows.
@@ -273,18 +300,27 @@ public class MarkitoWeb extends MarkitoBaseUtils {
         }
     }
     /**
-     * Waits for a new window to be opened and returns its handle.
+     * Waits for a new window to be opened and returns its handle during timeOutInSeconds.
      * @return
      */
-    public String WaitAndGetNewWindow(Set<String> priorWindows) {
+    public String WaitForNewWindow() {
+        return WaitForNewWindow( timeOutInSeconds ); // Uses standard timeout value.
+    }
+    /**
+     * Waits for a new window to be opened and returns its handle.
+     * @timeoutSeconds: Max time to wait for new window.
+     * @return
+     */
+    public String WaitForNewWindow( long timeoutSeconds) {
         printf( ANSI_YELLOW+"Waiting for new window...");
         try {
+            Set<String> priorWindows = driver.getWindowHandles();
             Set<String> currentWindows = null;
             Stopwatch stopwatch = Stopwatch.createStarted();
             do {
                 currentWindows = driver.getWindowHandles();
-                if (stopwatch.elapsed(TimeUnit.SECONDS)>timeOutInSeconds)
-                    throw new WebDriverException("ERROR: New Window not found.");
+                if (stopwatch.elapsed(TimeUnit.SECONDS)>timeoutSeconds)
+                    throw new WebDriverException("ERROR: New Window not found in "+timeoutSeconds+" seconds.\n");
                 printf( ANSI_YELLOW+".");
             } while ( currentWindows.size() == priorWindows.size());
             for (String window : currentWindows) {
@@ -293,7 +329,26 @@ public class MarkitoWeb extends MarkitoBaseUtils {
                     return window;
                 }
             }
-            throw new WebDriverException( "ERROR: New window not found.\n");
+            throw new WebDriverException("ERROR: New Window not found in "+timeoutSeconds+" seconds.\n");
+        } catch (Exception e) {
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        }
+    }
+    public void WaitForNWindows( int NWindows) {
+        WaitForNWindows( NWindows, timeOutInSeconds);
+    }
+    public void WaitForNWindows( int NWindows, long timeoutSeconds) {
+        printf( ANSI_YELLOW+"Waiting for new window...");
+        try {
+            Stopwatch stopwatch = Stopwatch.createStarted();
+            while (driver.getWindowHandles().size() != NWindows ){
+                if (stopwatch.elapsed(TimeUnit.SECONDS)>timeoutSeconds)
+                    throw new WebDriverException("ERROR: New Window not found in "+timeoutSeconds+" seconds.\n");
+                else
+                    printf(".");
+            }
+            printf("\n");
         } catch (Exception e) {
             printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
             throw new WebDriverException( e.getMessage());
@@ -329,7 +384,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param url
      */
     public void Get(String url) {
-        printf( ANSI_YELLOW+"Get [%s]", url);
+        printf( ANSI_YELLOW+"Get [%s]...", url);
         try{
             driver.get(url);
             printf( ANSI_YELLOW+"done!!!\n");
@@ -344,6 +399,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param by
      */
     public String GetText(By by) {
+        printf( ANSI_YELLOW+"GetText from, %s...", by);
         long currentTimeout = GetTimeouts();
         try {
             HighLightElement( by );
@@ -494,7 +550,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
         }    
     }
     /**
-     * Click in a clickable element located using By and bypassing webdriver.
+     * Click in a clickable element located using By and bypassing webdriver using js executor.
      * 
      * @param locator
      */
@@ -512,7 +568,6 @@ public class MarkitoWeb extends MarkitoBaseUtils {
     }
     /**
      * Click in a element located using webdriver Actions.
-     * 
      * @param locator
      */
     public void ClickUsingActions(By locator) {
@@ -533,6 +588,36 @@ public class MarkitoWeb extends MarkitoBaseUtils {
             builder
             .moveToElement(element)
             .click(element)		
+            .perform();
+            printf( ANSI_YELLOW+"done.\n", locator);
+            SetTimeouts(currentTimeout);
+        } catch (Exception e) {
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        }    
+    }
+    /**
+     * Double Click in a element located by locator using webdriver Actions.
+     * @param locator
+     */
+    public void DoubleClick(By locator) {
+        printf( ANSI_YELLOW+"Clicking simulated %s...", locator);
+        long currentTimeout = GetTimeouts();
+        try {
+            HighLightElement( locator );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+                .ignoring(StaleElementReferenceException.class)
+                .ignoring(WebDriverException.class)
+                .until(ExpectedConditions.elementToBeClickable(locator));
+  
+            WebElement element = driver.findElement(locator);
+            HighLightElement( element );
+            Actions builder = new Actions(driver);
+            builder
+            .moveToElement(element)
+            .doubleClick(element)		
             .perform();
             printf( ANSI_YELLOW+"done.\n", locator);
             SetTimeouts(currentTimeout);
@@ -634,19 +719,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param locator By of the element.
      */
     public void WaitForElementPresent(By locator) {
-        printf( ANSI_YELLOW+"Waiting for element %s...", locator.toString());
-        long currentTimeout = GetTimeouts();
-        try {
-            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
-            new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
-                    .ignoring(WebDriverException.class).until(ExpectedConditions.presenceOfElementLocated(locator));
-            printf( ANSI_YELLOW+"present!!!\n");
-            SetTimeouts(currentTimeout);
-        } catch (Exception e) {
-            SetTimeouts(currentTimeout);
-            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
-            throw new WebDriverException( e.getMessage());
-        }
+        WaitForElementPresent(locator, timeOutInSeconds);
     } 
     /**
      * Waits for an element to be present and not fail if not found on timeout, instead it will return true or false.
@@ -819,7 +892,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
     public void ClickOKOnAlert() {
         printf( ANSI_YELLOW+"Clicking OK on alert...");
         try {
-            WaitForAlertPresent();
+            WaitForAlertPresent(timeOutInSeconds);
             Alert alert = driver.switchTo().alert();
             alert.accept();
             printf( ANSI_YELLOW+"done.\n");
@@ -834,7 +907,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
     public void ClickCancelOnAlert() {
         try {
             printf( ANSI_YELLOW+"Clicking CANCEL on alert...");
-            WaitForAlertPresent();
+            WaitForAlertPresent(timeOutInSeconds);
             Alert alert = driver.switchTo().alert();
             alert.dismiss();
             printf( ANSI_YELLOW+"done.\n");
@@ -851,7 +924,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
     public String GetTextOfAlert() {
         try {
             printf( ANSI_YELLOW+"GetTextOfAlert: Waiting for alert present...");
-            WaitForAlertPresent();
+            WaitForAlertPresent(timeOutInSeconds);
             printf( ANSI_YELLOW+"Present!  Now getting text!!..");
             Alert alert = driver.switchTo().alert();
             String text = alert.getText();
@@ -869,7 +942,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      */
     public void TypeTextOnAlert(String text) {
         printf( ANSI_YELLOW+"TypeTextOnAlert: Waiting for alert present...");
-        WaitForAlertPresent();
+        WaitForAlertPresent(timeOutInSeconds);
         try {
             Alert alert = driver.switchTo().alert();
             alert.sendKeys(text);
@@ -921,14 +994,20 @@ public class MarkitoWeb extends MarkitoBaseUtils {
     /**
      * Selects an option from by using VisibleText.
      * 
-     * @param by
+     * @param selectObject
      * @param VisibleText
      */
-    public void SelectOptionByVisibleText(By by, String VisibleText) {
-        Select dropdown = new Select(driver.findElement(by));
-        HighLightElement(driver.findElement(by));
-        dropdown.selectByVisibleText(VisibleText);
-        printf( ANSI_YELLOW+"SelectOptionByVisibleText from %s option %s\n", by, VisibleText);
+    public void SelectOptionByVisibleText(By selectObject, String VisibleText) {
+        printf( ANSI_YELLOW+"SelectOptionByVisibleText from %s option %s...", selectObject, VisibleText);
+        try {
+            HighLightElement(driver.findElement(selectObject));
+            Select dropdown = new Select(driver.findElement(selectObject));
+            dropdown.selectByVisibleText(VisibleText);
+            println( ANSI_YELLOW+"done.");
+        } catch (Exception e) {
+            printf( ANSI_RED+"ERROR: option not selected. %s\n", e.getMessage());
+            throw new RuntimeException();
+        }
     }
     /**
      * Selects an option from by using integer index.
@@ -937,10 +1016,17 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param index
      */
     public void SelectOptionByIndex(By by, int index) {
-        Select dropdown = new Select(driver.findElement(by));
-        HighLightElement(driver.findElement(by));
-        dropdown.selectByIndex(index);
         printf( ANSI_YELLOW+"SelectOptionByIndex from %s index %s\n", by, index);
+        try {
+            HighLightElement(driver.findElement(by));
+            Select dropdown = new Select(driver.findElement(by));
+            dropdown.selectByIndex(index);
+            println( ANSI_YELLOW+"done.");
+        } catch (Exception e) {
+            printf( ANSI_RED+"ERROR: option not selected. %s\n", e.getMessage());
+            throw new RuntimeException();
+        }
+
     }
     /**
      * Selects an option from by using current value.
@@ -949,10 +1035,18 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param value
      */
     public void SelectOptionByValue(By by, String value) {
-        Select dropdown = new Select(driver.findElement(by));
-        HighLightElement(driver.findElement(by));
-        dropdown.selectByValue(value);
-        printf( ANSI_YELLOW+"SelectOptionByValue from %s value %s\n", by, value);
+        printf( ANSI_YELLOW+"SelectOptionByValue from %s value %s...", by, value);
+        try {
+            Select dropdown = new Select(driver.findElement(by));
+            HighLightElement(driver.findElement(by));
+            dropdown.selectByValue(value);
+            println( ANSI_YELLOW+"done.");
+        } catch (Exception e) {
+            printf( ANSI_RED+"ERROR: option not selected. %s\n", e.getMessage());
+            throw new RuntimeException();
+        }
+
+
     }
     public void SetLocation( double x, double y, double z ) {
         printf(ANSI_YELLOW + "Set location to %f, %f, %f...", x,y,z);
