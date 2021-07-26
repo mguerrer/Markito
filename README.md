@@ -11,24 +11,24 @@ With Markito you'll be writing code in seconds, creating a super readable code, 
 ### Web
 documentation<pre><code>
 public void HelloWorldTest() {
-    OpenWebDriver();
-    Get("http://www.google.com");
-    SendKeys( By.name("q"), "Hello world!!");
-    Click( By.name("btnK"));
-    CloseWebDriver();
+&nbsp;&nbsp;&nbsp;&nbsp;OpenWebDriver();
+&nbsp;&nbsp;&nbsp;&nbsp;Get("http://www.google.com");
+&nbsp;&nbsp;&nbsp;&nbsp;SendKeys( By.name("q"), "Hello world!!");
+&nbsp;&nbsp;&nbsp;&nbsp;Click( By.name("btnK"));
+&nbsp;&nbsp;&nbsp;&nbsp;CloseWebDriver();
 }
 </code></pre>
 ### Mobile
 <pre><code> 
-OpenAndroidDriver( new URL("http://hub.browserstack.com/wd/hub"), caps );
-Click( MobileBy.AccessibilityId("Search Wikipedia"));
-SendKeys( MobileBy.id("org.wikipedia.alpha:id/search_src_text"), "BrowserStack");
-List<WebElement> allProductsName = FindElements( MobileBy.className("android.widget.TextView"));
-assert(allProductsName.size() > 0);
-for (WebElement webElement : allProductsName) {
-    printf("[%s]\n", webElement.getText());
-}
-CloseAndroidDriver();
+&nbsp;&nbsp;&nbsp;&nbsp;OpenAndroidDriver( new URL("http://hub.browserstack.com/wd/hub"), caps );
+&nbsp;&nbsp;&nbsp;&nbsp;Click( MobileBy.AccessibilityId("Search Wikipedia"));
+&nbsp;&nbsp;&nbsp;&nbsp;SendKeys( MobileBy.id("org.wikipedia.alpha:id/search_src_text"), "BrowserStack");
+&nbsp;&nbsp;&nbsp;&nbsp;List<WebElement> allProductsName = FindElements( MobileBy.className("android.widget.TextView"));
+&nbsp;&nbsp;&nbsp;&nbsp;assert(allProductsName.size() > 0);
+&nbsp;&nbsp;&nbsp;&nbsp;for (WebElement webElement : allProductsName) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("[%s]\n", webElement.getText());
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;CloseAndroidDriver();
 </code></pre>
 ## Getting started
 So far there is no packed distribution, however, you can clone this repository and build using Java 15, and Maven 3.6.3. to produce <code>markito-0.2.jar</code> file with <code>mvn package</code>.
