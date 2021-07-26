@@ -1,6 +1,7 @@
-package cl.set.markito;
+package cl.set.markito.Samples;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
+import cl.set.markito.MarkitoWeb;
 
 public class WebHelloWorldSample extends MarkitoWeb {
     @Test

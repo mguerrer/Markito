@@ -1,4 +1,4 @@
-package cl.set.markito;
+package cl.set.markito.Samples;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import io.appium.java_client.MobileBy;
-
+import cl.set.markito.MarkitoiOS;
 
 public class iOSBrowserStackSample extends MarkitoiOS{
 
