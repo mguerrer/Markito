@@ -1,4 +1,4 @@
-package cl.set.markito;
+package cl.set.markito.Samples;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import cl.set.markito.MarkitoAndroid;
 import io.appium.java_client.MobileBy;
 
 
@@ -21,8 +22,8 @@ public class AndroidBrowserStackSample extends MarkitoAndroid {
     	DesiredCapabilities caps = new DesiredCapabilities();
     	
 		// Set your access credentials
-		caps.setCapability("browserstack.user", "marcos150");
-		caps.setCapability("browserstack.key", "uGotcDU7y8nn9V8tnJcS");
+		caps.setCapability("browserstack.user", "username");
+		caps.setCapability("browserstack.key", "userkey");
 		caps.setCapability("browserstack.appium_version", "1.17.0");
 		
 		// Set URL of the application under test
@@ -33,8 +34,8 @@ public class AndroidBrowserStackSample extends MarkitoAndroid {
     	caps.setCapability("os_version", "9.0");
         
     	// Set other BrowserStack capabilities
-    	caps.setCapability("project", "Pruebas moviles");
-    	caps.setCapability("build", "GasConnect v1.15 Android");
+    	caps.setCapability("project", "Project name");
+    	caps.setCapability("build", "Build name");
     	caps.setCapability("name", "Prueba Google Pixel 3");
        
     	OpenAndroidDriver( new URL("http://hub.browserstack.com/wd/hub"), caps );

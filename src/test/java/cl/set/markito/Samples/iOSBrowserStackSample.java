@@ -1,4 +1,4 @@
-package cl.set.markito;
+package cl.set.markito.Samples;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -6,6 +6,8 @@ import java.net.URL;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
+import cl.set.markito.MarkitoiOS;
 
 
 
@@ -18,8 +20,8 @@ public class iOSBrowserStackSample extends MarkitoiOS{
     	DesiredCapabilities caps = new DesiredCapabilities();
     	
 		// Set your access credentials
-		caps.setCapability("browserstack.user", "marcos150");
-		caps.setCapability("browserstack.key", "uGotcDU7y8nn9V8tnJcS");
+		caps.setCapability("browserstack.user", "username");
+		caps.setCapability("browserstack.key", "key");
 		
 		// Set URL of the application under test
 		caps.setCapability("app", "bs://444bd0308813ae0dc236f8cd461c02d3afa7901d");
