@@ -17,6 +17,7 @@ import com.google.common.base.Stopwatch;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+//import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
@@ -37,6 +38,7 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+//import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class MarkitoWeb extends MarkitoBaseUtils {
     public WebDriver driver = null;
@@ -434,7 +436,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param by
      */
     public String GetText(By by) {
-        printf( ANSI_YELLOW+"GetText from, %s...", by);
+        printf( ANSI_YELLOW+"GetText from %s...", by);
         long currentTimeout = GetTimeouts();
         try {
             HighLightElement( by );
@@ -442,12 +444,12 @@ public class MarkitoWeb extends MarkitoBaseUtils {
             String text = new WebDriverWait(driver, timeOutInSeconds)
                             .until(ExpectedConditions.presenceOfElementLocated(by))
                             .getText();
-                            printf( ANSI_YELLOW+"done [%s] in object %s\n", text, by);
+                            printf( ANSI_YELLOW+"done [%s].\n", text, by);
             SetTimeouts(currentTimeout);
             return text;
         } catch (Exception e) {
             SetTimeouts(currentTimeout);
-            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            printf( ANSI_RED+"failed!!!\n", e.getMessage());
             throw new WebDriverException( e.getMessage());
         } 
     }
@@ -465,6 +467,29 @@ public class MarkitoWeb extends MarkitoBaseUtils {
             String text = new WebDriverWait(driver, timeOutInSeconds)
                             .until(ExpectedConditions.presenceOfElementLocated(by))
                             .getAttribute("value");
+                            printf( ANSI_YELLOW+"done [%s] in object %s\n", text, by);
+            SetTimeouts(currentTimeout);
+            return text;
+        } catch (Exception e) {
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        } 
+    }
+     /**
+     * Get Attribute of an element located by.
+     * @param by
+     * @param attributeName
+     */
+    public String GetAttribute(By by, String attributeName) {
+        printf( ANSI_YELLOW+"GetAttribute ["+attributeName+"]...");
+        long currentTimeout = GetTimeouts();
+        try {
+            HighLightElement( by );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            String text = new WebDriverWait(driver, timeOutInSeconds)
+                            .until(ExpectedConditions.presenceOfElementLocated(by))
+                            .getAttribute(attributeName);
                             printf( ANSI_YELLOW+"done [%s] in object %s\n", text, by);
             SetTimeouts(currentTimeout);
             return text;
