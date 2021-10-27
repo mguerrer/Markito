@@ -1,5 +1,6 @@
 package cl.set.markito;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -8,7 +9,6 @@ import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.search.FlagTerm;
@@ -26,6 +26,7 @@ public class MarkitoEmail {
 	public ArrayList<Email> emailList = new ArrayList<Email>();
 	public Session emailSession  = null;
 	public Store store = null;
+	public Folder inbox = null;
 
 	public MarkitoEmail( String host, String storeType, String user, String password) {
 		Properties properties = new Properties();
@@ -55,19 +56,20 @@ public class MarkitoEmail {
 	 * @param user
 	 * @param password
 	 * @param markEmailAsRead: true if each msg is set as READ false otherwise.
-	 * @return
+	 * @return null on error, or an array of read messages.
 	 */
-	public ArrayList<Email> getUnreadEmailList(String host, String storeType, String user, String password, boolean markEmailAsRead) {
+	public Message[] messages = null;
+	public Message[] getUnreadEmailList(String host, String storeType, String user, String password, boolean markEmailAsRead) {
 		try {
 			// create the inbox object and open it
-			Folder inbox = store.getFolder("Inbox");
+			inbox = store.getFolder("Inbox");
 			inbox.open(Folder.READ_WRITE);
 
 			// retrieve the messages from the folder in an array and print it
-			Message[] messages = inbox.search(new FlagTerm(new Flags(Flag.SEEN), false));
+			messages = inbox.search(new FlagTerm(new Flags(Flag.SEEN), false));
 			System.out.println("messages.length---" + messages.length);
 
-			for (int i = 0, n = messages.length; i < n; i++) {
+			/*for (int i = 0, n = messages.length; i < n; i++) {
 				Message message = messages[i];
 				if (markEmailAsRead)
 					message.setFlag(Flag.SEEN, true);
@@ -76,25 +78,63 @@ public class MarkitoEmail {
 				System.out.println("Subject: " + message.getSubject());
 				System.out.println("From: " + message.getFrom()[0]);
 				System.out.println("Text: " + message.getContent().toString());
-				Email email = new Email();
-				email.from = message.getFrom()[0].toString();
-				email.subject = message.getSubject().toString();
-				email.text = message.getContent().toString();
-				emailList.add(i, email);
-			}
+			}*/
 
-			inbox.close(false);
-			store.close();
-		} catch (NoSuchProviderException e) {
-			e.printStackTrace();
-		} catch (MessagingException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-		return emailList;
+		return messages;
 	}
-
-
-
+	/**
+	 * Close the Email session.
+	 * @throws MessagingException
+	 */
+	public void closeEmailSession() throws MessagingException{
+		inbox.close(false);
+		store.close();
+	}
+		/**
+	 * Gets in an string the Subject field of message.
+	 * @param message
+	 * @return From in string
+		 * @throws MessagingException
+	 */
+	String getSubject(Message message) throws MessagingException {
+		if (message != null)
+			return message.getSubject();
+		else {
+			System.out.println("ERROR: getSubject: message parameter is null");
+			return null;
+		}
+	}
+	/**
+	 * Gets in an string the From field of message.
+	 * @param message
+	 * @return From in string
+	 * @throws MessagingException
+	 */
+	String getFrom(Message message) throws MessagingException {
+		if (message != null)
+			return message.getFrom()[0].toString();
+		else {
+			System.out.println("ERROR: getFrom: message parameter is null");
+			return null;
+		}
+	}
+	/**
+	 * Gets in an string the Content field of message.
+	 * @param message
+	 * @return From in string
+	 * @throws MessagingException
+	 * @throws IOException
+	 */
+	String getContent(Message message) throws IOException, MessagingException {
+		if (message != null)
+			return message.getContent().toString();
+		else {
+			System.out.println("ERROR: getCOntent: message parameter is null");
+			return null;
+		}
+	}
 }
