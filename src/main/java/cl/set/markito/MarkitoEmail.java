@@ -82,7 +82,7 @@ public class MarkitoEmail {
 		inbox.close(false);
 		store.close();
 	}
-		/**
+	/**
 	 * Gets in an string the Subject field of message.
 	 * @param message
 	 * @return From in string
