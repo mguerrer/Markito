@@ -18,12 +18,6 @@ import javax.mail.search.FlagTerm;
  * Marcos Guerrero - 26-10-2021
  */
 public class MarkitoEmail {
-	public class Email { // Represents the email basic object.
-		public String subject="";
-		public String from="";
-		public String text="";
-	}
-	public ArrayList<Email> emailList = new ArrayList<Email>();
 	public Session emailSession  = null;
 	public Store store = null;
 	public Folder inbox = null;
