@@ -39,7 +39,7 @@ So far there is no packed distribution, however, you can clone this repository a
 Now make your class to extend Markito as
 <pre><code>public class HelloWorld extends MarkitoWeb</code></pre> or
 <pre><code>public class HelloWorld extends MarkitoAndroid</code></pre> or
-<pre><code>public class HelloWorld extends MarkitoiOS</code></pre> or
+<pre><code>public class HelloWorld extends MarkitoiOS</code></pre> 
 You are ready to start coding.
 
 ## Contributing
