@@ -2,6 +2,7 @@
  * Markito general util test tools.
  * Marcos Guerrero
  * 30-06-2021
+ * Last modified: 16-08-2022
  */
 package cl.set.markito;
 
@@ -64,6 +65,20 @@ public class MarkitoBaseUtils {
     public static void ClearConsole() {
         System.out.print("\033[H\033[2J"); // Borra consola
         System.out.flush();
+    }
+
+    /**
+     * Enables println and printf to write to console.
+     */
+    public static void SetDebugModeON() {
+        debug = true;
+    }
+
+    /**
+     * Disable println and printf to write to console.
+     */
+    public static void SetDebugModeOFF() {
+        debug = false;
     }
 
     /**
