@@ -1,7 +1,6 @@
 package cl.set.markito;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.mail.Flags;
@@ -36,7 +35,6 @@ public class MarkitoEmail {
 			System.out.println("Connected to "+host+"..." );
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(1);
 		}
