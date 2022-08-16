@@ -21,7 +21,7 @@ public class MarkitoEmail {
 	public Store store = null;
 	public Folder inbox = null;
 
-	public MarkitoEmail( String host, String storeType, String user, String password) {
+	public MarkitoEmail( String host, String storeType, String user, String password) throws Exception {
 		Properties properties = new Properties();
 		properties.put("mail.imap.host", host);
 		properties.put("mail.imap.port", "993");
@@ -33,10 +33,9 @@ public class MarkitoEmail {
 			store = emailSession.getStore("imaps");
 			store.connect(host, user, password);
 			System.out.println("Connected to "+host+"..." );
-
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
+			System.out.println("Error on connecting to "+host+"..." );
+			throw new Exception(e.getMessage());
 		}
 
 	}
@@ -80,7 +79,7 @@ public class MarkitoEmail {
 	 * @return From in string
 		 * @throws MessagingException
 	 */
-	String getSubject(Message message) throws MessagingException {
+	public String getSubject(Message message) throws MessagingException {
 		if (message != null)
 			return message.getSubject();
 		else {
@@ -94,7 +93,7 @@ public class MarkitoEmail {
 	 * @return From in string
 	 * @throws MessagingException
 	 */
-	String getFrom(Message message) throws MessagingException {
+	public String getFrom(Message message) throws MessagingException {
 		if (message != null)
 			return message.getFrom()[0].toString();
 		else {
@@ -109,7 +108,7 @@ public class MarkitoEmail {
 	 * @throws MessagingException
 	 * @throws IOException
 	 */
-	String getContent(Message message) throws IOException, MessagingException {
+	public String getContent(Message message) throws IOException, MessagingException {
 		if (message != null)
 			return message.getContent().toString();
 		else {
