@@ -1,4 +1,4 @@
-package cl.set.markito.tests.RESTTestNG.framework;
+package cl.set.markito.tests.MarkitoREST.framework;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

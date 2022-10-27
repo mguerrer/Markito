@@ -1,4 +1,4 @@
-package cl.set.markito.tests.EmailJUnit;
+package cl.set.markito.tests.MarkitoEmail;
 import java.io.IOException;
 import javax.mail.Message;
 import javax.mail.MessagingException;

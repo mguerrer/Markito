@@ -1,13 +1,19 @@
 ![Markito logo](/images/Markito-100.png)
-# Markito v0.6
-A Selenium/Appium Webdriver wrapper written in Java to make coding easier and readable.
+# Markito v0.7
+A Selenium/Appium Webdriver wrapper written in Java to make coding easier and readable.  This wrapper has been designed for scripting style of programming for beginners, using the ideas of Selenese.
 ## Sponsors
 ![BrowserStack](/images/browserstacklogo.png)
 ## Features so far
 1. Support for most common use cases.
-2. Written in Java, supporting Selenium 3.141.59, Appium 6.0.0.  Tested in Windows 10, Chrome browser, Android and iOS.
+2. Written in Java 11, supporting Selenium 3.141.59, Appium 6.0.0.  Tested in Windows 10, Chrome browser, Android and iOS.
 3. Inspired by Selenese.
 4. Adds garbage collection for browsers and webdrivers improving clean execution.
+## Next steps
+1. Add automated testings.
+2. Refactoring to comply with OOD patterns like SOLID.
+3. Adds thread safe for parallel execution.
+4. Update to latest versions of selenium, appium and other dependencies.
+
 ## Hello world
 With Markito you'll be writing code in seconds, creating a super readable code, making you productive and improving code maintainability. This is the way your Hello World code will look like this with Markito:
 ### Web
@@ -41,6 +47,9 @@ Now make your class to extend Markito as
 <pre><code>public class HelloWorld extends MarkitoAndroid</code></pre> or
 <pre><code>public class HelloWorld extends MarkitoiOS</code></pre> 
 You are ready to start coding.
+
+## References
+1. [DriverManager library](https://bonigarcia.dev/webdrivermanager/): Provides automated support to manage webdriver's browser drivers.
 
 ## Contributing
 This is a Work In Progress, hence it could be nice that you can use and test, check compability on OSs other than Windows, add unit tests, etc.  Please feel free to add issues and PRs on contributions.   For further contact please write to [marcosguerrerow@hotmail.com](mailto:marcosguerrerow@hotmail.com).   Prior to add new issues consider the following criteria:
