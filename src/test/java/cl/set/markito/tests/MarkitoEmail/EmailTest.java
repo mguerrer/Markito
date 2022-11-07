@@ -1,15 +1,14 @@
-package cl.set.markito.tests.EmailJUnit;
-import java.io.IOException;
+package cl.set.markito.tests.MarkitoEmail;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.Assert;
 
+import cl.set.markito.MarkitoBaseUtils;
 import cl.set.markito.MarkitoEmail;
 
-public class EmailTest {
+public class EmailTest extends MarkitoBaseUtils{
 	@Test
-    public void GetMguerrerEmailsTest() throws MessagingException, IOException {
+    public void GetMguerrerEmailsTest() throws Exception {
 
 		String host = "imap.gmail.com";
 		String mailStoreType = "imap";
@@ -24,18 +23,26 @@ public class EmailTest {
 		} catch (Exception e) {
 			Assert.isTrue(false, e.getMessage());
 		}
+		if (emailClient == null) {
+			throw new Exception("ERROR: Can not get email client.");
+		}
 		// Acts
 		try {
 			messages = emailClient.getUnreadEmailList(host, mailStoreType, username, password, false);
 		} catch (Exception e) {
 			Assert.isTrue(false, e.getMessage());
 		}
-		for (Message message : messages) {
-			System.out.println("From:"+emailClient.getFrom(message));
-			System.out.println("Subject:"+emailClient.getSubject(message));
-			System.out.println("Content:"+emailClient.getContent(message));
-			
+		if ( messages != null) {
+			for (Message message : messages) {
+				System.out.println("From:"+emailClient.getFrom(message));
+				System.out.println("Subject:"+emailClient.getSubject(message));
+				System.out.println("Content:"+emailClient.getContent(message));
+				
+			}
+		} else {
+			println("No messages found...");
 		}
+
 		emailClient.closeEmailSession();
     }
     

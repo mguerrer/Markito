@@ -160,6 +160,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
         //String browserName = cap.getBrowserName().toLowerCase();
         try {
             if (driver != null) {
+
                 driver.quit();
                 driver=null;
                 println(ANSI_YELLOW+"Markito is destroyed.");

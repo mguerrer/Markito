@@ -1,4 +1,4 @@
-package cl.set.markito.tests.RESTTestNG.framework.types;
+package cl.set.markito.tests.MarkitoREST.framework.types;
 
 public class Rover {
     int id;

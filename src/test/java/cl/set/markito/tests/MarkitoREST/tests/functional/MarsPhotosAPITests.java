@@ -1,4 +1,4 @@
-package cl.set.markito.tests.RESTTestNG.tests.functional;
+package cl.set.markito.tests.MarkitoREST.tests.functional;
 import java.util.HashMap;
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import cl.set.markito.MarkitoREST;
-import cl.set.markito.tests.RESTTestNG.framework.*;
-import cl.set.markito.tests.RESTTestNG.framework.types.*;
+import cl.set.markito.tests.MarkitoREST.framework.*;
+import cl.set.markito.tests.MarkitoREST.framework.types.*;
 import io.restassured.response.Response;
 
 public class MarsPhotosAPITests extends MarsApiTestBase {
