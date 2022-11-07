@@ -74,23 +74,18 @@ public class DragAndDrop {
         int x = squareB.getLocation().x;
         int y = squareB.getLocation().y;
 
-        final String java_script =
-                "var src=arguments[0],tgt=arguments[1];var dataTransfer={dropEffe" +
-                                "ct:'',effectAllowed:'all',files:[],items:{},types:[],setData:fun" +
-                                "ction(format,data){this.items[format]=data;this.types.append(for" +
-                                "mat);},getData:function(format){return this.items[format];},clea" +
-                                "rData:function(format){}};var emit=function(event,target){var ev" +
-                                "t=document.createEvent('Event');evt.initEvent(event,true,false);" +
-                                "evt.dataTransfer=dataTransfer;target.dispatchEvent(evt);};emit('" +
-                                "dragstart',src);emit('dragenter',tgt);emit('dragover',tgt);emit(" +
-                                "'drop',tgt);emit('dragend',src);";
+        final String java_script =  "var src=arguments[0],tgt=arguments[1];var dataTransfer={dropEffe" +
+                                    "ct:'',effectAllowed:'all',files:[],items:{},types:[],setData:fun" +
+                                    "ction(format,data){this.items[format]=data;this.types.append(for" +
+                                    "mat);},getData:function(format){return this.items[format];},clea" +
+                                    "rData:function(format){}};var emit=function(event,target){var ev" +
+                                    "t=document.createEvent('Event');evt.initEvent(event,true,false);" +
+                                    "evt.dataTransfer=dataTransfer;target.dispatchEvent(evt);};emit('" +
+                                    "dragstart',src);emit('dragenter',tgt);emit('dragover',tgt);emit(" +
+                                    "'drop',tgt);emit('dragend',src);";
                         
         ((JavascriptExecutor) driver).executeScript(java_script, squareA, squareB);
-                   
-
-        //act.dragAndDrop(this.squareA, this.squareB).build().perform();
-
-    }
+     }
 
     /**
      * Click on Elemental Selenium Link.
