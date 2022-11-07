@@ -3,12 +3,12 @@
  */
 
 package cl.set.markito.tests.MarkitoWeb;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-
 import cl.set.markito.MarkitoWeb;
 import cl.set.markito.tests.MarkitoWeb.framework.BrowserManager;
 import cl.set.markito.tests.MarkitoWeb.framework.TheInternet.pages.DragAndDrop;
@@ -18,7 +18,7 @@ public class TheInternet {
     protected static ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<WebDriver>();
 
 
-    //@BeforeTest
+    @BeforeEach
     public void Setup(){
         WebDriver driver = BrowserManager.doBrowserSetup("chrome");
         //set driver
@@ -36,7 +36,7 @@ public class TheInternet {
     }
 
 
-    //@AfterTest
+    @AfterEach
     public void tearDown(){
         getDriver().quit();
 
@@ -46,7 +46,7 @@ public class TheInternet {
     }
     @Test
     public void HelloWorldTest() throws Exception {
-        Setup();
+        //Setup();
 
         // Arrange
         // Open Home Page
@@ -54,11 +54,17 @@ public class TheInternet {
         PageFactory.initElements(getDriver(), homePage);
         // Open link Drag And Drop
         homePage.clickDragAndDropLink();
-        // 
+
         DragAndDrop dragAndDropPage = new DragAndDrop(getDriver());
         dragAndDropPage.verifyPageLoaded();
+        
+        // Test drag and drop
+        for (int i=0; i<10; i++) {
+            dragAndDropPage.DragObjectAOverObjectB();
+            Thread.sleep(1000);
+        }
 
-        tearDown();
+        //tearDown();
 
     }
 }
