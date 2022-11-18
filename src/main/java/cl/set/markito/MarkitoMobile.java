@@ -197,8 +197,14 @@ public class MarkitoMobile extends MarkitoBaseUtils {
             if ( (elements!=null) && (elements.size()>1) ){
                 printf(ANSI_YELLOW_BACKGROUND+"WARNING: Hay más de un elemento apuntado por %s.\n", locator);
             }
-            elements.get(0).click();
-            printf(ANSI_YELLOW + "done.\n", locator);
+            if ( elements != null) {
+                elements.get(0).click();
+                printf(ANSI_YELLOW + "done.\n", locator);
+            } else {
+                throw new WebDriverException("ERROR: Cannot find element "+locator);
+               
+            }
+
         } catch (Exception e) {
             printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
             throw new WebDriverException(e.getMessage());

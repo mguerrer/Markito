@@ -301,4 +301,26 @@ public class MarkitoBaseUtils {
  
         return contentBuilder.toString();
     }
+    /**
+     * Get BrowserStack's username from environment variable BSUSERNAME
+     * @return
+     */
+    public String getBsUsername(){
+        String username = System.getenv("BSUSERNAME");
+        if ( username == null){
+            printf(ANSI_RED+"ERROR: BrowserStack user name not found.  Please add to environment variable BSUSERNAME.");
+        }
+        return username;
+    }
+     /**
+     * Get  BrowserStack's password (KEY) from environment variable BSPASSWORD
+     * @return
+     */
+    public String getBsPassword(){
+        String username = System.getenv("BSPASSWORD");
+        if ( username == null){
+            printf(ANSI_RED+"ERROR: BrowserStack user KEY not found.  Please add to environment variable BSPASSWORD.");
+        }
+        return username;
+    }
 }

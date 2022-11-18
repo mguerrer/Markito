@@ -1,4 +1,4 @@
-package cl.set.markito.Samples;
+package cl.set.markito.samples;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 
