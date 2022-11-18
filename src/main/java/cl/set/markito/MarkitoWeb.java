@@ -5,6 +5,7 @@ package cl.set.markito;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Stopwatch;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
@@ -38,7 +41,7 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-//import org.openqa.selenium.remote.RemoteWebDriver;
+
 
 public class MarkitoWeb extends MarkitoBaseUtils {
     public WebDriver driver = null;
@@ -62,6 +65,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param headless
      */
     public void OpenChromeDriver(boolean headless) {
+        WebDriverManager.chromedriver().setup();
         if (headless) {
             ChromeOptions options = new ChromeOptions();
             printf("Opening Chrome session with desired %s\n", options);
@@ -132,9 +136,9 @@ public class MarkitoWeb extends MarkitoBaseUtils {
 		catch (Exception e) {
 			println(ANSI_RED+"ERROR: Fallo en abrir InternetExplorerDriver.   Stack:"+ e.getMessage());
 		}
-        driver.manage().timeouts().implicitlyWait(65, TimeUnit.SECONDS);
-		driver.manage().timeouts().pageLoadTimeout(65, TimeUnit.SECONDS);
-		driver.manage().timeouts().setScriptTimeout(65, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
+		driver.manage().timeouts().setScriptTimeout(60, TimeUnit.SECONDS);
 
 		return driver;
 	}
@@ -572,6 +576,12 @@ public class MarkitoWeb extends MarkitoBaseUtils {
         }
 
     }
+    /**
+     * Waits for a frame using frameId (string) is available and switch to it.
+     * 
+     * @param frameId
+     * @throws InterruptedException
+     */
     public void SelectFrameById(String frameID)  {
         printf( ANSI_YELLOW+"SelectFrameBy %s...", frameID);
         long currentTimeout = GetTimeouts();
@@ -591,7 +601,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
         }
     }
     /**
-     * Waits for an element tobe clickable located using By and click in it.
+     * Waits for an element to be clickable located using By and click in it.
      * @param locator
      */
     public void Click(By locator) {
@@ -755,33 +765,73 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param locator
      */
     public void MouseOut(By locator) {
-    printf( ANSI_YELLOW+"MouseOut sobre %s...", locator);
-    long currentTimeout = GetTimeouts();
-    try {
-        HighLightElement( locator );
-        driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
-        new WebDriverWait(driver, timeOutInSeconds)
-            .ignoring(StaleElementReferenceException.class)
-            .ignoring(WebDriverException.class)
-            .until(ExpectedConditions.elementToBeClickable(locator));
-
-        WebElement element = driver.findElement(locator);
-        HighLightElement( element );
-
-        // Do not add waits.
-        Actions builder = new Actions(driver);
-        builder
-        .moveToElement(element)
-        .release(element)
-        .perform();
-        printf( ANSI_YELLOW+"done.\n", locator);
-        SetTimeouts(currentTimeout);
-    } catch (Exception e) {
-        SetTimeouts(currentTimeout);
-        printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
-        throw new WebDriverException( e.getMessage());
-    }    
-}
+        printf( ANSI_YELLOW+"MouseOut sobre %s...", locator);
+        long currentTimeout = GetTimeouts();
+        try {
+            HighLightElement( locator );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+                .ignoring(StaleElementReferenceException.class)
+                .ignoring(WebDriverException.class)
+                .until(ExpectedConditions.elementToBeClickable(locator));
+    
+            WebElement element = driver.findElement(locator);
+            HighLightElement( element );
+    
+            // Do not add waits.
+            Actions builder = new Actions(driver);
+            builder
+            .moveToElement(element)
+            .release(element)
+            .perform();
+            printf( ANSI_YELLOW+"done.\n", locator);
+            SetTimeouts(currentTimeout);
+        } catch (Exception e) {
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        }    
+    }
+    /**
+     * DragAndDrop sourceObject over targetObject.
+     * @param sourceObject
+     * @param targetObject
+     */
+    public void DragAndDrop(WebElement sourceObject, WebElement targetObject){
+        printf( ANSI_YELLOW+"DragAndDrop %s over %s...", sourceObject, targetObject);
+        long currentTimeout = GetTimeouts();
+        try {
+            HighLightElement( sourceObject );
+            HighLightElement( targetObject );
+            List<WebElement> elements = new  ArrayList<WebElement>(); 
+            elements.add( sourceObject );
+            elements.add( targetObject );
+            driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+                .ignoring(StaleElementReferenceException.class)
+                .ignoring(WebDriverException.class)
+                .until(ExpectedConditions.visibilityOfAllElements(elements));
+    
+            // Uses javascript to simulate drag and drop action.
+            final String java_script =  "var src=arguments[0],tgt=arguments[1];var dataTransfer={dropEffe" +
+                    "ct:'',effectAllowed:'all',files:[],items:{},types:[],setData:fun" +
+                    "ction(format,data){this.items[format]=data;this.types.append(for" +
+                    "mat);},getData:function(format){return this.items[format];},clea" +
+                    "rData:function(format){}};var emit=function(event,target){var ev" +
+                    "t=document.createEvent('Event');evt.initEvent(event,true,false);" +
+                    "evt.dataTransfer=dataTransfer;target.dispatchEvent(evt);};emit('" +
+                    "dragstart',src);emit('dragenter',tgt);emit('dragover',tgt);emit(" +
+                    "'drop',tgt);emit('dragend',src);";
+        
+            ((JavascriptExecutor) driver).executeScript(java_script, elements.get(0), elements.get(1));
+            printf( ANSI_YELLOW+"done.\n");
+            SetTimeouts(currentTimeout);
+        } catch (Exception e) {
+            SetTimeouts(currentTimeout);
+            printf( ANSI_RED+"failed!!! %s\n", e.getMessage());
+            throw new WebDriverException( e.getMessage());
+        }    
+    }
     /**
      * ClickAt in a clickable element located using By at position (x,y).
      * 

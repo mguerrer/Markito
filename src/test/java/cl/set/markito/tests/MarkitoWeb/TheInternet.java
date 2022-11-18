@@ -3,13 +3,13 @@
  */
 
 package cl.set.markito.tests.MarkitoWeb;
-import org.aspectj.lang.annotation.Before;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
-import cl.set.markito.MarkitoWeb;
 import cl.set.markito.tests.MarkitoWeb.framework.BrowserManager;
 import cl.set.markito.tests.MarkitoWeb.framework.TheInternet.pages.DragAndDrop;
 import cl.set.markito.tests.MarkitoWeb.framework.TheInternet.pages.Home;
@@ -45,8 +45,7 @@ public class TheInternet {
         threadLocalDriver.remove();
     }
     @Test
-    public void HelloWorldTest() throws Exception {
-        //Setup();
+    public void DragAndDropTest() throws Exception {
 
         // Arrange
         // Open Home Page
@@ -58,13 +57,19 @@ public class TheInternet {
         DragAndDrop dragAndDropPage = new DragAndDrop(getDriver());
         dragAndDropPage.verifyPageLoaded();
         
+        // Act & Assert
         // Test drag and drop
         for (int i=0; i<10; i++) {
             dragAndDropPage.DragObjectAOverObjectB();
-            Thread.sleep(1000);
+            Thread.sleep(100);
+            String header = dragAndDropPage.squareA.getText();
+            if ( (i % 2) == 0 ) { // Assert that header has changed after drag and drop.
+                assertEquals( header, "B" );
+            } else {
+                assertEquals( header, "A" );
+            }
         }
 
-        //tearDown();
 
     }
 }

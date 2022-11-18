@@ -107,7 +107,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * capabilities defined above
      */
     public void OpenAndroidDriver(URL UrlAppiumServer, MutableCapabilities caps) {
-        printf("Opening Android Session in %s with desired %s", UrlAppiumServer, caps);
+        printf("Opening Android Session in appium server at %s on device %s", UrlAppiumServer, caps.getCapability("device"));
         try {
             driver = new AndroidDriver<AndroidElement>(UrlAppiumServer, caps);
             if (driver == null) {
