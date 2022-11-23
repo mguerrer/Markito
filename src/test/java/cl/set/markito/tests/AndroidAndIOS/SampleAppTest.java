@@ -1,12 +1,9 @@
 package cl.set.markito.tests.AndroidAndIOS;
 
-import java.net.MalformedURLException;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.testng.AssertJUnit;
-
+import org.junit.jupiter.api.Assertions;
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MobileElement;
 
@@ -24,7 +21,8 @@ public class SampleAppTest extends BrowserStack{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        AssertJUnit.assertTrue( "Can not open Appium server.", driver != null );
+        
+        Assertions.assertNotEquals( null, driver, "Can not open Appium server."  );
 
         HomePage home = new HomePage(driver);
 
@@ -33,11 +31,10 @@ public class SampleAppTest extends BrowserStack{
         String msg = home.getTestResultMessage();
 
         // Assert
-        String expected;
         if ( platform.contains("iOS")){
-            AssertJUnit.assertTrue(msg.contains("Error in connecting bs-local"));
+            Assertions.assertTrue(msg.contains("Error in connecting bs-local"));
         } else {
-            AssertJUnit.assertTrue(msg.contains("Unable to connect."));
+            Assertions.assertTrue(msg.contains("Unable to connect."));
         }
 
         driver.quit();
