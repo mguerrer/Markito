@@ -81,6 +81,12 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency> <!--Email dependency-->
         <groupId>com.sun.mail</groupId>
         <artifactId>javax.mail</artifactId>
