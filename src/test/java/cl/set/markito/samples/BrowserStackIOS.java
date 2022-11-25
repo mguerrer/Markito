@@ -2,7 +2,6 @@ package cl.set.markito.samples;
 
 
 import java.net.URL;
-import java.util.List;
 import java.net.MalformedURLException;
 
 import org.openqa.selenium.support.ui.WebDriverWait;

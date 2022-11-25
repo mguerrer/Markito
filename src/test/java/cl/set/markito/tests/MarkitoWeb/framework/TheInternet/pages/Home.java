@@ -14,7 +14,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class Home {
-    private Map<String, String> data;
     private WebDriver driver;
     private int timeout = 15;
 
@@ -216,7 +215,7 @@ public class Home {
 
     public Home(WebDriver driver, Map<String, String> data) {
         this(driver);
-        this.data = data;
+//        this.data = data;
     }
 
     public Home(WebDriver driver, Map<String, String> data, int timeout) {

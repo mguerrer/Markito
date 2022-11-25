@@ -65,6 +65,8 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param headless
      */
     public void OpenChromeDriver(boolean headless) {
+        printf(ANSI_WHITE+"Verifying/updating Chrome driver.");
+
         WebDriverManager.chromedriver().setup();
         if (headless) {
             ChromeOptions options = new ChromeOptions();
