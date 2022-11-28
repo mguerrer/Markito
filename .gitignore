@@ -29,9 +29,6 @@ hs_err_pid*
 .settings/org.eclipse.jdt.core.prefs
 .settings/org.eclipse.m2e.core.prefs
 target
-target/maven-archiver/pom.properties
 .vs
 apps/LocalSample.*
 test-output
-target/maven-status/maven-compiler-plugin/compile/default-compile/*.lst
-target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
