@@ -195,7 +195,7 @@ public class MarkitoMobile extends MarkitoBaseUtils {
         try {
             List<MobileElement> elements = driver.findElements(locator);
             if ( (elements!=null) && (elements.size()>1) ){
-                printf(ANSI_YELLOW_BACKGROUND+"WARNING: Hay más de un elemento apuntado por %s.\n", locator);
+                printf(ANSI_YELLOW_BACKGROUND+"WARNING: There is more than one element found by %s.\n", locator);
             }
             if ( elements != null) {
                 elements.get(0).click();
@@ -272,6 +272,10 @@ public class MarkitoMobile extends MarkitoBaseUtils {
         }
         return contextNames;
     }
+    /**
+     * Establish the context to find elements on hybrid apps.
+     * @param ContextName
+     */
     public void SetContextHandle( String ContextName ){ 
         println(ANSI_YELLOW+"SetContextHandle "+ContextName); //prints out something like NATIVE_APP \n WEBVIEW_1
         driver.context(ContextName);

@@ -1,5 +1,7 @@
 package cl.set.markito.tests.MarkitoEmail;
 import javax.mail.Message;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.Assert;
 
@@ -7,6 +9,7 @@ import cl.set.markito.MarkitoBaseUtils;
 import cl.set.markito.MarkitoEmail;
 
 public class EmailTest extends MarkitoBaseUtils{
+	@Disabled
 	@Test
     public void GetMguerrerEmailsTest() throws Exception {
 
