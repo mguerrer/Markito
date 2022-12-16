@@ -17,8 +17,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
+
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class MarkitoBaseUtils {
     private final static String TASKLIST = "tasklist";
@@ -322,5 +325,18 @@ public class MarkitoBaseUtils {
             printf(ANSI_RED+"ERROR: BrowserStack user KEY not found.  Please add to environment variable BSPASSWORD.");
         }
         return username;
+    }
+    /**
+     * Logs in debug console the list of capabilities set with a pretty format.
+     * @param caps
+     */
+    public void LogCapabilities(DesiredCapabilities caps) {
+        Map<String,Object> jsoncaps = caps.toJson();
+        println("\nCapabilities: ");
+        for (String key: jsoncaps.keySet()) {
+            if ( !key.equals("browserstack.key") && !key.equals("browserstack.user")) {
+               printf("-%s:%s\n",ANSI_WHITE+key, ANSI_YELLOW+jsoncaps.get(key));
+            }
+        }
     }
 }
