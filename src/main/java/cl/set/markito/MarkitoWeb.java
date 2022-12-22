@@ -65,6 +65,8 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param headless
      */
     public void OpenChromeDriver(boolean headless) {
+        printf(ANSI_WHITE+"Verifying/updating Chrome driver.");
+
         WebDriverManager.chromedriver().setup();
         if (headless) {
             ChromeOptions options = new ChromeOptions();
@@ -78,8 +80,8 @@ public class MarkitoWeb extends MarkitoBaseUtils {
         js = (JavascriptExecutor) driver;
         vars = new HashMap<String, Object>();
         driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
-        driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // TImeout de espera de página
-        driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de ejecución
+        driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout for page loading
+        driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout for script execution
     }
     /***
      * Default firefox constructor that can use headless execution mode.

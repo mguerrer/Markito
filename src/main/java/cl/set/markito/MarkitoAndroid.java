@@ -51,6 +51,7 @@ public class MarkitoAndroid extends MarkitoWeb {
         try {
             AndroidDriver<AndroidElement> adriver = (AndroidDriver<AndroidElement>) driver;
             adriver.resetApp();
+            adriver.installApp(ANSI_BLACK);
             printf(ANSI_YELLOW + "done!\n");
         } catch (Exception e) {
             printf(ANSI_RED + "failed! %s\n", e.getMessage());
