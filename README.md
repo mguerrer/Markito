@@ -1,15 +1,36 @@
 ![Markito logo](/images/Markito-100.png)
-# Markito v0.7
-A Selenium/Appium Webdriver wrapper written in Java to make coding easier and readable.  This wrapper has been designed for scripting style of programming for beginners, using the ideas of Selenese. 
-It is an implementation of the [Bot pattern](https://www.selenium.dev/documentation/test_practices/design_strategies/#bot-pattern)
+# Markito v0.7 (Work in progress towards v1.0)
+A Selenium/Appium Webdriver wrapper written in Java to:
+1. Standardize a minimal set of commands to support web, native and hybrid app automation on different platforms.
+2. Make coding easier (scripting) and readable.  This wrapper has been designed for scripting style of programming for beginners, using the ideas of [Selenese](https://ui.vision/rpa/docs/selenium-ide). Similar ideas can be found on framework [Helium](https://github.com/mherrmann/selenium-python-helium)
+3. Provide an extra layer of abstraction over webdriver and appium to isolate test code from changes on those frameworks.
+4. Improved maintenance and usage through:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.1 Maven archetype for initial prkect setup.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.2 Automatic drivers update and download.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.3 Flakyness reduction with multiple locators and retry disciplines.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.4 Garbage collection and thread safety.
+
+It is an implementation of the [Bot pattern](https://www.selenium.dev/documentation/test_practices/design_strategies/#bot-pattern) Inspired by Selenese concise grammar and written in Java 11, using Selenium Java client 3.141.59, and Appium client 6.0.0.  
+Initial testing has been made in local Windows 10/Ubuntu and Chrome browser, also Android and iOS by using BrowserStack.
+
+
 ## Sponsors
-This project is tested with [BrowserStack](https://www.browserstack.com/)
+This project is tested using [BrowserStack](https://www.browserstack.com/) on Web and Mobile automation.
 
 ![BrowserStack](/images/browserstacklogo.png)
+
 ## Features so far
-1. Support for most common use case, test web app in Chrome, if you want others you can build a driver object and inject to Markito objects.
-2. Written in Java 11, supporting Selenium 3.141.59, Appium 6.0.0.  Tested in Windows 10, Chrome browser, Android and iOS.
-3. Inspired by Selenese concise grammar.
+1. Support for most common execution scenarios:
+1.1 Test web app in Chrome in local or remote Windows or Linux.
+1.2 Test web app in Chrome in Windows, Android and iOS devices.
+1.3 Test native app in Windows, Android and iOS.
+
+2. Driver factory provides an ease to use API to manage test servers sessions for the most common scenarios.  if you want some other you can build a driver object and inject to Markito* API objects.
+
 4. Garbage collection for browsers and webdrivers improving clean execution.
 5. Colorful logging in console and element highlighting helps on rapid debug.  Both can be disabled for runtime.
 6. Easy support for headless execution.
@@ -54,8 +75,7 @@ So far there is no packed distribution, however, you can clone this repository a
 <pre><code>import org.openqa.selenium.*;</code></pre>
 Now make your class to extend Markito as
 <pre><code>public class HelloWorld extends MarkitoWeb</code></pre> or
-<pre><code>public class HelloWorld extends MarkitoAndroid</code></pre> or
-<pre><code>public class HelloWorld extends MarkitoiOS</code></pre> 
+<pre><code>public class HelloWorld extends MarkitoMobile</code></pre> or
 You are ready to start coding.
 
 ## References
@@ -65,6 +85,5 @@ You are ready to start coding.
 ## Contributing
 This is a Work In Progress, hence it could be nice that you can use and test, check compability on OSs other than Windows, add unit tests, etc.  Please feel free to add issues and PRs on contributions.   For further contact please write to [marcosguerrerow@hotmail.com](mailto:marcosguerrerow@hotmail.com).   Prior to add new issues consider the following criteria:
 
-1. The idea is to maintain Markito as simple as possible in terms of available methods, for complex interactions user can use the exposed <code>WebDriver driver</code> property.
+1. The idea is to maintain Markito as simple as possible in terms of available methods, for complex interactions user can use the exposed <code>WebDriver getDriver()</code> method and use webdriver/appium as usual.
 2. Most of major web browsers are now based on Chromium, so multi-browser support will not be provided on COTS basis.
-3. 
