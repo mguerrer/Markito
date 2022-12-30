@@ -5,6 +5,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
+
+import java.util.logging.Level;
+
 import org.junit.jupiter.api.Assertions;
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MobileElement;
@@ -26,6 +34,11 @@ public class SampleWebTest extends BrowserStack{
             driver.get("https://www.google.com/");
             By query = By.name("q");
             driver.findElement(query).sendKeys("Markito");
+
+            LogEntries les = driver.manage().logs().get(LogType.PERFORMANCE);
+            for (LogEntry le : les) {
+              println(le.getMessage());
+            }
     
             driver.quit();
         } catch (Exception e) {
@@ -47,6 +60,9 @@ public class SampleWebTest extends BrowserStack{
             break;
         }
         SetProjectInformation("Test BrowserStack WEB App", platform, "Web test Run on "+platform + " and browser "+browser);
+        LoggingPreferences logPrefs = new LoggingPreferences();
+        logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
+        caps.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
     }
 
 }

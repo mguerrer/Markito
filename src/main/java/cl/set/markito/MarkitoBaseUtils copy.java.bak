@@ -1,0 +1,203 @@
+/**
+ * Markito general util test tools.
+ * Marcos Guerrero
+ * 30-06-2021
+ * Last modified: 16-08-2022
+ */
+package cl.set.markito;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Stream;
+
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+public class MarkitoBaseUtils {
+    
+
+
+  
+    /**
+     * Checks whether or not a file with fileName exists in downloads folder.
+     * 
+     * @param fileName
+     * @return true or false
+     */
+    public static boolean CheckIfFileIsDownloaded(String fileName) {
+        String filePathname = System.getProperty("user.home") + "/Downloads/" + fileName;
+        File file = new File(filePathname);
+        if (file.exists() && !file.isDirectory()) {
+            return true;
+        } else
+            return false;
+    }
+
+    /**
+     * Checks whether or not a file with fileName exists in downloads folder.
+     * 
+     * @param fileName
+     * @return true or false
+     */
+    public static boolean WaitForFileDownloaded(String fileName, long timeoutInSeconds) {
+        int i = 0;
+        String filePathname = FileSystems.getDefault().getPath(System.getProperty("user.home"), "downloads", fileName).toString();
+
+        printf(ANSI_YELLOW + "WaitForFileDownloaded %s..", filePathname);
+        do {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(CheckIfFileIsDownloaded(fileName)) { 
+                printf(ANSI_YELLOW+"found.\n");
+                return true;
+            }
+            printf(ANSI_YELLOW+".");
+        } while( i++<timeoutInSeconds);
+        printf(ANSI_RED+"ERROR: File %s not found in %d\n",filePathname, timeoutInSeconds);
+        return false;
+    }
+    
+    /**
+     * Print the process results.
+     * @param process
+     * @throws IOException
+     */
+    public static void PrintResults(Process process) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = "";
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
+    }
+    /***
+     * Deletes a file with fileName if exists in downloads folder.
+     * 
+     * @param fileName
+     */
+    public static void DeleteDownloadedFileIfExists(String fileName) {
+        if ( CheckIfFileIsDownloaded( fileName)){
+            String filePathname = System.getProperty("user.home") +"/Downloads/" + fileName;
+            File file = new File(filePathname);
+            file.delete();
+        } 
+    }
+    /**
+     * Generates a random String of size length.
+     * @param size
+     * @return
+     */
+    public static String RandomString(int size) {
+        // El banco de caracteres
+        String pool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        // La cadena en donde iremos agregando un carácter aleatorio
+        String randomString = "";
+        for (int x = 0; x < size; x++) {
+            int randomIndex = RandomNumber(0, pool.length() - 1);
+            char randomCharacter = pool.charAt(randomIndex);
+            randomString += randomCharacter;
+        }
+        return randomString;
+    }
+    public static int RandomNumber(int min, int max) {
+        // nextInt regresa en rango pero con límite superior exclusivo, por eso sumamos 1
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
+    }
+    public static String GetComputerName() {
+        try
+        {
+            InetAddress addr;
+            addr = InetAddress.getLocalHost();
+            return addr.getHostName();
+        }
+        catch (UnknownHostException ex)
+        {
+            println("Hostname can not be resolved");
+            return null;
+        }
+    }
+    public static boolean DeleteFile( String filename) { 
+        printf(ANSI_YELLOW+"DeleteFile %s\n", filename);
+        try {
+            File myObj = new File(filename); 
+            return myObj.delete();
+        }
+        catch (Exception e){
+            printf(ANSI_RED+"failed!!! %s\n", e.getMessage());
+            return false;
+        }
+
+    } 
+    /**
+     * Find files in a folder whose name matches regular expression.
+     * @param nameRegex
+     * @param folder
+     * @return
+     */
+    public static File[] FindFilesByNameRegex(String nameRegex, String folder) {
+        File[] files;
+        try {
+            File f = new File(folder);
+
+            FilenameFilter filter = new FilenameFilter() {
+                @Override
+                public boolean accept(File f, String name) {
+                    return name.matches(nameRegex);
+                }
+            };
+            files = f.listFiles(filter);
+            return files;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Get BrowserStack's username from environment variable BSUSERNAME
+     * @return
+     */
+    public String getBsUsername(){
+        String username = System.getenv("BSUSERNAME");
+        if ( username == null){
+            printf(ANSI_RED+"ERROR: BrowserStack user name not found.  Please add to environment variable BSUSERNAME.");
+        }
+        return username;
+    }
+     /**
+     * Get  BrowserStack's password (KEY) from environment variable BSPASSWORD
+     * @return
+     */
+    public String getBsPassword(){
+        String username = System.getenv("BSPASSWORD");
+        if ( username == null){
+            printf(ANSI_RED+"ERROR: BrowserStack user KEY not found.  Please add to environment variable BSPASSWORD.");
+        }
+        return username;
+    }
+    /**
+     * Logs in debug console the list of capabilities set with a pretty format.
+     * @param caps
+     */
+    public void LogCapabilities(DesiredCapabilities caps) {
+        Map<String,Object> jsoncaps = caps.toJson();
+        println("\nCapabilities: ");
+        for (String key: jsoncaps.keySet()) {
+            if ( !key.equals("browserstack.key") && !key.equals("browserstack.user")) {
+               printf("-%s:%s\n",ANSI_WHITE+key, ANSI_YELLOW+jsoncaps.get(key));
+            }
+        }
+    }
+}
