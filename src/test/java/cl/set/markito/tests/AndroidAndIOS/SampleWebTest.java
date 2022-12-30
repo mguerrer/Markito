@@ -14,8 +14,6 @@ import org.openqa.selenium.remote.CapabilityType;
 import java.util.logging.Level;
 
 import org.junit.jupiter.api.Assertions;
-import io.appium.java_client.MobileDriver;
-import io.appium.java_client.MobileElement;
 
 
 public class SampleWebTest extends BrowserStack{

@@ -7,6 +7,7 @@ import java.io.PrintStream;
  */
 
 public interface IDebugManager {
+    public PrintStream getDebugManagerOutputStream();
     public void setDebugManagerOutputStream( PrintStream output );
     public void clearConsole();
     public void setDebugModeON();

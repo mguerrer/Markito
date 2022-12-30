@@ -11,6 +11,9 @@ public class DebugManager extends MarkitoBaseUtilsValues implements IDebugManage
 
     public DebugManager() {
     }
+    public PrintStream getDebugManagerOutputStream() {
+        return this.output;
+    }    
     public void setDebugManagerOutputStream( PrintStream output ) {
         this.output = output;
     }

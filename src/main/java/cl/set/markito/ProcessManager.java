@@ -3,6 +3,8 @@ package cl.set.markito;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * This class implements methods to manage OS processes.  Currently implemented only for Windows 10.
@@ -56,5 +58,27 @@ public class ProcessManager extends DebugManager implements IProcessManager {
                 println("WARNING: Kill process not implemented fo OS=" + OS);
         }
         return false;
+    }
+
+    public String getComputerName() {
+        try
+        {
+            InetAddress addr;
+            addr = InetAddress.getLocalHost();
+            return addr.getHostName();
+        }
+        catch (UnknownHostException ex)
+        {
+            println("Hostname can not be resolved");
+            return null;
+        }
+    }
+
+    public void printProcessResults(Process process) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = "";
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
     }
 }

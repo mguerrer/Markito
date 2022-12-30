@@ -1,6 +1,7 @@
 package cl.set.markito.tests.MarkitoBaseUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import cl.set.markito.MarkitoBaseUtils2;
@@ -42,5 +43,9 @@ public class ProcessManagerTests extends MarkitoBaseUtils2{
         assertEquals( "Windows 10", os);      
         retCode = this.isProcessRunning("NON_EXISTING");
         assertEquals(false, retCode);
+    }
+    @Test
+    void TestGetComputerName() {
+        assertTrue( getComputerName() != null);
     }
 }

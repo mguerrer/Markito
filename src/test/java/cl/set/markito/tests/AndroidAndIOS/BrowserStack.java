@@ -1,17 +1,12 @@
 package cl.set.markito.tests.AndroidAndIOS;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import cl.set.markito.MarkitoBaseUtils;
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
