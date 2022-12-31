@@ -79,8 +79,9 @@ public class BrowserStack extends MarkitoBaseUtils {
     }
 
     public void setDesiredTechnicalCapabilities( String bsAppUrl, String browser,  String deviceName, String platform, String os_version ) {
+        BrowserStack bs = new BrowserStack();
 		// Set your access credentials
-		SetBsCredentials(getBsUsername(), getBsPassword());
+		// TODO: SetBsCredentials(bs.getBsUsername(), bs.getBsPassword());
 
 		// Set URL of the application under test or browser to use
         if ( bsAppUrl != null)

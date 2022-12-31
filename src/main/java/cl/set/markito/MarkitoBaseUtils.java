@@ -1,342 +1,223 @@
-/**
- * Markito general util test tools.
- * Marcos Guerrero
- * 30-06-2021
- * Last modified: 16-08-2022
- */
 package cl.set.markito;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Stream;
+import java.io.PrintStream;
 
-import org.openqa.selenium.remote.DesiredCapabilities;
+public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
+    private IProcessManager processManager = null;
+    private IFileManager fileManager = null;
+    private IDebugManager debugManager = null;
+    private IRandomUtils randomUtils = null;
 
-public class MarkitoBaseUtils {
-    private final static String TASKLIST = "tasklist";
-    private static String KILL = "taskkill /F /IM ";
-    public final static String IE_EXE = "iexplore.exe";
-    public final static String IE_DRIVER_EXE = "IEDriverServer.exe";
-    public final static String CHROME_EXE = "chrome.exe";
-    public final static String CHROMEDRIVER_EXE = "chromedriver.exe";
-    public final static String EDGE_EXE = "MicrosoftEdge.exe";
-    public final static String EDGEDRIVER_EXE = "MsEdgeDriver.exe";
-    public final static String FIREFOX_EXE = "firefox.exe";
-    public final static String FIREFOXDRIVER_EXE = "geckodriver.exe";
-    private static String OS = System.getProperty("os.name").toLowerCase();
-    public static boolean debug = true;
-    // ANSI colors tobe used in println and printf.
-    public final static String ANSI_RESET = "\u001B[0m";
-    public final static String ANSI_BLACK = "\u001B[30m";
-    public final static String ANSI_RED = "\u001B[31m";
-    public final static String ANSI_GREEN = "\u001B[32m";
-    public final static String ANSI_YELLOW = "\u001B[33m";
-    public final static String ANSI_BLUE = "\u001B[34m";
-    public final static String ANSI_PURPLE = "\u001B[35m";
-    public final static String ANSI_CYAN = "\u001B[36m";
-    public final static String ANSI_WHITE = "\u001B[37m";
-    public final static String ANSI_BLACK_BACKGROUND = "\u001B[40m";
-    public final static String ANSI_RED_BACKGROUND = "\u001B[41m";
-    public final static String ANSI_GREEN_BACKGROUND = "\u001B[42m";
-    public final static String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
-    public final static String ANSI_BLUE_BACKGROUND = "\u001B[44m";
-    public final static String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
-    public final static String ANSI_CYAN_BACKGROUND = "\u001B[46m";
-    public final static String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+    public MarkitoBaseUtils(IProcessManager processManager, IFileManager fileManager, DebugManager debugManager, IRandomUtils randomUtils) {
+        this.processManager = processManager;
+        this.fileManager = fileManager;
+        this.debugManager = debugManager;
+        this.randomUtils = randomUtils;
+    }
 
     public MarkitoBaseUtils() {
-        switch (OS) {
-            case "win":
-                KILL = "taskkill /F /IM ";
-        }
+        this.processManager = new ProcessManager();
+        this.fileManager = new FileManager();
+        this.debugManager = new DebugManager();
+        this.randomUtils = new RandomUtils();
     }
 
+    /* This group of simple methods to manage OS processes. */
     /**
-     * Clears console output.
+     * Kill a process by name.
+     * 
+     * @param processName
+     * @return
+     *         0: Process found and killed.
+     *         1: Operation not implemented for OS.
+     *         -1: Exception whilst killing the process.
      */
-    public static void ClearConsole() {
-        System.out.print("\033[H\033[2J"); // Borra consola
-        System.out.flush();
-    }
-
-    /**
-     * Enables println and printf to write to console.
-     */
-    public static void SetDebugModeON() {
-        debug = true;
-    }
-
-    /**
-     * Disable println and printf to write to console.
-     */
-    public static void SetDebugModeOFF() {
-        debug = false;
-    }
-
-    /**
-     * Prints an string to console when debug mode is ON.
-     */
-    public static void println(String x) {
-        if (debug)
-            System.out.println(x);
-    }
-
-    /**
-     * Prints an string using format string to console when debug mode is ON.
-     */
-    public static void printf(String format, Object... args) {
-        if (debug)
-            System.out.printf(format, args);
+    public int killProcess(String processName) {
+        return this.processManager.killProcess(processName);
     }
 
     /**
      * Checks if there are instances of processes with name processName.
      * 
      * @param processName
-     * @return boolean
+     * @return boolean: true if found, false if operation not implemented on OS or
+     *         not found.
      */
-    public static boolean isProcessRunning(String processName) {
-        switch (OS) {
-            case "win":
-                Process process;
-                try {
-                    process = Runtime.getRuntime().exec(TASKLIST);
-                } catch (IOException ex) {
-                    System.out.println("Error on get runtime" + ex.getMessage());
-                    return false;
-                }
-
-                String line;
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));) {
-                    while ((line = reader.readLine()) != null) {
-                        if (line.contains(processName)) {
-                            System.out.println("Process found");
-                            return true;
-                        }
-                    }
-                } catch (IOException ex) {
-                    System.out.println("Error on check for process " + processName + ": " + ex.getMessage());
-                }
-                return false;
-        }
-        return false;
+    public boolean isProcessRunning(String processName) {
+        return this.processManager.isProcessRunning(processName);
     }
 
     /**
-     * @param processName
-     */
-    public static void killProcessIfRunning(String processName) {
-        switch (OS) {
-            case "win":
-                System.out.println("Trying to kill process: " + processName);
-                try {
-                    if (isProcessRunning(processName)) {
-                        Runtime.getRuntime().exec(KILL + processName);
-                    }
-                } catch (IOException ex) {
-                    System.out.println("Error on kill process " + processName + ": " + ex.getMessage());
-                }
-        }
-    }
-
-    /**
-     * Checks whether or not a file with fileName exists in downloads folder.
+     * Get the host computer's name.
      * 
-     * @param fileName
-     * @return true or false
+     * @return
      */
-    public static boolean CheckIfFileIsDownloaded(String fileName) {
-        String filePathname = System.getProperty("user.home") + "/Downloads/" + fileName;
-        File file = new File(filePathname);
-        if (file.exists() && !file.isDirectory()) {
-            return true;
-        } else
-            return false;
+    public String getComputerName() {
+        return processManager.getComputerName();
     }
 
-    /**
-     * Checks whether or not a file with fileName exists in downloads folder.
-     * 
-     * @param fileName
-     * @return true or false
-     */
-    public static boolean WaitForFileDownloaded(String fileName, long timeoutInSeconds) {
-        int i = 0;
-        String filePathname = FileSystems.getDefault().getPath(System.getProperty("user.home"), "downloads", fileName).toString();
-
-        printf(ANSI_YELLOW + "WaitForFileDownloaded %s..", filePathname);
-        do {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if(CheckIfFileIsDownloaded(fileName)) { 
-                printf(ANSI_YELLOW+"found.\n");
-                return true;
-            }
-            printf(ANSI_YELLOW+".");
-        } while( i++<timeoutInSeconds);
-        printf(ANSI_RED+"ERROR: File %s not found in %d\n",filePathname, timeoutInSeconds);
-        return false;
-    }
-    
     /**
      * Print the process results.
+     * 
      * @param process
      * @throws IOException
      */
-    public static void PrintResults(Process process) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line = "";
-        while ((line = reader.readLine()) != null) {
-            System.out.println(line);
-        }
+    public void printProcessResults(Process process) throws IOException {
+        processManager.printProcessResults(process);
     }
+
+    /* This group of methods to manage provide a simple debug tool. */
+    /**
+     * Get the current debug mode.
+     * @return true: Debug mode is ON, false otherwise.
+     */
+    public boolean getDebugMode() {
+        return debugManager.getDebugMode();
+    }
+    /**
+     * Get current output stream.
+     * 
+     * @return
+     */
+    public PrintStream getDebugManagerOutputStream() {
+        return debugManager.getDebugManagerOutputStream();
+    }
+
+    /**
+     * Allows to redirect print commands to another output stream. Default to
+     * System.out.
+     */
+    public void setDebugManagerOutputStream(PrintStream output) {
+        debugManager.setDebugManagerOutputStream(output);
+    }
+
+    /**
+     * Clears console output.
+     */
+    public void ClearConsole() {
+        debugManager.clearConsole();
+    }
+
+    /**
+     * Enables println and printf to write to console.
+     */
+    public void SetDebugModeON() {
+        debugManager.setDebugModeON();
+    }
+
+    /**
+     * Disable println and printf to write to console.
+     */
+    public void SetDebugModeOFF() {
+        debugManager.setDebugModeOFF();
+    }
+
+    /**
+     * Prints an string to console when debug mode is ON.
+     */
+    public void println(String x) {
+        debugManager.println(x);
+    }
+
+    /**
+     * Prints an string using format string to console when debug mode is ON.
+     */
+    public void printf(String format, Object... args) {
+        debugManager.printf(format, args);
+    }
+
+    /**
+     * Downloads a file from URL to targetFilePathname.
+     * 
+     * @param URL
+     * @param targetFilePathname
+     * @return 0 on success, <0 on failure, >0 WARNING.
+     */
+    public int downloadFile(String URL, String targetFilePathname) {
+        return fileManager.downloadFile(URL, targetFilePathname);
+    }
+
+    /**
+     * Returns the content of a file given his pathname.
+     * 
+     * @param filePath
+     * @return: File's content.
+     * @throws IOException
+     */
+    public String readFileToString(String filePath) throws IOException {
+        return fileManager.readFileToString(filePath);
+    }
+
+    /**
+     * Checks whether or not a file with fileName exists in downloads folder.
+     * 
+     * @param fileName
+     * @return true or false
+     */
+    public boolean checkIfFileIsDownloaded(String fileName) {
+        return fileManager.checkIfFileIsDownloaded(fileName);
+    }
+
+    /**
+     * Waits for a file with fileName exists in downloads folder up to
+     * timeoutInSeconds.
+     * 
+     * @param fileName
+     * @param timeoutInSeconds
+     * @return true or false
+     */
+    public boolean waitForFileDownloaded(String fileName, long timeoutInSeconds) {
+        return fileManager.waitForFileDownloaded(fileName, timeoutInSeconds);
+    }
+
     /***
      * Deletes a file with fileName if exists in downloads folder.
      * 
      * @param fileName
      */
-    public static void DeleteDownloadedFileIfExists(String fileName) {
-        if ( CheckIfFileIsDownloaded( fileName)){
-            String filePathname = System.getProperty("user.home") +"/Downloads/" + fileName;
-            File file = new File(filePathname);
-            file.delete();
-        } 
+    public void deleteDownloadedFileIfExists(String fileName) {
+        fileManager.deleteDownloadedFileIfExists(fileName);
     }
-    /**
-     * Generates a random String of size length.
-     * @param size
-     * @return
-     */
-    public static String RandomString(int size) {
-        // El banco de caracteres
-        String pool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        // La cadena en donde iremos agregando un carácter aleatorio
-        String randomString = "";
-        for (int x = 0; x < size; x++) {
-            int randomIndex = RandomNumber(0, pool.length() - 1);
-            char randomCharacter = pool.charAt(randomIndex);
-            randomString += randomCharacter;
-        }
-        return randomString;
-    }
-    public static int RandomNumber(int min, int max) {
-        // nextInt regresa en rango pero con límite superior exclusivo, por eso sumamos 1
-        return ThreadLocalRandom.current().nextInt(min, max + 1);
-    }
-    public static String GetComputerName() {
-        try
-        {
-            InetAddress addr;
-            addr = InetAddress.getLocalHost();
-            return addr.getHostName();
-        }
-        catch (UnknownHostException ex)
-        {
-            println("Hostname can not be resolved");
-            return null;
-        }
-    }
-    public static boolean DeleteFile( String filename) { 
-        printf(ANSI_YELLOW+"DeleteFile %s\n", filename);
-        try {
-            File myObj = new File(filename); 
-            return myObj.delete();
-        }
-        catch (Exception e){
-            printf(ANSI_RED+"failed!!! %s\n", e.getMessage());
-            return false;
-        }
 
-    } 
     /**
      * Find files in a folder whose name matches regular expression.
+     * 
      * @param nameRegex
      * @param folder
      * @return
      */
-    public static File[] FindFilesByNameRegex(String nameRegex, String folder) {
-        File[] files;
-        try {
-            File f = new File(folder);
+    public File[] findFilesByNameRegex(String nameRegex, String folder) {
+        return fileManager.findFilesByNameRegex(nameRegex, folder);
+    }
 
-            FilenameFilter filter = new FilenameFilter() {
-                @Override
-                public boolean accept(File f, String name) {
-                    return name.matches(nameRegex);
-                }
-            };
-            files = f.listFiles(filter);
-            return files;
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
     /**
-     * Recibe un archivo que lee y devuelve su contenido.
-     * @param strFileInput: Pathname del archivo.
-     * @return strData: Contenido del archivo.
+     * Deletes a file.
+     * 
+     * @param filename
+     * @return true on success, false otherwise.
      */
-    public static String ReadFileToString(String strFileInput) {
-        printf(ANSI_YELLOW+"ReadFileToString %s\n", strFileInput);
-        StringBuilder contentBuilder = new StringBuilder();
- 
-        try (Stream<String> stream = Files.lines( Paths.get(strFileInput), StandardCharsets.UTF_8)) {
-            stream.forEach(s -> contentBuilder.append(s).append("\n"));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
- 
-        return contentBuilder.toString();
+    public boolean deleteFile(String filename) {
+        return fileManager.deleteFile(filename);
     }
-    /**
-     * Get BrowserStack's username from environment variable BSUSERNAME
-     * @return
-     */
-    public String getBsUsername(){
-        String username = System.getenv("BSUSERNAME");
-        if ( username == null){
-            printf(ANSI_RED+"ERROR: BrowserStack user name not found.  Please add to environment variable BSUSERNAME.");
-        }
-        return username;
-    }
+
      /**
-     * Get  BrowserStack's password (KEY) from environment variable BSPASSWORD
+     * Generates a random String of size length.
+     * @param size
      * @return
      */
-    public String getBsPassword(){
-        String username = System.getenv("BSPASSWORD");
-        if ( username == null){
-            printf(ANSI_RED+"ERROR: BrowserStack user KEY not found.  Please add to environment variable BSPASSWORD.");
-        }
-        return username;
+    public String RandomString(int size){
+        return randomUtils.RandomString(size);
     }
+
     /**
-     * Logs in debug console the list of capabilities set with a pretty format.
-     * @param caps
+     * Generates a random integer in range [min, max].
+     * @param min
+     * @param max
+     * @return
      */
-    public void LogCapabilities(DesiredCapabilities caps) {
-        Map<String,Object> jsoncaps = caps.toJson();
-        println("\nCapabilities: ");
-        for (String key: jsoncaps.keySet()) {
-            if ( !key.equals("browserstack.key") && !key.equals("browserstack.user")) {
-               printf("-%s:%s\n",ANSI_WHITE+key, ANSI_YELLOW+jsoncaps.get(key));
-            }
-        }
+    public int RandomNumber(int min, int max){
+        return randomUtils.RandomNumber(min, max);
     }
 }

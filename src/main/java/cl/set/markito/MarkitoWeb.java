@@ -1163,7 +1163,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param element
      */
     public void HighLightElement(WebElement element) {
-        if (debug)
+        if (getDebugMode())
             ExecuteJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');", element);
     }
      /**
@@ -1172,7 +1172,7 @@ public class MarkitoWeb extends MarkitoBaseUtils {
      * @param element
      */
     public void HighLightElement(By element) {
-        if (debug)
+        if (getDebugMode())
             ExecuteJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');", driver.findElement(element));
     }
     /**

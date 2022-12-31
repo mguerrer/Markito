@@ -18,6 +18,10 @@ public class DebugManager extends MarkitoBaseUtilsValues implements IDebugManage
         this.output = output;
     }
 
+    public boolean getDebugMode() {
+        return debug;
+    }
+
     /**
      * Clears console output.
      */

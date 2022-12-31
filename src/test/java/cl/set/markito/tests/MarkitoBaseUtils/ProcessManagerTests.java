@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import cl.set.markito.MarkitoBaseUtils2;
+import cl.set.markito.MarkitoBaseUtils;
 
-public class ProcessManagerTests extends MarkitoBaseUtils2{
+public class ProcessManagerTests extends MarkitoBaseUtils{
 
     @Test
     void TestKillProcess(){
