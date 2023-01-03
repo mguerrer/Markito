@@ -5,13 +5,23 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
+
+import cl.set.markito.BrowserStack;
+
+import java.util.logging.Level;
+
 import org.junit.jupiter.api.Assertions;
-import io.appium.java_client.MobileDriver;
-import io.appium.java_client.MobileElement;
 
-
+/**
+ * This test Browserstack's provided LocalSample.apk and  LocalSample.ipa.
+ */
 public class SampleWebTest extends BrowserStack{
-    @DisplayName("Click on home page text button and read test message.")
+    @DisplayName("Click on home page text button and read message.")
     @ParameterizedTest
     @ValueSource(strings = { "iOS", "android"})
     void SampleAppTestOnMobile( String platform ){
@@ -48,5 +58,4 @@ public class SampleWebTest extends BrowserStack{
         }
         SetProjectInformation("Test BrowserStack WEB App", platform, "Web test Run on "+platform + " and browser "+browser);
     }
-
 }

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import cl.set.markito.BrowserStack;
 import cl.set.markito.MarkitoAndroid;
 import io.appium.java_client.MobileBy;
 
@@ -37,13 +38,14 @@ public class AndroidTestWikipediaInBrowserStack extends MarkitoAndroid {
 	}
 
 	private void setDesiredCapabilities(DesiredCapabilities caps) {
+		BrowserStack bs = new BrowserStack();
 		// Set your access credentials
-		caps.setCapability("browserstack.user", getBsUsername());
-		caps.setCapability("browserstack.key", getBsPassword());
+		caps.setCapability("browserstack.user", bs.getBsUsername());
+		caps.setCapability("browserstack.key", bs.getBsPassword());
 		caps.setCapability("browserstack.appium_version", "1.17.0");
 		
 		// Set URL of the application under test
-		caps.setCapability("app", "bs://c700ce60cf13ae8ed97705a55b8e022f13c5827c");
+		caps.setCapability("app", "bs://656f787d6d3ed56439877c14724cd626f5f6bbff");
     	
     	// Specify device and os_version for testing
     	caps.setCapability("device", "Google Pixel 3");

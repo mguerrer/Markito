@@ -1,10 +1,13 @@
 package cl.set.markito.samples;
 
-
 import java.net.URL;
 import java.net.MalformedURLException;
 
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import cl.set.markito.BrowserStack;
+
+import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -12,41 +15,51 @@ import io.appium.java_client.MobileBy;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
 
-public class BrowserStackIOS {
+public class BrowserStackIOS extends BrowserStack {
 
-  public static String userName = "marcos150";
-  public static String accessKey = "uGotcDU7y8nn9V8tnJcS";
+    private String userName = getBsUsername();
+    private String accessKey = getBsPassword();
+    // TODO: Update Browserstack app url for apps/LocalSample.ipa
+    private static String app_url = "bs://78f0f26662f5b73438f2b6fca581d0b8366ada20";
 
-  public static void main(String args[]) throws MalformedURLException, InterruptedException {
-    DesiredCapabilities caps = new DesiredCapabilities();
 
-    caps.setCapability("device", "iPhone 11 Pro");
-    caps.setCapability("os_version", "15");
-    caps.setCapability("project", "My First Project");
-    caps.setCapability("build", "My First Build");
-    caps.setCapability("name", "Bstack-[Java] Sample Test");
-    //caps.setCapability("app", "<app_url>");
+    @Test
+    public void TestLocalSampleOnBsIOS() throws MalformedURLException, InterruptedException {
+        DesiredCapabilities caps = new DesiredCapabilities();
 
-    IOSDriver<IOSElement> driver = new IOSDriver<IOSElement>(new URL("https://"+userName+":"+accessKey+"@hub-cloud.browserstack.com/wd/hub"), caps);
+        userName = getBsUsername();
+        accessKey = getBsPassword();
+        SetBsCredentials( userName, accessKey );
 
-    IOSElement textButton = (IOSElement) new WebDriverWait(driver, 30).until(
-        ExpectedConditions.elementToBeClickable(MobileBy.AccessibilityId("Text Button")));
-    textButton.click();
-    IOSElement textInput = (IOSElement) new WebDriverWait(driver, 30).until(
-        ExpectedConditions.elementToBeClickable(MobileBy.AccessibilityId("Text Input")));
-    textInput.sendKeys("hello@browserstack.com\n");
+        caps.setCapability("device", "iPhone 11 Pro");
+        caps.setCapability("os_version", "15");
+        caps.setCapability("project", "TestLocalSampleOnBsIOS");
+        caps.setCapability("build", "1.0");
+        caps.setCapability("name", "Bstack-[Java] Sample Test");
+        caps.setCapability("app", app_url);
 
-    Thread.sleep(5000);
+        IOSDriver<IOSElement> driver = new IOSDriver<IOSElement>(
+                new URL("https://" + userName + ":" + accessKey + "@hub-cloud.browserstack.com/wd/hub"), caps);
 
-    IOSElement textOutput = (IOSElement) new WebDriverWait(driver, 30).until(
-        ExpectedConditions.elementToBeClickable(MobileBy.AccessibilityId("Text Output")));
+       /* IOSElement textButton = (IOSElement) new WebDriverWait(driver, 30).until(
+                ExpectedConditions.elementToBeClickable(MobileBy.AccessibilityId("Text Button")));
+        textButton.click();
+        IOSElement textInput = (IOSElement) new WebDriverWait(driver, 30).until(
+                ExpectedConditions.elementToBeClickable(MobileBy.AccessibilityId("Text Input")));
+        textInput.sendKeys("hello@browserstack.com\n");
 
-    if(textOutput != null && textOutput.getText().equals("hello@browserstack.com"))
-        assert(true);
-    else
-        assert(false);
+        Thread.sleep(5000);
 
-    // The driver.quit statement is required, otherwise the test continues to execute, leading to a timeout.
-    driver.quit();
-  }
+        IOSElement textOutput = (IOSElement) new WebDriverWait(driver, 30).until(
+                ExpectedConditions.elementToBeClickable(MobileBy.AccessibilityId("Text Output")));
+
+        if (textOutput != null && textOutput.getText().equals("hello@browserstack.com"))
+            assert (true);
+        else
+            assert (false);*/
+
+        // The driver.quit statement is required, otherwise the test continues to
+        // execute, leading to a timeout.
+        driver.quit();
+    }
 }
