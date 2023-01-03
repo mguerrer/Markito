@@ -11,13 +11,17 @@ import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 
+import cl.set.markito.BrowserStack;
+
 import java.util.logging.Level;
 
 import org.junit.jupiter.api.Assertions;
 
-
+/**
+ * This test Browserstack's provided LocalSample.apk and  LocalSample.ipa.
+ */
 public class SampleWebTest extends BrowserStack{
-    @DisplayName("Click on home page text button and read test message.")
+    @DisplayName("Click on home page text button and read message.")
     @ParameterizedTest
     @ValueSource(strings = { "iOS", "android"})
     void SampleAppTestOnMobile( String platform ){
@@ -32,11 +36,6 @@ public class SampleWebTest extends BrowserStack{
             driver.get("https://www.google.com/");
             By query = By.name("q");
             driver.findElement(query).sendKeys("Markito");
-
-            LogEntries les = driver.manage().logs().get(LogType.PERFORMANCE);
-            for (LogEntry le : les) {
-              println(le.getMessage());
-            }
     
             driver.quit();
         } catch (Exception e) {
@@ -58,9 +57,5 @@ public class SampleWebTest extends BrowserStack{
             break;
         }
         SetProjectInformation("Test BrowserStack WEB App", platform, "Web test Run on "+platform + " and browser "+browser);
-        LoggingPreferences logPrefs = new LoggingPreferences();
-        logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
-        caps.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
     }
-
 }

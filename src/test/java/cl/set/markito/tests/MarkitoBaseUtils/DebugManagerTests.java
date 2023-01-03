@@ -9,7 +9,7 @@ import java.io.PrintStream;
 
 import org.junit.jupiter.api.Test;
 
-import cl.set.markito.DebugManager;
+import cl.set.markito.utils.DebugManager;
 
 public class DebugManagerTests extends DebugManager {
     @Test

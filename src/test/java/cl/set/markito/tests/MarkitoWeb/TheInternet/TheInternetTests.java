@@ -2,7 +2,7 @@
  * Experimental Thread safe web test.
  */
 
-package cl.set.markito.tests.MarkitoWeb;
+package cl.set.markito.tests.MarkitoWeb.TheInternet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
@@ -10,11 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
-import cl.set.markito.tests.MarkitoWeb.framework.BrowserManager;
-import cl.set.markito.tests.MarkitoWeb.framework.TheInternet.pages.DragAndDrop;
-import cl.set.markito.tests.MarkitoWeb.framework.TheInternet.pages.Home;
 
-public class TheInternet {
+import cl.set.markito.tests.MarkitoWeb.TheInternet.pages.DragAndDrop;
+import cl.set.markito.tests.MarkitoWeb.TheInternet.pages.Home;
+import cl.set.markito.tests.MarkitoWeb.framework.BrowserManager;
+
+public class TheInternetTests {
     protected static ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<WebDriver>();
 
 

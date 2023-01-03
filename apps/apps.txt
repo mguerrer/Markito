@@ -1,0 +1,14 @@
+
+C:\Github\Markito>set user=marcos150 
+
+C:\Github\Markito>set pwd=uGotcDU7y8nn9V8tnJcS 
+
+C:\Github\Markito>echo "Uploading apps to BrowserStack" 
+"Uploading apps to BrowserStack"
+
+C:\Github\Markito>curl -u marcos150:uGotcDU7y8nn9V8tnJcS -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "file=@apps/LocalSample.apk" 
+{"app_url":"bs://3487aaf66a34795601caf0e0729041a6220dbd46"}
+C:\Github\Markito>curl -u marcos150:uGotcDU7y8nn9V8tnJcS -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "file=@apps/LocalSample.ipa" 
+{"app_url":"bs://78f0f26662f5b73438f2b6fca581d0b8366ada20"}
+C:\Github\Markito>curl -u marcos150:uGotcDU7y8nn9V8tnJcS -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "file=@apps/WikipediaSample.apk" 
+{"app_url":"bs://656f787d6d3ed56439877c14724cd626f5f6bbff"}

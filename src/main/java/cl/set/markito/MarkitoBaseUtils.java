@@ -4,6 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import cl.set.markito.utils.DebugManager;
+import cl.set.markito.utils.FileManager;
+import cl.set.markito.utils.IDebugManager;
+import cl.set.markito.utils.IFileManager;
+import cl.set.markito.utils.IProcessManager;
+import cl.set.markito.utils.IRandomUtils;
+import cl.set.markito.utils.MarkitoBaseUtilsValues;
+import cl.set.markito.utils.ProcessManager;
+import cl.set.markito.utils.RandomUtils;
+
 public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
     private IProcessManager processManager = null;
     private IFileManager fileManager = null;

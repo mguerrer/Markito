@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
-import cl.set.markito.FileManager;
+import cl.set.markito.utils.FileManager;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class FileManagerTests extends FileManager {

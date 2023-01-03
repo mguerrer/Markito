@@ -87,18 +87,17 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-<dependency>
-  <groupId>org.mockito</groupId>
-  <artifactId>mockito-core</artifactId>
-  <version>3.4.0</version>
-  <scope>test</scope>
-</dependency>
+	<dependency>
+	  <groupId>org.mockito</groupId>
+	  <artifactId>mockito-core</artifactId>
+	  <version>3.4.0</version>
+	  <scope>test</scope>
+	</dependency>
     <dependency> <!--Email dependency-->
         <groupId>com.sun.mail</groupId>
         <artifactId>javax.mail</artifactId>
         <version>1.6.2</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.testng/testng -->
     <dependency>
       <groupId>io.github.bonigarcia</groupId>
       <artifactId>webdrivermanager</artifactId>

@@ -1,4 +1,4 @@
-package cl.set.markito;
+package cl.set.markito.utils;
 
 public interface IRandomUtils {
     public String RandomString(int size);

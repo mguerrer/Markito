@@ -1,4 +1,4 @@
-package cl.set.markito;
+package cl.set.markito.utils;
 
 public class MarkitoBaseUtilsValues {
         // ANSI colors tobe used in println and printf.

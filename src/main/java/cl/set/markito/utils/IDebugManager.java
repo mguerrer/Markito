@@ -1,4 +1,4 @@
-package cl.set.markito;
+package cl.set.markito.utils;
 
 import java.io.PrintStream;
 
