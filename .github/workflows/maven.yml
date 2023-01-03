@@ -22,8 +22,8 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Set user
-      run: BSUSERNAME = ${{ secrets.BSUSERNAME }}
+      run: $BSUSERNAME = ${{ secrets.BSUSERNAME }}
     - name: Set key
-      run: BSPASSWORD = ${{ secrets.BSPASSWORD }}
+      run: $BSPASSWORD = ${{ secrets.BSPASSWORD }}
     - name: Build with Maven
       run: mvn -B package --file pom.xml
