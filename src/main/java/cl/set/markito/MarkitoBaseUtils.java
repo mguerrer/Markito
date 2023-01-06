@@ -6,21 +6,21 @@ import java.io.PrintStream;
 
 import cl.set.markito.utils.DebugManager;
 import cl.set.markito.utils.FileManager;
-import cl.set.markito.utils.IDebugManager;
-import cl.set.markito.utils.IFileManager;
-import cl.set.markito.utils.IProcessManager;
-import cl.set.markito.utils.IRandomUtils;
+import cl.set.markito.utils.Debugger;
+import cl.set.markito.utils.FileManagement;
+import cl.set.markito.utils.ProcessManagement;
+import cl.set.markito.utils.RandomDataManagement;
 import cl.set.markito.utils.MarkitoBaseUtilsValues;
 import cl.set.markito.utils.ProcessManager;
 import cl.set.markito.utils.RandomUtils;
 
 public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
-    private IProcessManager processManager = null;
-    private IFileManager fileManager = null;
-    private IDebugManager debugManager = null;
-    private IRandomUtils randomUtils = null;
+    private ProcessManagement processManager = null;
+    private FileManagement fileManager = null;
+    private Debugger debugManager = null;
+    private RandomDataManagement randomUtils = null;
 
-    public MarkitoBaseUtils(IProcessManager processManager, IFileManager fileManager, DebugManager debugManager, IRandomUtils randomUtils) {
+    public MarkitoBaseUtils(ProcessManagement processManager, FileManagement fileManager, DebugManager debugManager, RandomDataManagement randomUtils) {
         this.processManager = processManager;
         this.fileManager = fileManager;
         this.debugManager = debugManager;
@@ -34,7 +34,7 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
         this.randomUtils = new RandomUtils();
     }
 
-    /* This group of simple methods to manage OS processes. */
+    /* This is a group of simple methods to manage OS processes. */
     /**
      * Kill a process by name.
      * 

@@ -2,7 +2,7 @@ package cl.set.markito.utils;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class RandomUtils implements IRandomUtils {
+public class RandomUtils implements RandomDataManagement {
     
 
     public String RandomString(int size) {
