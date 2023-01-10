@@ -5,7 +5,7 @@ import java.net.MalformedURLException;
 
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import cl.set.markito.BrowserStack;
+import cl.set.markito.cloud.BrowserStack;
 
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;

@@ -19,4 +19,11 @@ public class MarkitoBaseUtilsValues {
         public final static String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
         public final static String ANSI_CYAN_BACKGROUND = "\u001B[46m";
         public final static String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+        public final static class Browser {
+                public final static String Chrome="chrome";
+                public final static String Edge="Edge";
+                public final static String IE = "IE";
+                public final static String Firefox = "Firefox";
+                public final static String Safari = "Safari";
+        }
 }

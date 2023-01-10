@@ -1,4 +1,4 @@
-package cl.set.markito;
+package cl.set.markito.cloud;
 
 import java.util.Map;
 

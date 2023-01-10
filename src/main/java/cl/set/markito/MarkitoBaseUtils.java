@@ -218,7 +218,7 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
      * @return
      */
     public String RandomString(int size){
-        return randomUtils.RandomString(size);
+        return randomUtils.randomString(size);
     }
 
     /**
@@ -228,6 +228,6 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
      * @return
      */
     public int RandomNumber(int min, int max){
-        return randomUtils.RandomNumber(min, max);
+        return randomUtils.randomNumber(min, max);
     }
 }

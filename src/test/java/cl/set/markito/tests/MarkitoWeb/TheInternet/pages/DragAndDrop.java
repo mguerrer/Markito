@@ -70,7 +70,7 @@ public class DragAndDrop {
         squareA = driver.findElement(By.id("column-a"));
         squareB = driver.findElement(By.id("column-b"));
 
-        markito.DragAndDrop(squareA, squareB);
+        markito.dragAndDrop(squareA, squareB);
 
         /*final String java_script =  "var src=arguments[0],tgt=arguments[1];var dataTransfer={dropEffe" +
                                     "ct:'',effectAllowed:'all',files:[],items:{},types:[],setData:fun" +

@@ -1,46 +1,57 @@
 ![Markito logo](/images/Markito-100.png)
 # Markito v0.7 (Work in progress towards v1.0)
-A Selenium/Appium Webdriver wrapper written in Java to:
-1. Standardize a minimal set of commands to support web, native and hybrid app automation on different platforms.
-2. Make coding easier (scripting) and readable.  This wrapper has been designed for scripting style of programming for beginners, using the ideas of [Selenese](https://ui.vision/rpa/docs/selenium-ide). Similar ideas can be found on framework [Helium](https://github.com/mherrmann/selenium-python-helium)
-3. Provide an extra layer of abstraction over webdriver and appium to isolate test code from changes on those frameworks.
+A Selenium/Appium Webdriver wrapper written in Java to make easiest:
+1. Support web, native and hybrid app automation on different platforms.
+   * Automator can run SAME script for WEB App on browsers (Chrome, Firefox, Edge, IE, Safari) running over Windows, Linux, Android and iOS.
+   * Automator can run SAME script for NATIVE (or HYBRYD) App for Windows, Android and iOS.
+2. Make coding simple, concise and readable.
+   *  This wrapper has been designed to extend script style using [Selenese](https://ui.vision/rpa/docs/selenium-ide) alike commands. Similar ideas can be found on framework [Helium](https://github.com/mherrmann/selenium-python-helium)
+   *  Simplified timeout management.
+      * W3C webdriver standard provides timeout management at session level, page level, JS script level and element level (implicit and explicit). Markito uses a single implicit timeout parameter to set all levels.
+3. Provide an extra layer of abstraction over webdriver and appium (or others in the future) to isolate your test code from changes on those frameworks.
 4. Improved maintenance and usage through:
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.1 Maven archetype for initial prkect setup.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.2 Automatic drivers update and download.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.3 Flakyness reduction with multiple locators and retry disciplines.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.4 Garbage collection and thread safety.
+   * Automatic drivers update and download.
+   * Flakyness reduction with multiple locators and retry disciplines.
+   * Garbage collection and thread safety.
 
 It is an implementation of the [Bot pattern](https://www.selenium.dev/documentation/test_practices/design_strategies/#bot-pattern) Inspired by Selenese concise grammar and written in Java 11, using Selenium Java client 3.141.59, and Appium client 6.0.0.  
-Initial testing has been made in local Windows 10/Ubuntu and Chrome browser, also Android and iOS by using BrowserStack.
-
+Testing has been made in local Windows 10/Ubuntu and Chrome browser, also Android and iOS by using BrowserStack.
 
 ## Sponsors
 This project is tested using [BrowserStack](https://www.browserstack.com/) on Web and Mobile automation.
 
 ![BrowserStack](/images/browserstacklogo.png)
 
+## Why Markito?
+Using a high level programming language to support scripting can be a good idea to provide easy support for complex interactions (e.g. access a DB or interact with OS), however this can produce obscure and hard to maintain test code because the difficulty to read and understand.  This also can cause the need for 'expert programmers only' to addapt or extend.  
+In the case of Java (one the most used OOP languages) to automate using webdriver/appium frameworks (most used), the client implementation makes it hard to learn for testers that are used with tools with scripting/codeless style, that is how test code should be written, ideally with near zero complexity. Even in the case of Java trained programmers setup and start programming can be challenging because:
+ * Selenium/Appium documentation is incomplete/outdated, and given the different versions of each framework, examples in Internet can be wrong for current version.
+ * Java client has been written using OOP principles, making the programmer to write too much text to express the commands. Examples includes:
+   *  driver.manage().wait( seconds );  // wait( seconds );
+   *  driver.manage().window().maximize(); // maximize();
+   *  element.findElement(By.cssSelector("...")).click(); // click( element );
+
 ## Features so far
-1. Support for most common execution scenarios:
-1.1 Test web app in Chrome in local or remote Windows or Linux.
-1.2 Test web app in Chrome in Windows, Android and iOS devices.
-1.3 Test native app in Windows, Android and iOS.
+1. Test use cases:
+    * TUC01- Test web app in Chrome, Edge, Firefox, IE in local (Windows and Linux).
 
-2. Driver factory provides an ease to use API to manage test servers sessions for the most common scenarios.  if you want some other you can build a driver object and inject to Markito* API objects.
+2. MarkitoDriver factory provides an ease to use API to build and manage sessions for the most common scenarios.  if you want some other you can build a driver object and inject to Markito* API objects.
 
-4. Garbage collection for browsers and webdrivers improving clean execution.
-5. Colorful logging in console and element highlighting helps on rapid debug.  Both can be disabled for runtime.
+5. Colorful text logging in console and highlighting for web elements helps on rapid debug.  Both can be disabled for runtime.
 6. Easy support for headless execution.
 ## Next steps
+1. Test use cases:
+    * TUC02- Test web app in Chrome, Edge, Firefox, IE in remote (BrowserStack).
+    * TUC03- Test web app in Chrome in Android and iOS devices.
+    * TUC04- Test native mobile app in Android and iOS.
+    * TUC05- Test native desktop app in Windows
 1. Add automated testings.
 2. Refactoring to comply with OOD patterns.
 3. Thread safe for parallel execution.
 4. Update to latest versions of selenium, appium and other dependencies.
-5. Browserstack native support.
-6. Automated browser drivers download to accomodate to current installed versions.  Build on top of [WebDriverManager](https://bonigarcia.dev/webdrivermanager/#webdriver-builder).
+5. Garbage collection for browsers and webdrivers improving clean execution.
+6. Browserstack native support.
+7. Automated browser drivers download to accomodate to current installed versions.  Build on top of [WebDriverManager](https://bonigarcia.dev/webdrivermanager/#webdriver-builder).
 
 ## Hello world
 With Markito you'll be writing code in seconds, creating a super readable code, making you productive and improving code maintainability. This is the way your Hello World code will look like this with Markito:

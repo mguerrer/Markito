@@ -11,7 +11,7 @@ import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 
-import cl.set.markito.BrowserStack;
+import cl.set.markito.cloud.BrowserStack;
 
 import java.util.logging.Level;
 

@@ -7,6 +7,7 @@ import java.io.IOException;
  */
 public interface ProcessManagement {
 
+    public String getCurrentOS();
     public int killProcess(String processName);
     public boolean isProcessRunning(String processName);
     public String getComputerName();

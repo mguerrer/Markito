@@ -89,10 +89,10 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param keys: Array of keys to be sent.
      */
     @Override
-    public void SendKeys(By locator, String keys) {
+    public void sendKeys(By locator, String keys) {
         printf(ANSI_YELLOW + "Android SendKeys %s ...", locator);
         try {
-            AndroidElement element = FindElement(locator);
+            AndroidElement element = findElement(locator);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.elementToBeClickable(locator));
             element.sendKeys(keys);
@@ -143,7 +143,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param by
      * @return AndroidElement
      */
-    public AndroidElement FindElement(By by) {
+    public AndroidElement findElement(By by) {
         printf(ANSI_YELLOW + "Android FindElement %s ...", by);
         try {
             AndroidElement element = (AndroidElement) driver.findElement(by);
@@ -154,7 +154,7 @@ public class MarkitoAndroid extends MarkitoWeb {
             LocalDateTime ldt = LocalDateTime.now();
             String date = ldt.toString();
             try {
-                TakeScreenSnapshot("TestResults\\FindERROR-" + date.toString().replaceAll("\\W+", "") + ".png");
+                takeScreenSnapshot("TestResults\\FindERROR-" + date.toString().replaceAll("\\W+", "") + ".png");
             } catch (Exception e2) {
                 printf("ERROR al tomar snapshot. Stack:%s\n", e2.getMessage());
             }
@@ -169,7 +169,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param by
      * @return WebElement
      */
-    public List<WebElement> FindElements(By by) {
+    public List<WebElement> findElements(By by) {
         printf(ANSI_YELLOW + "Android FindElements %s ...", by);
         List<WebElement> elements;
         try {
@@ -190,7 +190,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      *                          interruption.
      */
     @Override
-    public void SetTimeouts(long timeOutInSeconds) {
+    public void setTimeouts(long timeOutInSeconds) {
         this.timeOutInSeconds = timeOutInSeconds;
         driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
         printf(ANSI_YELLOW + "SetTimeouts in %d seconds.\n", timeOutInSeconds);
@@ -202,7 +202,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param fileWithPath: Pathname of the file to be generated.
      */
     @Override
-    public void TakeScreenSnapshot(String fileWithPath) {
+    public void takeScreenSnapshot(String fileWithPath) {
         try {
             // Convert web driver object to TakeScreenshot
             TakesScreenshot scrShot = ((TakesScreenshot) driver);
@@ -223,7 +223,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param locator
      */
     @Override
-    public void Click(By locator) {
+    public void click(By locator) {
         printf(ANSI_YELLOW + "Clicking (And) %s...", locator);
         try {
             driver.findElement(locator).click();
@@ -240,10 +240,10 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param by
      */
     @Override
-    public String GetText(By by) {
+    public String getText(By by) {
         printf(ANSI_YELLOW + "GetText in object %s\n", by);
         try {
-            WebElement element = FindElement(by);
+            WebElement element = findElement(by);
             return element.getText();
         } catch (Exception e) {
             printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
@@ -257,7 +257,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param by
      */
     @Override
-    public void WaitForElementVisible(By by) {
+    public void waitForElementVisible(By by) {
         printf(ANSI_YELLOW + "Waiting for element %s...", by.toString());
         try {
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
@@ -324,7 +324,7 @@ public class MarkitoAndroid extends MarkitoWeb {
 
     }
     @Override
-    public void SetLocation( double x, double y, double z) {
+    public void setLocation( double x, double y, double z) {
         printf(ANSI_YELLOW + "Set location to %f, %f, %f...", x,y,z);
         try {
             adriver = (AndroidDriver<AndroidElement>) driver;

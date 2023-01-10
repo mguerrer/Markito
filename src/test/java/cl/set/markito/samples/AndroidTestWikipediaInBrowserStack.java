@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import cl.set.markito.BrowserStack;
 import cl.set.markito.MarkitoAndroid;
+import cl.set.markito.cloud.BrowserStack;
 import io.appium.java_client.MobileBy;
 
 /**
@@ -26,9 +26,9 @@ public class AndroidTestWikipediaInBrowserStack extends MarkitoAndroid {
 		setDesiredCapabilities(caps);
        
     	OpenAndroidDriver( new URL("http://hub.browserstack.com/wd/hub"), caps );
-		Click( MobileBy.AccessibilityId("Search Wikipedia"));
-		SendKeys( MobileBy.id("org.wikipedia.alpha:id/search_src_text"), "BrowserStack");
-        List<WebElement> allProductsName = FindElements( MobileBy.className("android.widget.TextView"));
+		click( MobileBy.AccessibilityId("Search Wikipedia"));
+		sendKeys( MobileBy.id("org.wikipedia.alpha:id/search_src_text"), "BrowserStack");
+        List<WebElement> allProductsName = findElements( MobileBy.className("android.widget.TextView"));
 		assert(allProductsName.size() > 0);
 		for (WebElement webElement : allProductsName) {
 			printf("[%s]\n", webElement.getText());
