@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -116,7 +115,6 @@ public class MarkitoAndroid extends MarkitoWeb {
                 System.exit(-1);
             }
             js = (JavascriptExecutor) driver;
-            vars = new HashMap<String, Object>();
         } catch (Exception e) {
             printf(ANSI_RED
                     + "\nMarkito: ERROR on getting Android session. Is there an Appium server at %s?\nStack: %s\n",
@@ -154,7 +152,7 @@ public class MarkitoAndroid extends MarkitoWeb {
             LocalDateTime ldt = LocalDateTime.now();
             String date = ldt.toString();
             try {
-                takeScreenSnapshot("TestResults\\FindERROR-" + date.toString().replaceAll("\\W+", "") + ".png");
+                getScreenSnapshot("TestResults\\FindERROR-" + date.toString().replaceAll("\\W+", "") + ".png");
             } catch (Exception e2) {
                 printf("ERROR al tomar snapshot. Stack:%s\n", e2.getMessage());
             }
@@ -202,7 +200,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param fileWithPath: Pathname of the file to be generated.
      */
     @Override
-    public void takeScreenSnapshot(String fileWithPath) {
+    public void getScreenSnapshot(String fileWithPath) {
         try {
             // Convert web driver object to TakeScreenshot
             TakesScreenshot scrShot = ((TakesScreenshot) driver);

@@ -33,7 +33,7 @@ public class iOSBrowserStackSample extends MarkitoiOS{
 		
 		// Set other BrowserStack capabilities
 		caps.setCapability("project", "Pruebas moviles");
-		caps.setCapability("build", "GasConnect v1.15 iOS");
+		caps.setCapability("build", "Markito v1.15 iOS");
 		caps.setCapability("name", "Prueba IPhone 11 Pro");
 		
 		// Initialise the remote Webdriver using BrowserStack remote URL

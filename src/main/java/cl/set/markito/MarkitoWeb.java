@@ -6,10 +6,8 @@ package cl.set.markito;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -42,9 +40,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
+public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
     public WebDriver driver = null;
-    public Map<String, Object> vars;
     public JavascriptExecutor js;
     public long timeOutInSeconds = 60;
 
@@ -55,7 +52,6 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
     public MarkitoWeb(WebDriver driverObject) {
         driver = driverObject;
         js = (JavascriptExecutor) driver;
-        vars = new HashMap<String, Object>();
     }
 
     /***
@@ -77,7 +73,6 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
             driver = new ChromeDriver();
         }
         js = (JavascriptExecutor) driver;
-        vars = new HashMap<String, Object>();
         driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
         driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout for page loading
         driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout for script execution
@@ -99,7 +94,6 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
             driver = new FirefoxDriver();
         }
         js = (JavascriptExecutor) driver;
-        vars = new HashMap<String, Object>();
         driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
         driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // TImeout de espera de página
         driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de ejecución
@@ -140,7 +134,6 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
      */
     public WebDriver openInternetExplorerDriver(InternetExplorerOptions options) {
 
-        vars = new HashMap<String, Object>();
         try {
             driver = new InternetExplorerDriver(options);
         } catch (Exception e) {
@@ -219,7 +212,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "Finding element %s...", by);
         try {
             WebElement element = driver.findElement(by);
-            highLightElement(element);
+            highlightElement(element);
             printf(ANSI_YELLOW + "found.\n", by);
             return element;
         } catch (Exception e) {
@@ -240,7 +233,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         try {
             List<WebElement> elements = driver.findElements(by);
             elements.forEach(element -> {
-                highLightElement(element);
+                highlightElement(element);
             }); // Highlights on debug mode.
             printf(ANSI_YELLOW + "found %d elements.\n", elements.size());
             return elements;
@@ -511,7 +504,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "GetText from %s...", by);
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(by);
+            highlightElement(by);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             String text = new WebDriverWait(driver, timeOutInSeconds)
                     .until(ExpectedConditions.presenceOfElementLocated(by))
@@ -535,7 +528,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "GetValue ");
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(by);
+            highlightElement(by);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             String text = new WebDriverWait(driver, timeOutInSeconds)
                     .until(ExpectedConditions.presenceOfElementLocated(by))
@@ -560,7 +553,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "GetAttribute [" + attributeName + "]...");
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(by);
+            highlightElement(by);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             String text = new WebDriverWait(driver, timeOutInSeconds)
                     .until(ExpectedConditions.presenceOfElementLocated(by))
@@ -587,7 +580,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "SetAttributeValue ");
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(by);
+            highlightElement(by);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).until(ExpectedConditions.presenceOfElementLocated(by))
                     .getAttribute(attributeName);
@@ -689,7 +682,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "Clicking %s...", locator);
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(locator);
+            highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
@@ -714,7 +707,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
     public void clickJS(By locator) {
         printf(ANSI_YELLOW + "Clicking JS %s...", locator);
         try {
-            highLightElement(locator);
+            highlightElement(locator);
             // Do not add waits.
             executeJsScript("arguments[0].click();", driver.findElement(locator));
             printf(ANSI_YELLOW + "done.\n", driver.findElement(locator));
@@ -733,7 +726,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "Clicking simulated %s...", locator);
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(locator);
+            highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
@@ -741,7 +734,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
                     .until(ExpectedConditions.elementToBeClickable(locator));
 
             WebElement element = driver.findElement(locator);
-            highLightElement(element);
+            highlightElement(element);
             // Do not add waits.
             Actions builder = new Actions(driver);
             builder
@@ -772,7 +765,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
                     .until(ExpectedConditions.visibilityOfElementLocated(locator));
-            highLightElement(locator);
+            highlightElement(locator);
             WebElement element = driver.findElement(locator);
             Actions builder = new Actions(driver);
             builder
@@ -797,7 +790,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "DoubleClick %s...", webElement);
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(webElement);
+            highlightElement(webElement);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
@@ -827,7 +820,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "MouseOver sobre %s...", locator);
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(locator);
+            highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
@@ -835,7 +828,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
                     .until(ExpectedConditions.elementToBeClickable(locator));
 
             WebElement element = driver.findElement(locator);
-            highLightElement(element);
+            highlightElement(element);
             // Do not add waits.
             Actions builder = new Actions(driver);
             builder
@@ -859,7 +852,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "MouseOut sobre %s...", locator);
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(locator);
+            highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
@@ -867,7 +860,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
                     .until(ExpectedConditions.elementToBeClickable(locator));
 
             WebElement element = driver.findElement(locator);
-            highLightElement(element);
+            highlightElement(element);
 
             // Do not add waits.
             Actions builder = new Actions(driver);
@@ -894,8 +887,8 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "DragAndDrop %s over %s...", sourceObject, targetObject);
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(sourceObject);
-            highLightElement(targetObject);
+            highlightElement(sourceObject);
+            highlightElement(targetObject);
             List<WebElement> elements = new ArrayList<WebElement>();
             elements.add(sourceObject);
             elements.add(targetObject);
@@ -935,9 +928,9 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "ClickAt %s x=%d y=%d", locator, x, y);
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(locator);
+            highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-            highLightElement(locator);
+            highlightElement(locator);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.elementToBeClickable(locator));
             new Actions(driver).moveToElement(driver.findElement(locator), x, y).click().perform();
@@ -971,7 +964,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "Waiting for element %s on %d seconds...", locator.toString(), timeout);
         long currentTimeout = getTimeouts();
         try {
-            highLightElement(locator);
+            highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeout).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.presenceOfElementLocated(locator));
@@ -1168,7 +1161,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
     public void sendKeys(By locator, String keys) {
         printf(ANSI_YELLOW + "SendKeys %s to object %s...", keys, locator);
         long currentTimeout = getTimeouts();
-        highLightElement(driver.findElement(locator));
+        highlightElement(driver.findElement(locator));
         try {
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
@@ -1282,7 +1275,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
      * 
      * @param element
      */
-    public void highLightElement(WebElement element) {
+    public void highlightElement(WebElement element) {
         if (getDebugMode())
             executeJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');",
                     element);
@@ -1293,7 +1286,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
      * 
      * @param element
      */
-    public void highLightElement(By element) {
+    public void highlightElement(By element) {
         if (getDebugMode())
             executeJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');",
                     driver.findElement(element));
@@ -1308,7 +1301,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
     public void selectOptionByVisibleText(By selectObject, String VisibleText) {
         printf(ANSI_YELLOW + "SelectOptionByVisibleText from %s option %s...", selectObject, VisibleText);
         try {
-            highLightElement(driver.findElement(selectObject));
+            highlightElement(driver.findElement(selectObject));
             Select dropdown = new Select(driver.findElement(selectObject));
             dropdown.selectByVisibleText(VisibleText);
             println(ANSI_YELLOW + "done.");
@@ -1327,7 +1320,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
     public void selectOptionByIndex(By by, int index) {
         printf(ANSI_YELLOW + "SelectOptionByIndex from %s index %s\n", by, index);
         try {
-            highLightElement(driver.findElement(by));
+            highlightElement(driver.findElement(by));
             Select dropdown = new Select(driver.findElement(by));
             dropdown.selectByIndex(index);
             println(ANSI_YELLOW + "done.");
@@ -1348,7 +1341,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
         printf(ANSI_YELLOW + "SelectOptionByValue from %s value %s...", by, value);
         try {
             Select dropdown = new Select(driver.findElement(by));
-            highLightElement(driver.findElement(by));
+            highlightElement(driver.findElement(by));
             dropdown.selectByValue(value);
             println(ANSI_YELLOW + "done.");
         } catch (Exception e) {
@@ -1522,5 +1515,29 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver{
     @Override
     public Options manage() {
         return driver.manage();
+    }
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    public JavascriptExecutor getJs() {
+        return js;
+    }
+
+    public void setJs(JavascriptExecutor js) {
+        this.js = js;
+    }
+
+    public long getTimeOutInSeconds() {
+        return timeOutInSeconds;
+    }
+
+    public void setTimeOutInSeconds(long timeOutInSeconds) {
+        this.timeOutInSeconds = timeOutInSeconds;
     }
 }
