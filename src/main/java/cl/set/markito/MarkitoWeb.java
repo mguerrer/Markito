@@ -172,7 +172,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @throws Exception
      */
-    public void closeWebDriver() throws Exception {
+    public void closeWebSessionInDevice() throws Exception {
         // Capabilities cap = ((RemoteWebDriver) driver).getCapabilities();
         // String browserName = cap.getBrowserName().toLowerCase();
         try {
@@ -1291,9 +1291,9 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param element
      */
     public void highlightElement(By element) {
-        if (getDebugMode())
+        /*if (getDebugMode())
             executeJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');",
-                    driver.findElement(element));
+                    driver.findElement(element));*/
     }
 
     /**

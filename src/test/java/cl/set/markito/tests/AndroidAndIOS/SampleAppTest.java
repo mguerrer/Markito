@@ -23,7 +23,7 @@ public class SampleAppTest extends BrowserStack{
             driver = openBrowserStackMobileSession();
             Assertions.assertNotEquals( null, driver, "Can not open Appium server."  );
 
-            HomePage home = new HomePage(driver);
+            SampleAppHomePage home = new SampleAppHomePage(driver);
     
             // Act
             home.clickTestBrowserStackLocalButton();
@@ -47,17 +47,13 @@ public class SampleAppTest extends BrowserStack{
     private void testSetup(String platform) {
         switch (platform) {
             case "android":
-                setDesiredTechnicalCapabilities( "bs://080efa5ba6f9faed39f0532610da865b5618cffa", null,
-                                                "Google Pixel 3", 
-                                                 platform, "9.0");
+                setDesiredMobileTechnicalCapabilities( "bs://080efa5ba6f9faed39f0532610da865b5618cffa", "Google Pixel 3", platform, "9.0");
             break;
             case "iOS":
-                setDesiredTechnicalCapabilities( "bs://bdf179936842c3e5113e8f39aae3ccb5a20c85f9", null,
-                                                "iPhone 11 Pro", 
-                                                platform, "15");
+                setDesiredMobileTechnicalCapabilities( "bs://bdf179936842c3e5113e8f39aae3ccb5a20c85f9", "iPhone 11 Pro", platform, "15");
             break;
         }
-        SetProjectInformation("Test BrowserStack Sample App", platform, "Run on "+platform);
+        setProjectInformation("Test BrowserStack Sample App", platform, "Run on "+platform);
     }
 
 }

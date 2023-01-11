@@ -4,6 +4,9 @@ import cl.set.markito.browsers.*;
 import cl.set.markito.devices.Device;
 import cl.set.markito.devices.GooglePixel3;
 import cl.set.markito.devices.LocalComputer;
+import cl.set.markito.devices.MACVentura;
+import cl.set.markito.devices.Windows10;
+import cl.set.markito.devices.Windows11;
 import cl.set.markito.devices.iPhone11Pro;
 
 public class MarkitoBaseUtilsValues {
@@ -33,4 +36,7 @@ public class MarkitoBaseUtilsValues {
         public final static Device  GOOGLEPIXEL3_DEVICE = new GooglePixel3();
         public final static Device  IPHONE11PRO_DEVICE  = new iPhone11Pro();
         public final static Device  LOCAL_COMPUTER_DEVICE = new LocalComputer();
+        public final static Device  WINDOWS10_COMPUTER_DEVICE = new Windows10();
+        public final static Device  WINDOWS11_COMPUTER_DEVICE = new Windows11();
+        public final static Device  MAC_VENTURA_COMPUTER_DEVICE = new MACVentura();
 }

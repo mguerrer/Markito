@@ -8,16 +8,22 @@ import java.io.File;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.DeviceRotation;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.html5.Location;
+import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -25,9 +31,38 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MobileElement;
 
-public class MarkitoMobile extends MarkitoBaseUtils {
+public class MarkitoMobile extends MarkitoBaseUtils implements MobileDriver<MobileElement>{
     public MobileDriver<MobileElement> driver = null;
     public long timeOutInSeconds = 60;
+
+    
+    /**
+     * Default constructor indicates to webdriver that platform is Mobile.
+     */
+    public MarkitoMobile() {
+        printf(ANSI_YELLOW + "Markito MobileDriver has born.\n");
+    }
+
+    public MobileDriver<MobileElement> getDriver() {
+        return driver;
+    }
+
+    public void setDriver(MobileDriver<MobileElement> driver) {
+        this.driver = driver;
+    }
+
+    public void setDriver(WebDriver driver) {
+        this.driver = (MobileDriver<MobileElement>) driver;
+    }
+
+    public long getTimeOutInSeconds() {
+        return timeOutInSeconds;
+    }
+
+    public void setTimeOutInSeconds(long timeOutInSeconds) {
+        this.timeOutInSeconds = timeOutInSeconds;
+    }
+
 
     /**
      * Launch Mobile App selected in capabilities.
@@ -55,13 +90,6 @@ public class MarkitoMobile extends MarkitoBaseUtils {
             printf(ANSI_RED + "failed! %s\n", e.getMessage());
             throw new WebDriverException(e.getMessage());
         }
-    }
-
-    /**
-     * Default constructor indicates to webdriver that platform is Mobile.
-     */
-    public MarkitoMobile() {
-        printf(ANSI_YELLOW + "Markito MobileDriver has born.\n");
     }
 
     /**
@@ -279,5 +307,257 @@ public class MarkitoMobile extends MarkitoBaseUtils {
     public void SetContextHandle( String ContextName ){ 
         println(ANSI_YELLOW+"SetContextHandle "+ContextName); //prints out something like NATIVE_APP \n WEBVIEW_1
         driver.context(ContextName);
+    }
+
+    @Override
+    public void get(String url) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public String getCurrentUrl() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getTitle() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getPageSource() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void close() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void quit() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public Set<String> getWindowHandles() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getWindowHandle() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public TargetLocator switchTo() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Navigation navigate() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Options manage() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Response execute(String driverCommand, Map<String, ?> parameters) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Response execute(String driverCommand) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public WebDriver context(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Set<String> getContextHandles() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getContext() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void rotate(ScreenOrientation orientation) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public ScreenOrientation getOrientation() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void rotate(DeviceRotation rotation) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public DeviceRotation rotation() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MobileElement findElement(String by, String using) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<MobileElement> findElements(String by, String using) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Location location() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setLocation(Location location) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public List<MobileElement> findElements(By by) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MobileElement findElement(By by) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MobileElement findElementByClassName(String className) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<MobileElement> findElementsByClassName(String className) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MobileElement findElementByCssSelector(String cssSelector) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<MobileElement> findElementsByCssSelector(String cssSelector) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MobileElement findElementById(String id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<MobileElement> findElementsById(String id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MobileElement findElementByLinkText(String linkText) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<MobileElement> findElementsByLinkText(String linkText) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MobileElement findElementByPartialLinkText(String partialLinkText) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<MobileElement> findElementsByPartialLinkText(String partialLinkText) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MobileElement findElementByName(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<MobileElement> findElementsByName(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MobileElement findElementByTagName(String tagName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<MobileElement> findElementsByTagName(String tagName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MobileElement findElementByXPath(String xPath) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<MobileElement> findElementsByXPath(String xPath) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

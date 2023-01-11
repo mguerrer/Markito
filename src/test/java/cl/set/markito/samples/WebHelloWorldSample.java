@@ -20,6 +20,6 @@ public class WebHelloWorldSample extends MarkitoWeb {
         for (WebElement webElement : results) {
             println(webElement.getText());
         }
-        closeWebDriver();
+        closeWebSessionInDevice();
     }
 }

@@ -1,10 +1,10 @@
 package cl.set.markito.devices;
 
-public final class iPhone11Pro implements Device {
+public final class Windows10 implements Device {
     public final String providerURL = "http://hub-cloud.browserstack.com/wd/hub";
-    public final String name = "iPhone 11 Pro";
-    public final String platform = "iOS";
-    public final String platform_version = "13";
+    public final String name = "Browserstack Windows 10";
+    public final String platform = "Windows";
+    public final String platform_version = "10";
     public String getProviderURL() {
         return providerURL;
     }

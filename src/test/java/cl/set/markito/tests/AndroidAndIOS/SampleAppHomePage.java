@@ -11,7 +11,7 @@ import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 /**
  * POM class for demo BrowserStack app.
  */
-public class HomePage {
+public class SampleAppHomePage {
     MobileDriver<MobileElement> driver;
     
     @AndroidFindBy(id = "com.example.android.basicnetworking:id/test_action" ) // XPATH=//*/android.widget.Button[@text='Test Browserstack Local Connection']
@@ -22,7 +22,7 @@ public class HomePage {
     @iOSXCUITFindBy(accessibility = "ResultBrowserStackLocal") // @iOSXCUITFindBy( xpath=//XCUIElementTypeTextField[@name="ResultBrowserStackLocal"] )
     MobileElement textMsgBox;
     
-	public HomePage(MobileDriver<MobileElement> driver) {
+	public SampleAppHomePage(MobileDriver<MobileElement> driver) {
         this.driver = driver;
            PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }

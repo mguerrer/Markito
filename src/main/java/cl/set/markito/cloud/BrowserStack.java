@@ -1,10 +1,12 @@
 package cl.set.markito.cloud;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import java.net.URL;
+
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -16,11 +18,15 @@ import io.appium.java_client.ios.IOSDriver;
 
 public class BrowserStack extends DebugManager {
     
-    DesiredCapabilities capabilities = new DesiredCapabilities();
-    public DesiredCapabilities getCapabilities() {
+    MutableCapabilities capabilities = new MutableCapabilities();
+    HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
+    public MutableCapabilities getCapabilities() {
         return capabilities;
     }
 
+    public BrowserStack(){
+        setBsCredentials(getBsUsername(), getBsPassword());
+    }
     MobileDriver<MobileElement> mobiledriver;
     WebDriver webdriver;
     /**
@@ -56,14 +62,15 @@ public class BrowserStack extends DebugManager {
      * 
      * @param caps
      */
-    public void LogCapabilities(DesiredCapabilities caps) {
-        Map<String, Object> jsoncaps = caps.toJson();
+    public void LogCapabilities(MutableCapabilities caps) {
+        return;
+        /*Map<String, Object> jsoncaps = caps.toJson();
         println("\nCapabilities: ");
         for (String key : jsoncaps.keySet()) {
             if (!key.equals("browserstack.key") && !key.equals("browserstack.user")) {
                 printf("-%s:%s\n", ANSI_WHITE + key, ANSI_YELLOW + jsoncaps.get(key));
             }
-        }
+        }*/
     }
 
     public MobileDriver<MobileElement> openBrowserStackMobileSession() throws Exception {
@@ -107,7 +114,7 @@ public class BrowserStack extends DebugManager {
             browser = capabilities.getCapability("browserName").toString();
             printf(ANSI_WHITE + " on browser " + browser);
         }
-        LogCapabilities(capabilities);
+        LogCapabilities((DesiredCapabilities) capabilities);
 
         try {
             switch (platform) {
@@ -129,29 +136,44 @@ public class BrowserStack extends DebugManager {
         return webdriver;
     }
 
-    public void setDesiredTechnicalCapabilities(String bsAppUrl, String browser, String deviceName, String platform,
-            String os_version) {
-        BrowserStack bs = new BrowserStack();
-        // Set your access credentials
-        SetBsCredentials(bs.getBsUsername(), bs.getBsPassword());
-
+    public void setDesiredMobileTechnicalCapabilities(String bsAppUrl, String deviceName, String platform, String os_version) {
         // Set URL of the application under test or browser to use
         if (bsAppUrl != null)
             SetAppUnderTesting(bsAppUrl);
-        else if (browser != null) {
-            capabilities.setBrowserName(browser);
-            capabilities.setCapability(CapabilityType.BROWSER_NAME, browser);
-            capabilities.setCapability(CapabilityType.VERSION, "108");
-        }
 
         // Specify device and os_version for testing
-        SetDeviceAndOsVersion(deviceName, platform, os_version);
+        browserstackOptions.put("osVersion", os_version);
+        browserstackOptions.put("deviceName", deviceName);
+        browserstackOptions.put("local", "false");
+        capabilities.setCapability("bstack:options", browserstackOptions);
         capabilities.setCapability("browserstack.appium_version", "1.21.0");
         capabilities.setCapability("browserstack.idleTimeout", "30");
 
+    }    
+    public void setDesiredWebTechnicalCapabilities(String browser, String platform, String os_version) {
+
+        // Set browser
+        MutableCapabilities capabilities = new MutableCapabilities();
+        capabilities.setCapability("browserName", browser);
+        browserstackOptions.put("os", platform);
+        browserstackOptions.put("osVersion", os_version);
+        browserstackOptions.put("browserVersion", "latest");
+        browserstackOptions.put("local", "false");
+        browserstackOptions.put("seleniumVersion", "3.14.0");
+        capabilities.setCapability("bstack:options", browserstackOptions);
+
+        if (browser != null) {
+            capabilities.setCapability("browserstack.browserVersion", "latest");
+        }
+
+
+        capabilities.setCapability("browserstack.seleniumVersion", "3.14.0");
+        capabilities.setCapability("browserstack.idleTimeout", "30");
+        capabilities.setCapability("browserstack.local", "false");
+
     }
 
-    public void SetProjectInformation(String projectName, String buildName, String testName) {
+    public void setProjectInformation(String projectName, String buildName, String testName) {
         // Set other BrowserStack capabilities
 
         this.capabilities.setCapability("project", projectName);
@@ -159,7 +181,7 @@ public class BrowserStack extends DebugManager {
         this.capabilities.setCapability("name", testName);
     }
 
-    public void SetDeviceAndOsVersion(String device, String platform, String os_version) {
+    private void SetDeviceAndOsVersion(String device, String platform, String os_version) {
         this.capabilities.setCapability("device", device);
         this.capabilities.setCapability("os_version", os_version);
         this.capabilities.setCapability("platformName", platform);
@@ -169,7 +191,7 @@ public class BrowserStack extends DebugManager {
         this.capabilities.setCapability("app", appUrlInBs);
     }
 
-    public void SetBsCredentials(String username, String key) {
+    public void setBsCredentials(String username, String key) {
         this.capabilities.setCapability("browserstack.user", username);
         this.capabilities.setCapability("browserstack.key", key);
     }
