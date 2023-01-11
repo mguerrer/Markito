@@ -1161,12 +1161,16 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
     public void sendKeys(By locator, String keys) {
         printf(ANSI_YELLOW + "SendKeys %s to object %s...", keys, locator);
         long currentTimeout = getTimeouts();
-        highlightElement(driver.findElement(locator));
         try {
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOfElementLocated(locator));
-            driver.findElement(locator).sendKeys(keys);
+            WebElement textBox = driver.findElement(locator);
+            //highlightElement( textBox);
+            if ( textBox == null ){
+                throw new Exception(ANSI_RED+" Can not find element "+ locator);
+            }
+            textBox.sendKeys(keys);
             setTimeouts(currentTimeout);
             println("done!");
         } catch (Exception e) {
@@ -1276,9 +1280,9 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param element
      */
     public void highlightElement(WebElement element) {
-        if (getDebugMode())
+        /*if (getDebugMode())
             executeJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');",
-                    element);
+                    element);*/
     }
 
     /**
