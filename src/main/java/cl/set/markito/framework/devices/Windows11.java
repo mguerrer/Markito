@@ -1,9 +1,9 @@
-package cl.set.markito.devices;
+package cl.set.markito.framework.devices;
 
 public final class Windows11 implements Device {
     public final String providerURL = "http://hub-cloud.browserstack.com/wd/hub";
     public final String name = "Browserstack Windows 11";
-    public final String platform = "Windows";
+    public OS platform = OS.WINDOWS;
     public final String platform_version = "11";
     public String getProviderURL() {
         return providerURL;
@@ -11,7 +11,11 @@ public final class Windows11 implements Device {
     public String getName() {
         return name;
     }
-    public String getPlatform() {
+    
+    public void setPlatform(OS os) {
+        platform = os;
+    }
+    public OS getPlatform() {
         return platform;
     }
     public String getPlatform_version() {

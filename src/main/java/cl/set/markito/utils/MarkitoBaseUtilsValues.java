@@ -1,13 +1,13 @@
 package cl.set.markito.utils;
 
-import cl.set.markito.browsers.*;
-import cl.set.markito.devices.Device;
-import cl.set.markito.devices.GooglePixel3;
-import cl.set.markito.devices.LocalComputer;
-import cl.set.markito.devices.MACVentura;
-import cl.set.markito.devices.Windows10;
-import cl.set.markito.devices.Windows11;
-import cl.set.markito.devices.iPhone11Pro;
+import cl.set.markito.framework.browsers.*;
+import cl.set.markito.framework.devices.Device;
+import cl.set.markito.framework.devices.GooglePixel3;
+import cl.set.markito.framework.devices.LocalComputer;
+import cl.set.markito.framework.devices.MacVentura;
+import cl.set.markito.framework.devices.Windows10;
+import cl.set.markito.framework.devices.Windows11;
+import cl.set.markito.framework.devices.iPhone11Pro;
 
 public class MarkitoBaseUtilsValues {
         // ANSI colors tobe used in println and printf.
@@ -38,5 +38,5 @@ public class MarkitoBaseUtilsValues {
         public final static Device  LOCAL_COMPUTER_DEVICE = new LocalComputer();
         public final static Device  WINDOWS10_COMPUTER_DEVICE = new Windows10();
         public final static Device  WINDOWS11_COMPUTER_DEVICE = new Windows11();
-        public final static Device  MAC_VENTURA_COMPUTER_DEVICE = new MACVentura();
+        public final static Device  MAC_VENTURA_COMPUTER_DEVICE = new MacVentura();
 }

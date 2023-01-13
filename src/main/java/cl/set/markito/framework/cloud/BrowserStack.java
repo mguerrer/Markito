@@ -1,8 +1,8 @@
-package cl.set.markito.cloud;
+package cl.set.markito.framework.cloud;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.lang.reflect.Field;
 import java.net.URL;
 
 import org.openqa.selenium.MutableCapabilities;
@@ -18,9 +18,9 @@ import io.appium.java_client.ios.IOSDriver;
 
 public class BrowserStack extends DebugManager {
     
-    MutableCapabilities capabilities = new MutableCapabilities();
+    DesiredCapabilities capabilities = new DesiredCapabilities();
     HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
-    public MutableCapabilities getCapabilities() {
+    public DesiredCapabilities getCapabilities() {
         return capabilities;
     }
 
@@ -62,15 +62,23 @@ public class BrowserStack extends DebugManager {
      * 
      * @param caps
      */
-    public void LogCapabilities(MutableCapabilities caps) {
-        return;
-        /*Map<String, Object> jsoncaps = caps.toJson();
+    public void LogCapabilities(DesiredCapabilities caps) {
+        /*for (Field field : capabilities.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                System.out.println(field.getName() + ": " + field.get(capabilities));
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }*/
+         
+        Map<String, Object> jsoncaps = caps.toJson();
         println("\nCapabilities: ");
         for (String key : jsoncaps.keySet()) {
             if (!key.equals("browserstack.key") && !key.equals("browserstack.user")) {
                 printf("-%s:%s\n", ANSI_WHITE + key, ANSI_YELLOW + jsoncaps.get(key));
             }
-        }*/
+        }
     }
 
     public MobileDriver<MobileElement> openBrowserStackMobileSession() throws Exception {
@@ -114,7 +122,6 @@ public class BrowserStack extends DebugManager {
             browser = capabilities.getCapability("browserName").toString();
             printf(ANSI_WHITE + " on browser " + browser);
         }
-        LogCapabilities((DesiredCapabilities) capabilities);
 
         try {
             switch (platform) {
@@ -148,29 +155,26 @@ public class BrowserStack extends DebugManager {
         capabilities.setCapability("bstack:options", browserstackOptions);
         capabilities.setCapability("browserstack.appium_version", "1.21.0");
         capabilities.setCapability("browserstack.idleTimeout", "30");
-
+        LogCapabilities(capabilities);
     }    
     public void setDesiredWebTechnicalCapabilities(String browser, String platform, String os_version) {
 
         // Set browser
-        MutableCapabilities capabilities = new MutableCapabilities();
         capabilities.setCapability("browserName", browser);
-        browserstackOptions.put("os", platform);
-        browserstackOptions.put("osVersion", os_version);
-        browserstackOptions.put("browserVersion", "latest");
+        capabilities.setCapability("browserVersion", "latest");
+        if (browser != null) {
+            browserstackOptions.put("browserVersion", "latest");
+        }        capabilities.setCapability("platform", platform);
+        //capabilities.setCapability("osVersion", os_version);
+        //browserstackOptions.put("osVersion", os_version);
+
         browserstackOptions.put("local", "false");
         browserstackOptions.put("seleniumVersion", "3.14.0");
         capabilities.setCapability("bstack:options", browserstackOptions);
-
-        if (browser != null) {
-            capabilities.setCapability("browserstack.browserVersion", "latest");
-        }
-
-
         capabilities.setCapability("browserstack.seleniumVersion", "3.14.0");
         capabilities.setCapability("browserstack.idleTimeout", "30");
         capabilities.setCapability("browserstack.local", "false");
-
+        LogCapabilities(capabilities);
     }
 
     public void setProjectInformation(String projectName, String buildName, String testName) {
@@ -179,12 +183,6 @@ public class BrowserStack extends DebugManager {
         this.capabilities.setCapability("project", projectName);
         this.capabilities.setCapability("build", buildName);
         this.capabilities.setCapability("name", testName);
-    }
-
-    private void SetDeviceAndOsVersion(String device, String platform, String os_version) {
-        this.capabilities.setCapability("device", device);
-        this.capabilities.setCapability("os_version", os_version);
-        this.capabilities.setCapability("platformName", platform);
     }
 
     public void SetAppUnderTesting(String appUrlInBs) {

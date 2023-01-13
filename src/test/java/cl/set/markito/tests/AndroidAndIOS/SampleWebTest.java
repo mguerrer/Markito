@@ -5,7 +5,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import cl.set.markito.cloud.BrowserStack;
+
+import cl.set.markito.framework.cloud.BrowserStack;
 
 import org.junit.jupiter.api.Assertions;
 

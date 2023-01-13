@@ -18,7 +18,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-//import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
@@ -28,7 +27,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.html5.Location;
@@ -40,6 +38,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+/**
+ * This is the legacy class to drive web test up to version 0.7.
+ */
 public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
     public WebDriver driver = null;
     public JavascriptExecutor js;
@@ -59,23 +60,14 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param headless
      */
-    public void openChromeDriver(boolean headless) {
-        printf(ANSI_WHITE + "Verifying/updating Chrome driver.");
-
+    public WebDriver openChromeDriver() {
+        println(ANSI_WHITE + "Verifying/updating Chrome driver.");
         WebDriverManager.chromedriver().setup();
-        if (headless) {
-            ChromeOptions options = new ChromeOptions();
-            printf("Opening Chrome session with desired %s\n", options);
-            options.addArguments("--headless", "--no-sandbox");
-            driver = new ChromeDriver(options);
-        } else {
-            println("Opening Chrome session all by default.\n");
-            driver = new ChromeDriver();
-        }
+        println("Opening Chrome session all by default.\n");
+        driver = new ChromeDriver();
         js = (JavascriptExecutor) driver;
-        driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
-        driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout for page loading
-        driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout for script execution
+        setTimeouts(30);
+        return driver;
     }
 
     /***
@@ -94,9 +86,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
             driver = new FirefoxDriver();
         }
         js = (JavascriptExecutor) driver;
-        driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
-        driver.manage().timeouts().pageLoadTimeout(timeOutInSeconds, TimeUnit.SECONDS); // TImeout de espera de página
-        driver.manage().timeouts().setScriptTimeout(timeOutInSeconds, TimeUnit.SECONDS); // Timeout de ejecución
+        setTimeouts(30);
     }
 
     /**
@@ -122,6 +112,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
         options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
         if (!((initialURL == null) || initialURL.equals("")))
             options.withInitialBrowserUrl(initialURL); // Esto ahorra segundos al inicio.
+        setTimeouts(30);
         return openInternetExplorerDriver(options);
     }
 
@@ -139,9 +130,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
         } catch (Exception e) {
             println(ANSI_RED + "ERROR: Fallo en abrir InternetExplorerDriver.   Stack:" + e.getMessage());
         }
-        driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
-        driver.manage().timeouts().setScriptTimeout(60, TimeUnit.SECONDS);
+        setTimeouts(30);
 
         return driver;
     }
@@ -1372,7 +1361,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param fileWithPath: Pathname of the file to be generated.
      */
-    public void getScreenSnapshot(String fileWithPath) throws Exception {
+    public void takeScreenSnapshot(String fileWithPath) throws Exception {
         // Convert web driver object to TakeScreenshot
         TakesScreenshot scrShot = ((TakesScreenshot) driver);
         // Call getScreenshotAs method to create image file
@@ -1406,7 +1395,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
         LocalDateTime ldt = LocalDateTime.now();
         String date = ldt.toString().replaceAll("\\W+", "");
         try {
-            getScreenSnapshot("TestResults\\" + Name + "-" + date + ".png");
+            takeScreenSnapshot("TestResults\\" + Name + "-" + date + ".png");
         } catch (Exception e) {
             printf("ERROR al tomar snapshot. Stack:%s\n", e.getMessage());
         }

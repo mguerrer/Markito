@@ -1,9 +1,9 @@
-package cl.set.markito.devices;
+package cl.set.markito.framework.devices;
 
 public final class GooglePixel3 implements Device {
     public final String providerURL = "http://hub-cloud.browserstack.com/wd/hub";
     public final String name = "Google Pixel 3";
-    public final String platform = "Android";
+    public OS platform = OS.ANDROID;
     public final String platform_version = "9.0";
     public String getProviderURL() {
         return providerURL;
@@ -11,10 +11,12 @@ public final class GooglePixel3 implements Device {
     public String getName() {
         return name;
     }
-    public String getPlatform() {
-        return platform;
+    public void setPlatform( OS os ) {
+        this.platform = os;
     }
-    public String getPlatform_version() {
+    public OS getPlatform() {
+        return platform;
+    }    public String getPlatform_version() {
         return platform_version;
     }
 }

@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import cl.set.markito.MarkitoiOS;
-import cl.set.markito.cloud.BrowserStack;
+import cl.set.markito.framework.cloud.BrowserStack;
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.ios.IOSElement;
 

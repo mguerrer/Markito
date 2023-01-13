@@ -152,7 +152,7 @@ public class MarkitoAndroid extends MarkitoWeb {
             LocalDateTime ldt = LocalDateTime.now();
             String date = ldt.toString();
             try {
-                getScreenSnapshot("TestResults\\FindERROR-" + date.toString().replaceAll("\\W+", "") + ".png");
+                takeScreenSnapshot("TestResults\\FindERROR-" + date.toString().replaceAll("\\W+", "") + ".png");
             } catch (Exception e2) {
                 printf("ERROR al tomar snapshot. Stack:%s\n", e2.getMessage());
             }
@@ -200,7 +200,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param fileWithPath: Pathname of the file to be generated.
      */
     @Override
-    public void getScreenSnapshot(String fileWithPath) {
+    public void takeScreenSnapshot(String fileWithPath) {
         try {
             // Convert web driver object to TakeScreenshot
             TakesScreenshot scrShot = ((TakesScreenshot) driver);

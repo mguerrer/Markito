@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import cl.set.markito.cloud.BrowserStack;
+import cl.set.markito.framework.cloud.BrowserStack;
 
 import org.junit.jupiter.api.Assertions;
 import io.appium.java_client.MobileDriver;

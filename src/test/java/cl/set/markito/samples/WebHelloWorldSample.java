@@ -9,7 +9,7 @@ import cl.set.markito.MarkitoWeb;
 public class WebHelloWorldSample extends MarkitoWeb {
     @Test
     public void HelloWorldTest() throws Exception {
-        openChromeDriver(false);
+        openChromeDriver();
         get("http://www.google.com");
         // Search "Hello world!!" string
         sendKeys( By.name("q"), "Hello world!!");
