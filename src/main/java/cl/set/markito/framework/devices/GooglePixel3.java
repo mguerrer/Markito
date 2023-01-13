@@ -4,7 +4,7 @@ public final class GooglePixel3 implements Device {
     public final String providerURL = "http://hub-cloud.browserstack.com/wd/hub";
     public final String name = "Google Pixel 3";
     public OS platform = OS.ANDROID;
-    public final String platform_version = "9.0";
+    public final String platform_version = "10.0";
     public String getProviderURL() {
         return providerURL;
     }

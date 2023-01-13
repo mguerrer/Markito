@@ -10,25 +10,30 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import cl.set.markito.framework.devices.OS;
 import cl.set.markito.utils.DebugManager;
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.remote.MobileCapabilityType;
 
 public class BrowserStack extends DebugManager {
-    
+
     DesiredCapabilities capabilities = new DesiredCapabilities();
     HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
+
     public DesiredCapabilities getCapabilities() {
         return capabilities;
     }
 
-    public BrowserStack(){
+    public BrowserStack() {
         setBsCredentials(getBsUsername(), getBsPassword());
     }
+
     MobileDriver<MobileElement> mobiledriver;
     WebDriver webdriver;
+
     /**
      * Get BrowserStack's username from environment variable BSUSERNAME
      * 
@@ -63,15 +68,17 @@ public class BrowserStack extends DebugManager {
      * @param caps
      */
     public void LogCapabilities(DesiredCapabilities caps) {
-        /*for (Field field : capabilities.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            try {
-                System.out.println(field.getName() + ": " + field.get(capabilities));
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }*/
-         
+        /*
+         * for (Field field : capabilities.getClass().getDeclaredFields()) {
+         * field.setAccessible(true);
+         * try {
+         * System.out.println(field.getName() + ": " + field.get(capabilities));
+         * } catch (IllegalArgumentException | IllegalAccessException e) {
+         * e.printStackTrace();
+         * }
+         * }
+         */
+
         Map<String, Object> jsoncaps = caps.toJson();
         println("\nCapabilities: ");
         for (String key : jsoncaps.keySet()) {
@@ -143,7 +150,8 @@ public class BrowserStack extends DebugManager {
         return webdriver;
     }
 
-    public void setDesiredMobileTechnicalCapabilities(String bsAppUrl, String deviceName, String platform, String os_version) {
+    public void setDesiredMobileTechnicalCapabilities(String bsAppUrl, String deviceName, String platform,
+            String os_version) {
         // Set URL of the application under test or browser to use
         if (bsAppUrl != null)
             SetAppUnderTesting(bsAppUrl);
@@ -156,25 +164,38 @@ public class BrowserStack extends DebugManager {
         capabilities.setCapability("browserstack.appium_version", "1.21.0");
         capabilities.setCapability("browserstack.idleTimeout", "30");
         LogCapabilities(capabilities);
-    }    
-    public void setDesiredWebTechnicalCapabilities(String browser, String platform, String os_version) {
+    }
 
-        // Set browser
-        capabilities.setCapability("browserName", browser);
-        capabilities.setCapability("browserVersion", "latest");
-        if (browser != null) {
-            browserstackOptions.put("browserVersion", "latest");
-        }        capabilities.setCapability("platform", platform);
-        //capabilities.setCapability("osVersion", os_version);
-        //browserstackOptions.put("osVersion", os_version);
+    /** */
+    public DesiredCapabilities setDesiredWebTechnicalCapabilities(String browser, String deviceName, String platform,
+            String os_version) {
 
-        browserstackOptions.put("local", "false");
-        browserstackOptions.put("seleniumVersion", "3.14.0");
-        capabilities.setCapability("bstack:options", browserstackOptions);
-        capabilities.setCapability("browserstack.seleniumVersion", "3.14.0");
+        // General settings
         capabilities.setCapability("browserstack.idleTimeout", "30");
         capabilities.setCapability("browserstack.local", "false");
+        // Settings to support Mobile web testing.
+        if (platform.equals(OS.IOS.name)) {
+            //capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
+            capabilities.setCapability("browserstack.deviceName", deviceName);
+            capabilities.setCapability("browserstack.osVersion", os_version);
+            capabilities.setCapability("browserstack.appium_version", "1.21.0");
+
+        } else if (platform.equals(OS.ANDROID.name)) {
+            capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UIAutomator2");
+            capabilities.setCapability("browserstack.deviceName", deviceName);
+            capabilities.setCapability("browserstack.osVersion", os_version);
+
+        } else { // Settings for Desktop web testing
+            // Set browser
+            capabilities.setCapability("browserName", browser);
+            capabilities.setCapability("browserVersion", "latest");
+            // Set platform
+            capabilities.setCapability("platform", platform);
+            capabilities.setCapability("browserstack.osVersion", os_version);
+            capabilities.setCapability("browserstack.seleniumVersion", "3.14.0");
+        }
         LogCapabilities(capabilities);
+        return capabilities;
     }
 
     public void setProjectInformation(String projectName, String buildName, String testName) {

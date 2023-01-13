@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import cl.set.markito.framework.cloud.BrowserStack;
-
 import org.junit.jupiter.api.Assertions;
 
 /**
@@ -39,10 +38,10 @@ public class SampleWebTest extends BrowserStack{
     private void testSetup(String platform, String browser) {
         switch (platform) {
             case "android":
-                setDesiredWebTechnicalCapabilities( browser, platform, "9.0");
+                setDesiredWebTechnicalCapabilities( browser, GOOGLEPIXEL3_DEVICE.getName(), platform, "9.0");
             break;
             case "iOS":
-                setDesiredWebTechnicalCapabilities( browser, platform, "15");
+                setDesiredWebTechnicalCapabilities( browser, IPHONE11PRO_DEVICE.getName(), platform, "15");
             break;
         }
         setProjectInformation("Test BrowserStack WEB App", platform, "Web test Run on "+platform + " and browser "+browser);

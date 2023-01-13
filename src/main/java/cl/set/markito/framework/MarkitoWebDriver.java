@@ -85,9 +85,9 @@ public class MarkitoWebDriver extends MarkitoBaseUtils implements MarkitoGeneric
                 + device.getName() + " " + device.getPlatform());
         try {
             if (device.getProviderURL().contains("browserstack")) {
-                bs.setDesiredWebTechnicalCapabilities(browser.getName().toString(), device.getPlatform().toString(),
+                bs.setDesiredWebTechnicalCapabilities(browser.getName().toString(), device.getName(), device.getPlatform().toString(),
                         device.getPlatform_version());
-                bs.setProjectInformation("Multibrowser/MultiPlatform tests.", "MultiTests", "MultiBrowserTest");
+                bs.setProjectInformation("Markito", "MultiTests", "MultiBrowserTest");
             } else if (!device.getProviderURL().equals("")) {
                 throw new Exception(ANSI_RED + "ERROR: Provider " + device.getProviderURL()
                         + " not supported for device " + device.getName());
@@ -97,9 +97,6 @@ public class MarkitoWebDriver extends MarkitoBaseUtils implements MarkitoGeneric
             } else {
                 driver = setRemoteWebDrivers(device, bs.getCapabilities());
             }
-            if ( getDebugMode() )
-                bs.LogCapabilities(bs.getCapabilities());
- 
         } catch (Exception e) {
             
             println("\n" + ANSI_RED + "ERROR on creating session." + e.getMessage());
@@ -353,17 +350,17 @@ public class MarkitoWebDriver extends MarkitoBaseUtils implements MarkitoGeneric
     private WebDriver setRemoteWebDrivers(Device device, MutableCapabilities caps)
             throws MalformedURLException, Exception {
         WebDriver driver;
-        if ( caps.getPlatform().toString().equals("")){
-            String os = System.getProperty("os.name");
-            if (os.toLowerCase().contains("windows"))
-                device.setPlatform( OS.WINDOWS );
-        }
+
         switch (device.getPlatform()) {
             case ANDROID:
-                driver = new AndroidDriver<MobileElement>(new URL(device.getProviderURL()), caps);
+            driver = new RemoteWebDriver(new URL(device.getProviderURL()), caps);
+
+//                driver = new AndroidDriver<MobileElement>(new URL(device.getProviderURL()), caps);
                 break;
             case IOS:
-                driver = new IOSDriver<MobileElement>(new URL(device.getProviderURL()), caps);
+                driver = new RemoteWebDriver(new URL(device.getProviderURL()), caps);
+
+    //            driver = new IOSDriver<MobileElement>(new URL(device.getProviderURL()), caps);
                 break;
             case OSX:
             case WINDOWS:

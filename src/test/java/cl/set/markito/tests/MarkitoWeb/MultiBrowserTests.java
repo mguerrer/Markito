@@ -21,15 +21,16 @@ public class MultiBrowserTests extends MarkitoWebDriver {
     void GoogleSearchTest(Browser browser, Device device) throws Exception {
         
         // Arrange
-        setAutomaticDriverDownload(true);
-        setDriver(openBrowserSessionInDevice(browser, device));
+        setAutomaticDriverDownload(true); // Adds automatic driver download on local machine
+        setDriver(openBrowserSessionInDevice(browser, device)); // Open web session on device
         get("https://www.google.cl");
         // Act
-        By queryTextBox = By.name("q");
+        By queryTextBox = By.name("q"); // Do the query in Google search
         sendKeys(queryTextBox, "Markito" + Keys.ENTER);
-        getScreenSnapshotWithDate("GoogleSearchTest");
+        // Get screenshot as GoogleSearchTest-20230111T171104751078.png on TestResults folder.
+        getScreenSnapshotWithDate("GoogleSearchTest"); 
 
-        List<WebElement> results = findElements(By.tagName("h3"));
+        List<WebElement> results = findElements(By.tagName("h3")); // Print found titles
         for (WebElement result : results) {
             println(result.getText());
         }
@@ -43,8 +44,6 @@ public class MultiBrowserTests extends MarkitoWebDriver {
 
      /**
      * Provides test scenarios for multi-browser and multi-platform testing.
-     * 
-     * @return
      */
     private static Stream<Arguments> webScenarios() {
         return Stream.of(
@@ -55,7 +54,7 @@ public class MultiBrowserTests extends MarkitoWebDriver {
 
             Arguments.of(CHROME_BROWSER, WINDOWS10_COMPUTER_DEVICE),
             Arguments.of(FIREFOX_BROWSER, WINDOWS10_COMPUTER_DEVICE),
-            // TODO: Arguments.of(IE_BROWSER, WINDOWS10_COMPUTER_DEVICE),
+            Arguments.of(IE_BROWSER, WINDOWS10_COMPUTER_DEVICE),
             Arguments.of(EDGE_BROWSER, WINDOWS10_COMPUTER_DEVICE),
 
             Arguments.of(CHROME_BROWSER, WINDOWS11_COMPUTER_DEVICE),
@@ -66,16 +65,15 @@ public class MultiBrowserTests extends MarkitoWebDriver {
             Arguments.of(CHROME_BROWSER, MAC_VENTURA_COMPUTER_DEVICE),
             Arguments.of(FIREFOX_BROWSER, MAC_VENTURA_COMPUTER_DEVICE),
             Arguments.of(SAFARI_BROWSER, MAC_VENTURA_COMPUTER_DEVICE),
-            Arguments.of(EDGE_BROWSER, MAC_VENTURA_COMPUTER_DEVICE)
+            Arguments.of(EDGE_BROWSER, MAC_VENTURA_COMPUTER_DEVICE),
 
-            /*Arguments.of(CHROME_BROWSER, IPHONE11PRO_DEVICE),
+            Arguments.of(CHROME_BROWSER, IPHONE11PRO_DEVICE),
             Arguments.of(FIREFOX_BROWSER, IPHONE11PRO_DEVICE),
             Arguments.of(SAFARI_BROWSER, IPHONE11PRO_DEVICE),
             Arguments.of(EDGE_BROWSER, IPHONE11PRO_DEVICE),
             Arguments.of(CHROME_BROWSER, GOOGLEPIXEL3_DEVICE),
             Arguments.of(FIREFOX_BROWSER, GOOGLEPIXEL3_DEVICE),
-            Arguments.of(EDGE_BROWSER, GOOGLEPIXEL3_DEVICE)*/
-         
+            Arguments.of(EDGE_BROWSER, GOOGLEPIXEL3_DEVICE)
         );
     }
 }
