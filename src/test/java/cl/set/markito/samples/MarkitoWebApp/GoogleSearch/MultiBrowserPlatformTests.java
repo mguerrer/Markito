@@ -33,8 +33,12 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
 
         // Get screenshot as GoogleSearchTest-20230111T171104751078.png on TestResults folder.
         getScreenSnapshotWithDate("GoogleSearchTest"); 
-        List<WebElement> results = findElements(By.xpath("//*/h3")); // Print found titles
-
+        // Print found titles
+        List<WebElement> results = null;
+        if ( isAndroid()) 
+            results = findElements(By.xpath("//*/div[@class='MjjYud']/div/div/div/div/div/div/a/div/div[@role='heading']")); 
+        else 
+            results = findElements(By.tagName("h3")); 
         for (WebElement result : results) {
             println( getText( result ) );
         }
