@@ -1,0 +1,35 @@
+GENERIC XPATH //XCUIElementTypeKey[@name="q"]
+
+
+<XCUIElementTypeKey name="q">
+<XCUIElementTypeKey name="w">
+<XCUIElementTypeKey name="e">
+<XCUIElementTypeKey name="r">
+<XCUIElementTypeKey name="t">
+<XCUIElementTypeKey name="y">
+<XCUIElementTypeKey name="u">
+<XCUIElementTypeKey name="i">
+<XCUIElementTypeKey name="o">
+<XCUIElementTypeKey name="p">
+<XCUIElementTypeKey name="a">
+<XCUIElementTypeKey name="s">
+<XCUIElementTypeKey name="d">
+<XCUIElementTypeKey name="f">
+<XCUIElementTypeKey name="g">
+<XCUIElementTypeKey name="h">
+<XCUIElementTypeKey name="j">
+<XCUIElementTypeKey name="k">
+<XCUIElementTypeKey name="l">
+<XCUIElementTypeButton name="shift">
+<XCUIElementTypeKey name="z">
+<XCUIElementTypeKey name="x">
+<XCUIElementTypeKey name="c">
+<XCUIElementTypeKey name="v">
+<XCUIElementTypeKey name="b">
+<XCUIElementTypeKey name="n">
+<XCUIElementTypeKey name="m">
+<XCUIElementTypeKey name="delete">
+<XCUIElementTypeKey name="more">
+<XCUIElementTypeKey name="space">
+<XCUIElementTypeKey name=".">
+<XCUIElementTypeButton name="Go">

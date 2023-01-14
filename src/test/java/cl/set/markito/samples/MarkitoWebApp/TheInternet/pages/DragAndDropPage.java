@@ -4,7 +4,7 @@ Copyright (c) 2022, Marcos Guerrero. All Rights Reserved.
 Not for reuse without permission.
 */
 
-package cl.set.markito.tests.MarkitoWeb.TheInternet.pages;
+package cl.set.markito.samples.MarkitoWebApp.TheInternet.pages;
 
 import java.util.Map;
 import org.openqa.selenium.support.CacheLookup;
@@ -18,7 +18,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class DragAndDrop {
+public class DragAndDropPage {
     private WebDriver driver;
     private int timeout = 15;
 
@@ -42,19 +42,19 @@ public class DragAndDrop {
 
     private final String pageUrl = "/drag_and_drop";
 
-    public DragAndDrop() {
+    public DragAndDropPage() {
     }
 
-    public DragAndDrop(WebDriver driver) {
+    public DragAndDropPage(WebDriver driver) {
         this();
         this.driver = driver;
     }
 
-    public DragAndDrop(WebDriver driver, Map<String, String> data) {
+    public DragAndDropPage(WebDriver driver, Map<String, String> data) {
         this(driver);
     }
 
-    public DragAndDrop(WebDriver driver, Map<String, String> data, int timeout) {
+    public DragAndDropPage(WebDriver driver, Map<String, String> data, int timeout) {
         this(driver, data);
         this.timeout = timeout;
     }
@@ -90,7 +90,7 @@ public class DragAndDrop {
      *
      * @return the DragAndDrop class instance.
      */
-    public DragAndDrop clickElementalSeleniumLink() {
+    public DragAndDropPage clickElementalSeleniumLink() {
         elementalSelenium.click();
         return this;
     }
@@ -100,7 +100,7 @@ public class DragAndDrop {
      *
      * @return the DragAndDrop class instance.
      */
-    public DragAndDrop clickForkMeOnGithubLink() {
+    public DragAndDropPage clickForkMeOnGithubLink() {
         forkMeOnGithub.click();
         return this;
     }
@@ -110,7 +110,7 @@ public class DragAndDrop {
      *
      * @return the DragAndDrop class instance.
      */
-    public DragAndDrop verifyPageLoaded() {
+    public DragAndDropPage verifyPageLoaded() {
         (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getPageSource().contains(pageLoadedText);
@@ -124,7 +124,7 @@ public class DragAndDrop {
      *
      * @return the DragAndDrop class instance.
      */
-    public DragAndDrop verifyPageUrl() {
+    public DragAndDropPage verifyPageUrl() {
         (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getCurrentUrl().contains(pageUrl);

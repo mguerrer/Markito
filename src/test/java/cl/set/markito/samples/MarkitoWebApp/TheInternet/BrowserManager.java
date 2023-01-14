@@ -1,4 +1,4 @@
-package cl.set.markito.tests.MarkitoWeb.framework;
+package cl.set.markito.samples.MarkitoWebApp.TheInternet;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;

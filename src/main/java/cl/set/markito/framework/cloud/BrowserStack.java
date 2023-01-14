@@ -2,11 +2,10 @@ package cl.set.markito.framework.cloud;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.lang.reflect.Field;
 import java.net.URL;
 
-import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -20,7 +19,7 @@ import io.appium.java_client.remote.MobileCapabilityType;
 
 public class BrowserStack extends DebugManager {
 
-    DesiredCapabilities capabilities = new DesiredCapabilities();
+    DesiredCapabilities capabilities = null;
     HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
 
     public DesiredCapabilities getCapabilities() {
@@ -28,9 +27,14 @@ public class BrowserStack extends DebugManager {
     }
 
     public BrowserStack() {
+        capabilities = new DesiredCapabilities();
         setBsCredentials(getBsUsername(), getBsPassword());
     }
 
+    public BrowserStack(DesiredCapabilities capabilities) {
+        this.capabilities = capabilities;
+        setBsCredentials(getBsUsername(), getBsPassword());
+    }
     MobileDriver<MobileElement> mobiledriver;
     WebDriver webdriver;
 
@@ -68,22 +72,11 @@ public class BrowserStack extends DebugManager {
      * @param caps
      */
     public void LogCapabilities(DesiredCapabilities caps) {
-        /*
-         * for (Field field : capabilities.getClass().getDeclaredFields()) {
-         * field.setAccessible(true);
-         * try {
-         * System.out.println(field.getName() + ": " + field.get(capabilities));
-         * } catch (IllegalArgumentException | IllegalAccessException e) {
-         * e.printStackTrace();
-         * }
-         * }
-         */
-
         Map<String, Object> jsoncaps = caps.toJson();
         println("\nCapabilities: ");
         for (String key : jsoncaps.keySet()) {
             if (!key.equals("browserstack.key") && !key.equals("browserstack.user")) {
-                printf("-%s:%s\n", ANSI_WHITE + key, ANSI_YELLOW + jsoncaps.get(key));
+                printf("-%s: %s\n", ANSI_WHITE + key, ANSI_YELLOW + jsoncaps.get(key));
             }
         }
     }
@@ -173,26 +166,38 @@ public class BrowserStack extends DebugManager {
         // General settings
         capabilities.setCapability("browserstack.idleTimeout", "30");
         capabilities.setCapability("browserstack.local", "false");
+        // Set browser
+        capabilities.setCapability("browserName", browser);
+        capabilities.setCapability("browserVersion", "latest");
         // Settings to support Mobile web testing.
         if (platform.equals(OS.IOS.name)) {
-            //capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
-            capabilities.setCapability("browserstack.deviceName", deviceName);
-            capabilities.setCapability("browserstack.osVersion", os_version);
+            capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
+            HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
+            browserstackOptions.put("deviceName", deviceName);
+            browserstackOptions.put("osVersion", os_version);
+            capabilities.setCapability("bstack:options", browserstackOptions);
             capabilities.setCapability("browserstack.appium_version", "1.21.0");
+            capabilities.setCapability("connectHardwareKeyboard", false);
 
         } else if (platform.equals(OS.ANDROID.name)) {
             capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UIAutomator2");
-            capabilities.setCapability("browserstack.deviceName", deviceName);
-            capabilities.setCapability("browserstack.osVersion", os_version);
-
+            capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
+            HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
+            browserstackOptions.put("deviceName", deviceName);
+            browserstackOptions.put("osVersion", os_version);
+            capabilities.setCapability("bstack:options", browserstackOptions);
+            // https://github.com/appium/java-client/issues/1242
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.setExperimentalOption("w3c", false);
+            capabilities.merge(chromeOptions);
         } else { // Settings for Desktop web testing
-            // Set browser
-            capabilities.setCapability("browserName", browser);
-            capabilities.setCapability("browserVersion", "latest");
+
             // Set platform
-            capabilities.setCapability("platform", platform);
-            capabilities.setCapability("browserstack.osVersion", os_version);
             capabilities.setCapability("browserstack.seleniumVersion", "3.14.0");
+            HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
+            browserstackOptions.put("os", platform);
+            browserstackOptions.put("osVersion", os_version);
+            capabilities.setCapability("bstack:options", browserstackOptions);
         }
         LogCapabilities(capabilities);
         return capabilities;

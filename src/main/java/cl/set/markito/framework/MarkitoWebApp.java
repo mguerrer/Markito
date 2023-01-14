@@ -24,11 +24,12 @@ import cl.set.markito.MarkitoBaseUtils;
 import cl.set.markito.framework.browsers.Browser;
 import cl.set.markito.framework.cloud.BrowserStack;
 import cl.set.markito.framework.devices.Device;
-import cl.set.markito.framework.devices.OS;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MultiTouchAction;
-import io.appium.java_client.appmanagement.ApplicationState;
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.AndroidElement;
+import io.appium.java_client.appmanagement.ApplicationState;
 import io.appium.java_client.ios.IOSDriver;
 
 import org.apache.commons.io.FileUtils;
@@ -37,6 +38,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -45,19 +47,19 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * Generic interface to drive browsers in desktop and mobile devices.
  * Marcos Guerrero: 12-01-2023
  */
-public class MarkitoWebDriver extends MarkitoBaseUtils implements MarkitoGenericWebDriver {
+public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWebDriver {
     private WebDriver driver = null;
     private JavascriptExecutor js;
     private long timeOutInSeconds = 60;
     private Boolean automaticDriverDownload = false;
+    private BrowserStack browserStack = new BrowserStack();
+    public  Map<String, Object> vars = new HashMap<String, Object>();
 
-    public Map<String, Object> vars = new HashMap<String, Object>();
-
-    public MarkitoWebDriver() {
+    public MarkitoWebApp() {
         println(ANSI_YELLOW + "\nMarkito WebDriver started.");
     }
 
-    public MarkitoWebDriver(WebDriver driverObject) {
+    public MarkitoWebApp(WebDriver driverObject) {
         driver = driverObject;
         js = (JavascriptExecutor) driver;
     }
@@ -69,6 +71,10 @@ public class MarkitoWebDriver extends MarkitoBaseUtils implements MarkitoGeneric
         return driver;
     }
 
+    /**
+     * For local execution download/update needed drivers for current installed browser version.  This method allows to do (true) or not (false).
+     * @param automaticDriverDownload: true or false
+     */
     public void setAutomaticDriverDownload(Boolean automaticDriverDownload) {
         this.automaticDriverDownload = automaticDriverDownload;
     }
@@ -77,17 +83,33 @@ public class MarkitoWebDriver extends MarkitoBaseUtils implements MarkitoGeneric
         return automaticDriverDownload;
     }
 
+    /**
+     * Setup of BrowserStack dashboard parameters to organize test results. 
+     * @param projectName
+     * @param buildName
+     * @param testName
+     */
+    public void setBrowserstackProjectInformation(String projectName, String buildName, String testName){
+        browserStack.setProjectInformation(projectName, buildName, testName);
+    }
+
+    /**
+     * Open a webbrowser session in a device.
+     * @param browser
+     * @param device
+     * @return
+     * @throws Exception
+     */
     public WebDriver openBrowserSessionInDevice(Browser browser, Device device) throws Exception {
         WebDriver driver;
-        BrowserStack bs = new BrowserStack();
 
         printf(ANSI_YELLOW + "Creating Markito WEB session on browser " + browser.getName() + " on device "
                 + device.getName() + " " + device.getPlatform());
         try {
             if (device.getProviderURL().contains("browserstack")) {
-                bs.setDesiredWebTechnicalCapabilities(browser.getName().toString(), device.getName(), device.getPlatform().toString(),
+                browserStack.setDesiredWebTechnicalCapabilities(browser.getName().toString(), device.getName(), device.getPlatform().toString(),
                         device.getPlatform_version());
-                bs.setProjectInformation("Markito", "MultiTests", "MultiBrowserTest");
+                
             } else if (!device.getProviderURL().equals("")) {
                 throw new Exception(ANSI_RED + "ERROR: Provider " + device.getProviderURL()
                         + " not supported for device " + device.getName());
@@ -95,7 +117,7 @@ public class MarkitoWebDriver extends MarkitoBaseUtils implements MarkitoGeneric
             if (device.equals(LOCAL_COMPUTER_DEVICE)) {
                 driver = setLocalWebDrivers(browser);
             } else {
-                driver = setRemoteWebDrivers(device, bs.getCapabilities());
+                driver = setRemoteWebDrivers(device, browserStack.getCapabilities());
             }
         } catch (Exception e) {
             
@@ -180,11 +202,34 @@ public class MarkitoWebDriver extends MarkitoBaseUtils implements MarkitoGeneric
         return null;
     }
 
+    public boolean isIOS(){
+        return driver.toString().contains("io.appium.java_client.ios.IOSDriver");
+    }
+    public boolean isAndroid() {
+        return driver.toString().contains("automationName=UIAutomator2" );
+    }
+    public IOSDriver<WebElement> getIosDriver() {
+        return (IOSDriver<WebElement>)driver;
+    }
+    public AndroidDriver<WebElement> getAndroidDriver() {
+        return (AndroidDriver<WebElement>)driver;
+    }
+    public MobileDriver<WebElement> getMobileDriver() {
+        return (MobileDriver<WebElement>)driver;
+    }
     @Override
     public List<WebElement> findElements(By by) {
         printf(ANSI_YELLOW + "Finding elements %s...", by);
-        try {
-            List<WebElement> elements = driver.findElements(by);
+        try { // XPATH=	            //XCUIElementTypeTextField[@name="URL"]  //XCUIElementTypeButton[@name="Go"]
+        //    XPATH elements 	//XCUIElementTypeStaticText[@name="Markito (@markito_pr) • Instagram photos and videos"]
+            List<WebElement> elements;
+            if ( isIOS()){ // iOS
+                elements = getIosDriver().findElements(by);
+            } else if ( isAndroid()) { // Android
+                elements = getAndroidDriver().findElements(by);
+            }
+            else 
+                elements = driver.findElements(by);
             /*
              * TODO elements.forEach(element -> {
              * highlightElement(element);
@@ -347,20 +392,16 @@ public class MarkitoWebDriver extends MarkitoBaseUtils implements MarkitoGeneric
         this.timeOutInSeconds = timeOutInSeconds;
     }
 
-    private WebDriver setRemoteWebDrivers(Device device, MutableCapabilities caps)
+    private WebDriver setRemoteWebDrivers(Device device, DesiredCapabilities caps)
             throws MalformedURLException, Exception {
         WebDriver driver;
 
         switch (device.getPlatform()) {
             case ANDROID:
-            driver = new RemoteWebDriver(new URL(device.getProviderURL()), caps);
-
-//                driver = new AndroidDriver<MobileElement>(new URL(device.getProviderURL()), caps);
+                driver = new AndroidDriver<WebElement>(new URL(device.getProviderURL()), caps);
                 break;
             case IOS:
-                driver = new RemoteWebDriver(new URL(device.getProviderURL()), caps);
-
-    //            driver = new IOSDriver<MobileElement>(new URL(device.getProviderURL()), caps);
+                driver = new IOSDriver<WebElement>(new URL(device.getProviderURL()), caps);
                 break;
             case OSX:
             case WINDOWS:
@@ -568,13 +609,53 @@ public class MarkitoWebDriver extends MarkitoBaseUtils implements MarkitoGeneric
         // TODO Auto-generated method stub
         MarkitoGenericWebDriver.super.click();
     }
+     /**
+     * Waits for an element to be clickable located using By and click in it.
+     * 
+     * @param locator
+     */
+    public void click(By locator) {
+        printf(ANSI_YELLOW + "Clicking %s...", locator);
+        long currentTimeout = getTimeOutInSeconds();
+        try {
+            //highlightElement(locator);
+            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+                    .ignoring(StaleElementReferenceException.class)
+                    .ignoring(WebDriverException.class)
+                    .until(ExpectedConditions.elementToBeClickable(locator));
+            driver.findElement(locator).click();
+            setTimeOutInSeconds(currentTimeout);
+            printf(ANSI_YELLOW + "done.\n", locator);
+        } catch (Exception e) {
+            setTimeOutInSeconds(currentTimeout);
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
 
     @Override
     public void closeApp() {
         // TODO Auto-generated method stub
         MarkitoGenericWebDriver.super.closeApp();
     }
+    /**
+     * Get contexts for Hybrid Apps.
+     * 
+     * @return ContextNames: Obtained contexts from Android driver.
+     */
+    /*public Set<String> getContextHandles() {
+        Set<String> contextNames = getMobileDriver().getContextHandles();
+        for (String contextName : contextNames) {
+            println(ANSI_YELLOW + contextName); // prints out something like NATIVE_APP \n WEBVIEW_1
+        }
+        return contextNames;
+    }
 
+    public void context(String ContextName) {
+        println(ANSI_YELLOW + "SetContextHandle " + ContextName); // prints out something like NATIVE_APP \n WEBVIEW_1
+        getMobileDriver().context(ContextName);
+    }*/
     @Override
     public WebDriver context(String name) {
         // TODO Auto-generated method stub
@@ -763,6 +844,71 @@ public class MarkitoWebDriver extends MarkitoBaseUtils implements MarkitoGeneric
     public String getText() {
         // TODO Auto-generated method stub
         return MarkitoGenericWebDriver.super.getText();
+    }
+     /**
+     * Get Text of an web element.
+     * 
+     * @param element
+     */
+    public String getText(WebElement element) {
+        printf(ANSI_YELLOW + "GetText from WebElement...");
+        long currentTimeout = getTimeOutInSeconds();
+        try {
+            //highlightElement(by);
+            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            String text = element.getText();
+            printf(ANSI_YELLOW + "done [%s].\n", text);
+            setTimeOutInSeconds(currentTimeout);
+            return text;
+        } catch (Exception e) {
+            setTimeOutInSeconds(currentTimeout);
+            printf(ANSI_RED + "failed!!!\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+     /**
+     * Get Text of an web element.
+     * 
+     * @param element
+     */
+    public String getText(AndroidElement element) {
+        printf(ANSI_YELLOW + "GetText from %s...", element.toString());
+        long currentTimeout = getTimeOutInSeconds();
+        try {
+            //highlightElement(by);
+            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            String text = element.getText();
+            printf(ANSI_YELLOW + "done [%s].\n", text);
+            setTimeOutInSeconds(currentTimeout);
+            return text;
+        } catch (Exception e) {
+            setTimeOutInSeconds(currentTimeout);
+            printf(ANSI_RED + "failed!!!\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+     /**
+     * Get Text of an element located by.
+     * 
+     * @param by
+     */
+    public String getText(By by) {
+        printf(ANSI_YELLOW + "GetText from %s...", by);
+        long currentTimeout = getTimeOutInSeconds();
+        try {
+            //highlightElement(by);
+            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            String text = new WebDriverWait(driver, timeOutInSeconds)
+                    .until(ExpectedConditions.presenceOfElementLocated(by))
+                    .getText();
+            printf(ANSI_YELLOW + "done [%s].\n", text, by);
+            setTimeOutInSeconds(currentTimeout);
+            return text;
+        } catch (Exception e) {
+            setTimeOutInSeconds(currentTimeout);
+            printf(ANSI_RED + "failed!!!\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
     }
 
     @Override

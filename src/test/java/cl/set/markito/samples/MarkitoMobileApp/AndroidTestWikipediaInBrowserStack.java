@@ -1,4 +1,4 @@
-package cl.set.markito.samples;
+package cl.set.markito.samples.MarkitoMobileApp;
 
 import java.net.MalformedURLException;
 import java.net.URL;

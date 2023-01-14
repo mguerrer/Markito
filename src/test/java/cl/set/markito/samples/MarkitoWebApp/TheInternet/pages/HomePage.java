@@ -4,7 +4,7 @@ Copyright (c) 2022, Marcos Guerrero. All Rights Reserved.
 Not for reuse without permission.
 */
 
-package cl.set.markito.tests.MarkitoWeb.TheInternet.pages;
+package cl.set.markito.samples.MarkitoWebApp.TheInternet.pages;
 import java.util.Map;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
@@ -13,7 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class Home {
+public class HomePage {
     private WebDriver driver;
     private int timeout = 15;
 
@@ -205,20 +205,20 @@ public class Home {
     @CacheLookup
     private WebElement wysiwygEditor;
 
-    public Home() {
+    public HomePage() {
     }
 
-    public Home(WebDriver driver) {
+    public HomePage(WebDriver driver) {
         this();
         this.driver = driver;
     }
 
-    public Home(WebDriver driver, Map<String, String> data) {
+    public HomePage(WebDriver driver, Map<String, String> data) {
         this(driver);
 //        this.data = data;
     }
 
-    public Home(WebDriver driver, Map<String, String> data, int timeout) {
+    public HomePage(WebDriver driver, Map<String, String> data, int timeout) {
         this(driver, data);
         this.timeout = timeout;
     }
@@ -228,7 +228,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickAbTestingLink() {
+    public HomePage clickAbTestingLink() {
         abTesting.click();
         return this;
     }
@@ -238,7 +238,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickAddremoveElementsLink() {
+    public HomePage clickAddremoveElementsLink() {
         addremoveElements.click();
         return this;
     }
@@ -248,7 +248,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickBasicAuthLink() {
+    public HomePage clickBasicAuthLink() {
         basicAuth.click();
         return this;
     }
@@ -258,7 +258,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickBrokenImagesLink() {
+    public HomePage clickBrokenImagesLink() {
         brokenImages.click();
         return this;
     }
@@ -268,7 +268,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickChallengingDomLink() {
+    public HomePage clickChallengingDomLink() {
         challengingDom.click();
         return this;
     }
@@ -278,7 +278,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickCheckboxesLink() {
+    public HomePage clickCheckboxesLink() {
         checkboxes.click();
         return this;
     }
@@ -288,7 +288,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickContextMenuLink() {
+    public HomePage clickContextMenuLink() {
         contextMenu.click();
         return this;
     }
@@ -298,7 +298,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickDigestAuthenticationLink() {
+    public HomePage clickDigestAuthenticationLink() {
         digestAuthentication.click();
         return this;
     }
@@ -308,7 +308,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickDisappearingElementsLink() {
+    public HomePage clickDisappearingElementsLink() {
         disappearingElements.click();
         return this;
     }
@@ -318,7 +318,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickDragAndDropLink() {
+    public HomePage clickDragAndDropLink() {
         dragAndDrop.click();
         return this;
     }
@@ -328,7 +328,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickDropdownLink() {
+    public HomePage clickDropdownLink() {
         dropdown.click();
         return this;
     }
@@ -338,7 +338,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickDynamicContentLink() {
+    public HomePage clickDynamicContentLink() {
         dynamicContent.click();
         return this;
     }
@@ -348,7 +348,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickDynamicControlsLink() {
+    public HomePage clickDynamicControlsLink() {
         dynamicControls.click();
         return this;
     }
@@ -358,7 +358,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickDynamicLoadingLink() {
+    public HomePage clickDynamicLoadingLink() {
         dynamicLoading.click();
         return this;
     }
@@ -368,7 +368,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickElementalSeleniumLink() {
+    public HomePage clickElementalSeleniumLink() {
         elementalSelenium.click();
         return this;
     }
@@ -378,7 +378,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickEntryAdLink() {
+    public HomePage clickEntryAdLink() {
         entryAd.click();
         return this;
     }
@@ -388,7 +388,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickExitIntentLink() {
+    public HomePage clickExitIntentLink() {
         exitIntent.click();
         return this;
     }
@@ -398,7 +398,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickFileDownloadLink() {
+    public HomePage clickFileDownloadLink() {
         fileDownload.click();
         return this;
     }
@@ -408,7 +408,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickFileUploadLink() {
+    public HomePage clickFileUploadLink() {
         fileUpload.click();
         return this;
     }
@@ -418,7 +418,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickFloatingMenuLink() {
+    public HomePage clickFloatingMenuLink() {
         floatingMenu.click();
         return this;
     }
@@ -428,7 +428,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickForgotPasswordLink() {
+    public HomePage clickForgotPasswordLink() {
         forgotPassword.click();
         return this;
     }
@@ -438,7 +438,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickForkMeOnGithubLink() {
+    public HomePage clickForkMeOnGithubLink() {
         forkMeOnGithub.click();
         return this;
     }
@@ -448,7 +448,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickFormAuthenticationLink() {
+    public HomePage clickFormAuthenticationLink() {
         formAuthentication.click();
         return this;
     }
@@ -458,7 +458,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickFramesLink() {
+    public HomePage clickFramesLink() {
         frames.click();
         return this;
     }
@@ -468,7 +468,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickGeolocationLink() {
+    public HomePage clickGeolocationLink() {
         geolocation.click();
         return this;
     }
@@ -478,7 +478,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickHorizontalSliderLink() {
+    public HomePage clickHorizontalSliderLink() {
         horizontalSlider.click();
         return this;
     }
@@ -488,7 +488,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickHoversLink() {
+    public HomePage clickHoversLink() {
         hovers.click();
         return this;
     }
@@ -498,7 +498,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickInfiniteScrollLink() {
+    public HomePage clickInfiniteScrollLink() {
         infiniteScroll.click();
         return this;
     }
@@ -508,7 +508,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickInputsLink() {
+    public HomePage clickInputsLink() {
         inputs.click();
         return this;
     }
@@ -518,7 +518,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickJavascriptAlertsLink() {
+    public HomePage clickJavascriptAlertsLink() {
         javascriptAlerts.click();
         return this;
     }
@@ -528,7 +528,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickJavascriptOnloadEventErrorLink() {
+    public HomePage clickJavascriptOnloadEventErrorLink() {
         javascriptOnloadEventError.click();
         return this;
     }
@@ -538,7 +538,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickJqueryUiMenusLink() {
+    public HomePage clickJqueryUiMenusLink() {
         jqueryUiMenus.click();
         return this;
     }
@@ -548,7 +548,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickKeyPressesLink() {
+    public HomePage clickKeyPressesLink() {
         keyPresses.click();
         return this;
     }
@@ -558,7 +558,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickLargeDeepDomLink() {
+    public HomePage clickLargeDeepDomLink() {
         largeDeepDom.click();
         return this;
     }
@@ -568,7 +568,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickMultipleWindowsLink() {
+    public HomePage clickMultipleWindowsLink() {
         multipleWindows.click();
         return this;
     }
@@ -578,7 +578,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickNestedFramesLink() {
+    public HomePage clickNestedFramesLink() {
         nestedFrames.click();
         return this;
     }
@@ -588,7 +588,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickNotificationMessagesLink() {
+    public HomePage clickNotificationMessagesLink() {
         notificationMessages.click();
         return this;
     }
@@ -598,7 +598,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickRedirectLinkLink() {
+    public HomePage clickRedirectLinkLink() {
         redirectLink.click();
         return this;
     }
@@ -608,7 +608,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickSecureFileDownloadLink() {
+    public HomePage clickSecureFileDownloadLink() {
         secureFileDownload.click();
         return this;
     }
@@ -618,7 +618,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickShadowDomLink() {
+    public HomePage clickShadowDomLink() {
         shadowDom.click();
         return this;
     }
@@ -628,7 +628,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickShiftingContentLink() {
+    public HomePage clickShiftingContentLink() {
         shiftingContent.click();
         return this;
     }
@@ -638,7 +638,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickSlowResourcesLink() {
+    public HomePage clickSlowResourcesLink() {
         slowResources.click();
         return this;
     }
@@ -648,7 +648,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickSortableDataTablesLink() {
+    public HomePage clickSortableDataTablesLink() {
         sortableDataTables.click();
         return this;
     }
@@ -658,7 +658,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickStatusCodesLink() {
+    public HomePage clickStatusCodesLink() {
         statusCodes.click();
         return this;
     }
@@ -668,7 +668,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickTyposLink() {
+    public HomePage clickTyposLink() {
         typos.click();
         return this;
     }
@@ -678,7 +678,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home clickWysiwygEditorLink() {
+    public HomePage clickWysiwygEditorLink() {
         wysiwygEditor.click();
         return this;
     }
@@ -688,7 +688,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home verifyPageLoaded() {
+    public HomePage verifyPageLoaded() {
         (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getPageSource().contains(pageLoadedText);
@@ -702,7 +702,7 @@ public class Home {
      *
      * @return the Home class instance.
      */
-    public Home verifyPageUrl() {
+    public HomePage verifyPageUrl() {
         (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getCurrentUrl().contains(pageUrl);
