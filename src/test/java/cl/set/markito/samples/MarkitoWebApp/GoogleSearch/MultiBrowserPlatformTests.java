@@ -1,7 +1,5 @@
 package cl.set.markito.samples.MarkitoWebApp.GoogleSearch;
 
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import org.junit.Assert;
@@ -20,32 +18,28 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
     @ParameterizedTest
     @MethodSource("webScenarios")
     void GoogleSearchTest(Browser browser, Device device) throws Exception {
-        
         // Arrange
         setBrowserstackProjectInformation("Markito", "MultiBrowserPlatformTests", 
                                             "Google Search-"+browser.getName()+"-"+device.getName());
         setAutomaticDriverDownload(true); // Adds automatic driver download on local machine
         setDriver(openBrowserSessionInDevice(browser, device)); // Open web session on device
+        GoogleSearchHomePage searchPage = new GoogleSearchHomePage( getDriver());
         get("https://www.google.cl");
-        // Act
-        By queryTextBox = By.name("q"); // Do the query in Google search
-        sendKeys(queryTextBox, "Markito" + Keys.ENTER );
+        
+        // Act: This search is not working on IOS https://discuss.appium.io/t/sendkeys-and-click-function-does-not-work-for-ios-simulator/5896
+        sendKeys( searchPage.queryTextBox, "Markito" + Keys.ENTER );
 
         // Get screenshot as GoogleSearchTest-20230111T171104751078.png on TestResults folder.
         getScreenSnapshotWithDate("GoogleSearchTest"); 
+
         // Print found titles
-        List<WebElement> results = null;
-        if ( isAndroid()) 
-            results = findElements(By.xpath("//*/div[@class='MjjYud']/div/div/div/div/div/div/a/div/div[@role='heading']")); 
-        else 
-            results = findElements(By.tagName("h3")); 
-        for (WebElement result : results) {
-            println( getText( result ) );
+        GoogleSearchResultsPage resultsPage = new GoogleSearchResultsPage( getDriver());
+        for (WebElement result : resultsPage.queryResults) {
+            getText( result );
         }
-        // Assert This assert can not work on IOS https://discuss.appium.io/t/sendkeys-and-click-function-does-not-work-for-ios-simulator/5896
-        if (!isIOS()) { 
-            Assert.assertTrue("FAILED", results.size() > 0);
-        }
+        // Assert 
+        if ( !isIOS())
+            Assert.assertTrue("FAILED", resultsPage.queryResults.size() > 0);
     }
     @AfterEach
     void tearDown() throws Exception {

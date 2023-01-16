@@ -24,7 +24,6 @@ import cl.set.markito.MarkitoBaseUtils;
 import cl.set.markito.framework.browsers.Browser;
 import cl.set.markito.framework.cloud.BrowserStack;
 import cl.set.markito.framework.devices.Device;
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MultiTouchAction;
 import io.appium.java_client.android.AndroidDriver;
@@ -208,20 +207,22 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
     public boolean isAndroid() {
         return driver.toString().contains("automationName=UIAutomator2" );
     }
+    @SuppressWarnings("unchecked")
     public IOSDriver<WebElement> getIosDriver() {
         return (IOSDriver<WebElement>)driver;
     }
+    @SuppressWarnings("unchecked")
     public AndroidDriver<WebElement> getAndroidDriver() {
         return (AndroidDriver<WebElement>)driver;
     }
+    @SuppressWarnings("unchecked")
     public MobileDriver<WebElement> getMobileDriver() {
         return (MobileDriver<WebElement>)driver;
     }
     @Override
     public List<WebElement> findElements(By by) {
         printf(ANSI_YELLOW + "Finding elements %s...", by);
-        try { // XPATH=	            //XCUIElementTypeTextField[@name="URL"]  //XCUIElementTypeButton[@name="Go"]
-        //    XPATH elements 	//XCUIElementTypeStaticText[@name="Markito (@markito_pr) • Instagram photos and videos"]
+        try { 
             List<WebElement> elements;
             if ( isIOS()){ // iOS
                 elements = getIosDriver().findElements(by);
@@ -1057,7 +1058,23 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
             throw new WebDriverException(e.getMessage());
         }
     }
-
+    /**
+     * Simulates typing Keys over an editable element located By.
+     * 
+     * @param locator
+     * @param keys
+     */
+    public void sendKeys(WebElement element, String keys) {
+        printf(ANSI_YELLOW + "SendKeys %s to element...", keys);
+        try {
+            // highlightElement( textBox);
+            element.sendKeys(keys);
+            println("done!");
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
     @Override
     public void setLocation(Location location) {
         // TODO Auto-generated method stub

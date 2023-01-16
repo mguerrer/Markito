@@ -24,7 +24,7 @@ public class SampleAppHomePage {
     
 	public SampleAppHomePage(MobileDriver<MobileElement> driver) {
         this.driver = driver;
-           PageFactory.initElements(new AppiumFieldDecorator(driver), this);
+        PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
     public void clickTestBrowserStackLocalButton(){

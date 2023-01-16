@@ -33,7 +33,7 @@ public class MarkitoAndroid extends MarkitoWeb {
     public void LaunchApp() {
         printf(ANSI_YELLOW + "Android LaunchApp...");
         try {
-            AndroidDriver<AndroidElement> adriver = (AndroidDriver<AndroidElement>) driver;
+            AndroidDriver<AndroidElement> adriver = ();
             adriver.launchApp();
             printf(ANSI_YELLOW + "done!\n");
         } catch (Exception e) {
