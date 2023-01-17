@@ -12,6 +12,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import cl.set.markito.IMarkitoWeb;
 import cl.set.markito.MarkitoWeb;
 
 import org.openqa.selenium.By;
@@ -64,7 +65,7 @@ public class DragAndDropPage {
      */
     public void DragObjectAOverObjectB() {
         //Actions act = new Actions(this.driver);
-        MarkitoWeb markito = new MarkitoWeb(driver);
+        IMarkitoWeb markito = new MarkitoWeb(driver);
 
         // Dragged and dropped.
         squareA = driver.findElement(By.id("column-a"));

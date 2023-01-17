@@ -41,7 +41,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * This is the legacy class to drive web test up to version 0.7.
  */
-public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
+public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver, IMarkitoWeb {
     public WebDriver driver = null;
     public JavascriptExecutor js;
     public long timeOutInSeconds = 60;
@@ -60,6 +60,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param headless
      */
+    @Override
     public WebDriver openChromeDriver() {
         println(ANSI_WHITE + "Verifying/updating Chrome driver.");
         WebDriverManager.chromedriver().setup();
@@ -75,6 +76,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param headless
      */
+    @Override
     public void openFirefoxDriver(boolean headless) {
         if (headless) {
             FirefoxOptions options = new FirefoxOptions();
@@ -95,6 +97,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @return the driver session.
      */
+    @Override
     public WebDriver openInternetExplorerDriver() {
         return openInternetExplorerDriver("");
     }
@@ -106,6 +109,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @return the driver session.
      */
+    @Override
     public WebDriver openInternetExplorerDriver(String initialURL) {
         InternetExplorerOptions options = new InternetExplorerOptions();
         options.ignoreZoomSettings();
@@ -123,6 +127,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @return the driver session.
      */
+    @Override
     public WebDriver openInternetExplorerDriver(InternetExplorerOptions options) {
 
         try {
@@ -149,6 +154,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      *                                 log file.
      *                                 http://engineermehedizaman.blogspot.com/2015/03/internet-explorer-driver-for-selenium.html
      */
+    @Override
     public void setInternetExplorerEnvironmentVariables(String pathToIEDriverServerExe, String debugLevel,
             String pathToIEDriverServerLog) {
         System.setProperty("webdriver.ie.driver", pathToIEDriverServerExe);
@@ -161,6 +167,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @throws Exception
      */
+    @Override
     public void closeWebSessionInDevice() throws Exception {
         // Capabilities cap = ((RemoteWebDriver) driver).getCapabilities();
         // String browserName = cap.getBrowserName().toLowerCase();
@@ -197,6 +204,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param by
      * @return WebElement
      */
+    @Override
     public WebElement findElement(By by) {
         printf(ANSI_YELLOW + "Finding element %s...", by);
         try {
@@ -217,6 +225,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param by
      * @return WebElement
      */
+    @Override
     public List<WebElement> findElements(By by) {
         printf(ANSI_YELLOW + "Finding elements %s...", by);
         try {
@@ -238,6 +247,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param timeOutInSeconds
      */
+    @Override
     public void setTimeouts(long timeOutInSeconds) {
         this.timeOutInSeconds = timeOutInSeconds;
         try {
@@ -259,6 +269,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param timeOutInSeconds
      */
+    @Override
     public long getTimeouts() {
         return this.timeOutInSeconds;
     }
@@ -268,6 +279,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param windowHandle
      */
+    @Override
     public String createWindow() {
         printf(ANSI_YELLOW + "CreateWindow...");
         try {
@@ -298,6 +310,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param windowHandle
      */
+    @Override
     public void selectWindow(String windowHandle) {
         printf(ANSI_YELLOW + "SelectWindow...");
         try {
@@ -312,12 +325,13 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
     /**
      * Obtains the string handle be used to select the current window.
      */
+    @Override
     public String getWindowHandle() {
         printf(ANSI_YELLOW + "GetWindowHandle...");
         try {
-            String ventanasPrevias = driver.getWindowHandle();
+            String currentWindowHandle = driver.getWindowHandle();
             printf(ANSI_YELLOW + "done...\n");
-            return ventanasPrevias;
+            return currentWindowHandle;
         } catch (Exception e) {
             printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
             throw new WebDriverException(e.getMessage());
@@ -331,6 +345,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param title: Expected window title.
      * @return: A window handle or null if not found.
      */
+    @Override
     public String getWindowHandleByTitle(String title) {
         Set<String> windowsHandles = driver.getWindowHandles();
         String handle = null;
@@ -355,6 +370,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @return
      */
+    @Override
     public Set<String> getWindowHandles() {
         printf(ANSI_YELLOW + "GetWindowHandles...");
         try {
@@ -373,6 +389,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @return
      */
+    @Override
     public String waitForNewWindow() {
         return waitForNewWindow(timeOutInSeconds); // Uses standard timeout value.
     }
@@ -383,6 +400,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @timeoutSeconds: Max time to wait for new window.
      * @return
      */
+    @Override
     public String waitForNewWindow(long timeoutSeconds) {
         printf(ANSI_YELLOW + "Waiting for new window...");
         try {
@@ -413,6 +431,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
     /**
      * Waits until the number of opened windows is equal to NWindows.
      */
+    @Override
     public void waitForNWindows(int NWindows) {
         waitForNWindows(NWindows, timeOutInSeconds);
     }
@@ -420,6 +439,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
     /**
      * Waits until the number of opened windows is equal to NWindows.
      */
+    @Override
     public void waitForNWindows(int NWindows, long timeoutSeconds) {
         printf(ANSI_YELLOW + "Waiting for new window...");
         try {
@@ -441,6 +461,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * Close the selected window. Please refer to
      * "https://www.selenium.dev/selenium/docs/api/java/com/thoughtworks/selenium/webdriven/commands/Close.html"
      */
+    @Override
     public void CloseCurrentWindow() {
         println(ANSI_YELLOW + "CloseCurrentWindow.");
         driver.close();
@@ -454,6 +475,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param script
      * @param args
      */
+    @Override
     public void executeJsScript(String script, java.lang.Object... args) {
         js.executeScript(script, args);
     }
@@ -464,6 +486,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param script
      * @param args
      */
+    @Override
     public void executeAsynchromousJsScript(String script, String args) {
         js.executeAsyncScript(script, args);
     }
@@ -473,6 +496,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param url
      */
+    @Override
     public void get(String url) {
         printf(ANSI_YELLOW + "Get [%s]...", url);
         try {
@@ -489,6 +513,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param by
      */
+    @Override
     public String getText(By by) {
         printf(ANSI_YELLOW + "GetText from %s...", by);
         long currentTimeout = getTimeouts();
@@ -513,6 +538,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param by
      */
+    @Override
     public String getValue(By by) {
         printf(ANSI_YELLOW + "GetValue ");
         long currentTimeout = getTimeouts();
@@ -538,6 +564,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param by
      * @param attributeName
      */
+    @Override
     public String getAttribute(By by, String attributeName) {
         printf(ANSI_YELLOW + "GetAttribute [" + attributeName + "]...");
         long currentTimeout = getTimeouts();
@@ -565,6 +592,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param value
      * @return Fails on attribute not found or other condition.
      */
+    @Override
     public void setAttributeValue(By by, String attributeName, String value) {
         printf(ANSI_YELLOW + "SetAttributeValue ");
         long currentTimeout = getTimeouts();
@@ -590,6 +618,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param frameHandle
      * @throws InterruptedException
      */
+    @Override
     public void selectFrameByHandle(int frameHandle) throws InterruptedException {
         printf(ANSI_YELLOW + "SelectFrameByHandle %d...", frameHandle);
         long currentTimeout = getTimeouts();
@@ -614,6 +643,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param frameLocator
      * @throws InterruptedException
      */
+    @Override
     public void selectFrameByLocator(By frameLocator) throws InterruptedException {
         printf(ANSI_YELLOW + "SelectFrameBy %s...", frameLocator);
         long currentTimeout = getTimeouts();
@@ -643,6 +673,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param frameId
      * @throws InterruptedException
      */
+    @Override
     public void selectFrameById(String frameID) {
         printf(ANSI_YELLOW + "SelectFrameBy %s...", frameID);
         long currentTimeout = getTimeouts();
@@ -667,6 +698,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param locator
      */
+    @Override
     public void click(By locator) {
         printf(ANSI_YELLOW + "Clicking %s...", locator);
         long currentTimeout = getTimeouts();
@@ -693,6 +725,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param locator
      */
+    @Override
     public void clickJS(By locator) {
         printf(ANSI_YELLOW + "Clicking JS %s...", locator);
         try {
@@ -711,6 +744,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param locator
      */
+    @Override
     public void clickUsingActions(By locator) {
         printf(ANSI_YELLOW + "Clicking simulated %s...", locator);
         long currentTimeout = getTimeouts();
@@ -745,6 +779,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param locator
      */
+    @Override
     public void doubleClick(By locator) {
         printf(ANSI_YELLOW + "DoubleClick %s...", locator);
         long currentTimeout = getTimeouts();
@@ -775,6 +810,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param webElement
      */
+    @Override
     public void doubleClick(WebElement webElement) {
         printf(ANSI_YELLOW + "DoubleClick %s...", webElement);
         long currentTimeout = getTimeouts();
@@ -805,6 +841,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param locator
      */
+    @Override
     public void mouseOver(By locator) {
         printf(ANSI_YELLOW + "MouseOver sobre %s...", locator);
         long currentTimeout = getTimeouts();
@@ -837,6 +874,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param locator
      */
+    @Override
     public void mouseOut(By locator) {
         printf(ANSI_YELLOW + "MouseOut sobre %s...", locator);
         long currentTimeout = getTimeouts();
@@ -872,6 +910,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param sourceObject
      * @param targetObject
      */
+    @Override
     public void dragAndDrop(WebElement sourceObject, WebElement targetObject) {
         printf(ANSI_YELLOW + "DragAndDrop %s over %s...", sourceObject, targetObject);
         long currentTimeout = getTimeouts();
@@ -913,6 +952,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param locator
      */
+    @Override
     public void clickAt(By locator, int x, int y) {
         printf(ANSI_YELLOW + "ClickAt %s x=%d y=%d", locator, x, y);
         long currentTimeout = getTimeouts();
@@ -937,6 +977,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param locator By of the element.
      */
+    @Override
     public void waitForElementPresent(By locator) {
         waitForElementPresent(locator, timeOutInSeconds);
     }
@@ -949,6 +990,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param timeout max time to wait for element to be visible.
      * @return true if element is visible!!! false if element is not visible.
      */
+    @Override
     public boolean waitForElementPresent(By locator, long timeout) {
         printf(ANSI_YELLOW + "Waiting for element %s on %d seconds...", locator.toString(), timeout);
         long currentTimeout = getTimeouts();
@@ -972,6 +1014,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param locator
      */
+    @Override
     public void waitForElementVisible(By locator) {
         printf(ANSI_YELLOW + "Waiting for element %s...", locator.toString());
         long currentTimeout = getTimeouts();
@@ -996,6 +1039,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param timeout max time to wait for element to be visible.
      * @return true or false depending on finding the element in timeout seconds.
      */
+    @Override
     public boolean waitForElementVisible(By locator, long timeout) {
         printf(ANSI_YELLOW + "Waiting for element %s on %d seconds...", locator.toString(), timeout);
         long currentTimeout = getTimeouts();
@@ -1021,6 +1065,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param timeout    max time to wait for element to be visible.
      * @return true or false depending on finding the element in timeout seconds.
      */
+    @Override
     public boolean waitForElementVisible(WebElement webElement, long timeout) {
         printf(ANSI_YELLOW + "Waiting for element %s on %d seconds...", webElement.toString(), timeout);
         long currentTimeout = getTimeouts();
@@ -1043,6 +1088,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param webElement
      */
+    @Override
     public void waitForElementVisible(WebElement webElement) {
         printf(ANSI_YELLOW + "Waiting for element %s...", webElement.toString());
         long currentTimeout = getTimeouts();
@@ -1066,6 +1112,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param locator: Locator to element.
      * @throws WebDriverException when not found in timeoutInSeconds.
      */
+    @Override
     public void waitForTextInElement(String text, By locator) {
         printf(ANSI_YELLOW + "Waiting for text %s in element %s...", text, locator.toString());
         long currentTimeout = getTimeouts();
@@ -1094,6 +1141,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param timeout: Time to wait for.
      * @return true if text is found on element before timeout seconds.
      */
+    @Override
     public boolean waitForTextInElement(String text, By locator, long timeout) {
         printf(ANSI_YELLOW + "Waiting for text %s in element %s...", text, locator.toString());
         long currentTimeout = getTimeouts();
@@ -1120,6 +1168,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param text: Text to wait for
      */
+    @Override
     public void waitForTextInPage(String text) {
         printf(ANSI_YELLOW + "Searching for text %s...", text);
         long currentTimeout = getTimeouts();
@@ -1147,6 +1196,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param locator
      * @param keys
      */
+    @Override
     public void sendKeys(By locator, String keys) {
         printf(ANSI_YELLOW + "SendKeys %s to object %s...", keys, locator);
         long currentTimeout = getTimeouts();
@@ -1172,6 +1222,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
     /**
      * Waits for alert present and Clicks OK if present during timeout period.
      */
+    @Override
     public void clickOKOnAlert() {
         printf(ANSI_YELLOW + "Clicking OK on alert...");
         try {
@@ -1188,6 +1239,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
     /**
      * Waits for alert present and Clicks CANCEL if present during timeout period.
      */
+    @Override
     public void clickCancelOnAlert() {
         try {
             printf(ANSI_YELLOW + "Clicking CANCEL on alert...");
@@ -1206,6 +1258,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @return String
      */
+    @Override
     public String getTextOfAlert() {
         try {
             printf(ANSI_YELLOW + "GetTextOfAlert: Waiting for alert present...");
@@ -1226,6 +1279,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param text
      */
+    @Override
     public void typeTextOnAlert(String text) {
         printf(ANSI_YELLOW + "TypeTextOnAlert: Waiting for alert present...");
         waitForAlertPresent(timeOutInSeconds);
@@ -1245,6 +1299,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param timeOutInSeconds
      * @return
      */
+    @Override
     public boolean waitForAlertPresent(long timeOutInSeconds) {
         printf(ANSI_YELLOW + "WaitForAlertPresent: Waiting for alert present in %d seconds...", timeOutInSeconds);
         long currentTimeout = getTimeouts();
@@ -1268,6 +1323,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param element
      */
+    @Override
     public void highlightElement(WebElement element) {
         /*if (getDebugMode())
             executeJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');",
@@ -1279,6 +1335,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param element
      */
+    @Override
     public void highlightElement(By element) {
         /*if (getDebugMode())
             executeJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');",
@@ -1291,6 +1348,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param selectObject
      * @param VisibleText
      */
+    @Override
     public void selectOptionByVisibleText(By selectObject, String VisibleText) {
         printf(ANSI_YELLOW + "SelectOptionByVisibleText from %s option %s...", selectObject, VisibleText);
         try {
@@ -1310,6 +1368,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param by
      * @param index
      */
+    @Override
     public void selectOptionByIndex(By by, int index) {
         printf(ANSI_YELLOW + "SelectOptionByIndex from %s index %s\n", by, index);
         try {
@@ -1330,6 +1389,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * @param by
      * @param value
      */
+    @Override
     public void selectOptionByValue(By by, String value) {
         printf(ANSI_YELLOW + "SelectOptionByValue from %s value %s...", by, value);
         try {
@@ -1344,6 +1404,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
 
     }
 
+    @Override
     public void setLocation(double x, double y, double z) {
         printf(ANSI_YELLOW + "Set location to %f, %f, %f...", x, y, z);
         try {
@@ -1361,6 +1422,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param fileWithPath: Pathname of the file to be generated.
      */
+    @Override
     public void takeScreenSnapshot(String fileWithPath) throws Exception {
         // Convert web driver object to TakeScreenshot
         TakesScreenshot scrShot = ((TakesScreenshot) driver);
@@ -1391,6 +1453,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param Name: The name you want to recognize.
      */
+    @Override
     public void getScreenSnapshotWithDate(String Name) {
         LocalDateTime ldt = LocalDateTime.now();
         String date = ldt.toString().replaceAll("\\W+", "");
@@ -1404,6 +1467,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
     /**
      * Waits for a a full page load by reading document.readyState.
      */
+    @Override
     public void waitForPageToLoad() {
         printf(ANSI_YELLOW + "WaitForPageToLoad...");
         try {
@@ -1423,6 +1487,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
      * 
      * @param element
      */
+    @Override
     public void waitForElementInvisibility(By element) {
         printf(ANSI_YELLOW + "Waiting for invisibility of element %s...", element.toString());
         long currentTimeout = getTimeouts();
@@ -1439,6 +1504,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
         }
     }
 
+    @Override
     public void waitForElementToBeClickable(By element) {
         printf(ANSI_YELLOW + "Waiting for Clickeable of element %s...", element.toString());
         long currentTimeout = getTimeouts();
@@ -1454,6 +1520,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
         }
     }
 
+    @Override
     public boolean waitForWebElementSelected(By chkDO, long timeOut) {
         printf(ANSI_YELLOW + "Waiting for element %s...", chkDO.toString());
         long currentTimeout = getTimeouts();
@@ -1510,26 +1577,32 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver {
         return driver.manage();
     }
 
+    @Override
     public WebDriver getDriver() {
         return driver;
     }
 
+    @Override
     public void setDriver(WebDriver driver) {
         this.driver = driver;
     }
 
+    @Override
     public JavascriptExecutor getJs() {
         return js;
     }
 
+    @Override
     public void setJs(JavascriptExecutor js) {
         this.js = js;
     }
 
+    @Override
     public long getTimeOutInSeconds() {
         return timeOutInSeconds;
     }
 
+    @Override
     public void setTimeOutInSeconds(long timeOutInSeconds) {
         this.timeOutInSeconds = timeOutInSeconds;
     }
