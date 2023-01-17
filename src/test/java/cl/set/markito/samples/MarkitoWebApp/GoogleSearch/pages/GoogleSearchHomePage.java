@@ -1,4 +1,4 @@
-package cl.set.markito.samples.MarkitoWebApp.GoogleSearch;
+package cl.set.markito.samples.MarkitoWebApp.GoogleSearch.pages;
 
 
 

@@ -14,6 +14,8 @@ import org.openqa.selenium.*;
 import cl.set.markito.framework.MarkitoWebApp;
 import cl.set.markito.framework.browsers.*;
 import cl.set.markito.framework.devices.*;
+import cl.set.markito.samples.MarkitoWebApp.GoogleSearch.pages.GoogleSearchHomePage;
+import cl.set.markito.samples.MarkitoWebApp.GoogleSearch.pages.GoogleSearchResultsPage;
 
 /**
  * Tests to demonstrate Markito capability to run tests for web app on different scenarios.

@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,10 +61,11 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public Map<String, Object> vars = new HashMap<String, Object>();
 
     public MarkitoWebApp() {
-        println(ANSI_YELLOW + "\nMarkito WebDriver started.");
+        println(ANSI_YELLOW + "\nMarkito WebDriver started. Thread=" + Thread.currentThread().getId());
     }
 
     public MarkitoWebApp(WebDriver driverObject) {
+        println(ANSI_YELLOW + "\nMarkito WebDriver started. Thread=" + Thread.currentThread().getId());
         driver = driverObject;
         js = (JavascriptExecutor) driver;
     }
@@ -399,30 +401,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         return getDriver().switchTo();
     }
 
-    public WebDriver getDriver() {
-        return driver;
-    }
-
-    public JavascriptExecutor getJs() {
-        return js;
-    }
-
-    public long getTimeOutInSeconds() {
-        return timeOutInSeconds;
-    }
-
-    public void setDriver(WebDriver driver) {
-        this.driver = driver;
-    }
-
-    public void setJs(JavascriptExecutor js) {
-        this.js = js;
-    }
-
-    public void setTimeOutInSeconds(long timeOutInSeconds) {
-        this.timeOutInSeconds = timeOutInSeconds;
-    }
-
     private WebDriver setRemoteWebDrivers(Device device, DesiredCapabilities caps)
             throws MalformedURLException, Exception {
         WebDriver driver;
@@ -705,6 +683,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @param args
      */
     public void executeJsScript(String script, java.lang.Object... args) {
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript(script, args);
     }
 
@@ -715,6 +694,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @param args
      */
     public void executeAsynchromousJsScript(String script, String args) {
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeAsyncScript(script, args);
     }
 
@@ -942,13 +922,13 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(Exception.class).until(ExpectedConditions.elementToBeClickable(locator));
             WebElement textBox = driver.findElement(locator);
-            // highlightElement( textBox);
+            highlightElement( textBox);
             if (textBox == null) {
                 throw new Exception(ANSI_RED + " Can not find element " + locator);
             }
             textBox.sendKeys(keys);
             setTimeOutInSeconds(currentTimeout);
-            println("done!");
+            println(ANSI_YELLOW +"done!");
         } catch (Exception e) {
             setTimeOutInSeconds(currentTimeout);
             printf(ANSI_RED + "failed! %s\n", e.getMessage());
@@ -967,7 +947,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         try {
             // highlightElement( textBox);
             element.sendKeys(keys);
-            println("done!");
+            println(ANSI_YELLOW +"done!");
         } catch (Exception e) {
             printf(ANSI_RED + "failed! %s\n", e.getMessage());
             throw new WebDriverException(e.getMessage());
@@ -982,77 +962,54 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         return getMobileDriver().terminateApp(bundleId);
     }
 
-    @Override
-    public void click() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void clear() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public String getAttribute(String name) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String getCssValue(String propertyName) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Point getLocation() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void submit() {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * @Override
-     * public TouchAction performTouchAction(TouchAction touchAction) {
-     * // TODO Auto-generated method stub
-     * return getMobileDriver().performTouchAction(touchAction);
-     * }
-     * 
-     * @Override
-     * public void activateApp(String bundleId, @Nullable
-     * BaseActivateApplicationOptions options) {
-     * // TODO Auto-generated method stub
-     * getMobileDriver().activateApp(bundleId, options);
-     * }
-     * 
-     * @Override
-     * public void installApp(String appPath, @Nullable
-     * BaseInstallApplicationOptions options) {
-     * // TODO Auto-generated method stub
-     * getMobileDriver().installApp(appPath, options);
-     * }
-     * 
-     * @Override
-     * public boolean removeApp(String bundleId, @Nullable
-     * BaseRemoveApplicationOptions options) {
-     * // TODO Auto-generated method stub
-     * return getMobileDriver().removeApp(bundleId, options);
-     * }
-     * 
-     * @Override
-     * public boolean terminateApp(String bundleId, @Nullable
-     * BaseTerminateApplicationOptions options) {
-     * // TODO Auto-generated method stub
-     * return getMobileDriver().terminateApp(bundleId, options);
-     * }
+    /**
+     * Get the value of a given CSS property.
+     * Color values should be returned as rgba strings, so,
+     * for example if the "background-color" property is set as "green" in the
+     * HTML source, the returned value will be "rgba(0, 255, 0, 1)".
+     *
+     * Note that shorthand CSS properties (e.g. background, font, border,
+     * border-top, margin,
+     * margin-top, padding, padding-top, list-style, outline, pause, cue) are not
+     * returned,
+     * in accordance with the
+     * <a href=
+     * "http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleDeclaration">DOM
+     * CSS2 specification</a>
+     * - you should directly access the longhand properties (e.g. background-color)
+     * to access the
+     * desired values.
+     *
+     * @param propertyName the css property name of the element
+     * @return The current, computed value of the property.
      */
+    public String getCssValue(WebElement element, String propertyName) {
+        return element.getCssValue(propertyName);
+    }
+
+    /**
+     * Where on the page is the top left-hand corner of the rendered element?
+     *
+     * @return A point, containing the location of the top left-hand corner of the
+     *         element
+     */
+    public Point getLocation(WebElement element) {
+        return element.getLocation();
+    }
+
+    /**
+     * If this current element is a form, or an element within a form, then this
+     * will be submitted to
+     * the remote server. If this causes the current page to change, then this
+     * method will block until
+     * the new page is loaded.
+     *
+     * @throws NoSuchElementException If the given element is not within a form
+     */
+    public void submit(WebElement element) {
+        element.submit();
+
+    }
 
     /**
      * Establish a unified timeout parameter for implicit waits, page loads and
@@ -1285,13 +1242,14 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "SetAttributeValue ");
         long currentTimeout = getTimeouts();
         try {
-            highlightElement(by);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).until(ExpectedConditions.presenceOfElementLocated(by))
                     .getAttribute(attributeName);
             setTimeouts(currentTimeout);
-            executeJsScript("arguments[0].setAttribute(arguments[1], arguments[2]);", driver.findElement(by),
-                    attributeName, value);
+            WebElement element = driver.findElement(by);
+            highlightElement(element);
+
+            executeJsScript("arguments[0].setAttribute(arguments[1], arguments[2]);", element, attributeName, value);
             printf(ANSI_YELLOW + "done set attribute [%s] with value [%s] in object %s\n", attributeName, value, by);
         } catch (Exception e) {
             setTimeouts(currentTimeout);
@@ -1386,15 +1344,34 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public void clickJS(By locator) {
         printf(ANSI_YELLOW + "Clicking JS %s...", locator);
         try {
-            highlightElement(locator);
-            // Do not add waits.
-            executeJsScript("arguments[0].click();", driver.findElement(locator));
-            printf(ANSI_YELLOW + "done.\n", driver.findElement(locator));
+            WebElement element = driver.findElement(locator);
+            highlightElement(element);
+            clickJS(element);
         } catch (Exception e) {
             printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
             throw new WebDriverException(e.getMessage());
         }
     }
+
+    /**
+     * Click in a clickable web element bypassing webdriver using
+     * js executor.
+     * 
+     * @param locator
+     */
+    public void clickJS(WebElement element) {
+        printf(ANSI_YELLOW + "Clicking JS %s...", element);
+        try {
+            highlightElement(element);
+            // Do not add waits.
+            executeJsScript("arguments[0].click();", element);
+            printf(ANSI_YELLOW + "done.\n");
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
     /**
      * Click in a element located using webdriver Actions.
      * 
@@ -1404,7 +1381,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Clicking simulated %s...", locator);
         long currentTimeout = getTimeouts();
         try {
-            highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
@@ -1443,8 +1419,8 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
                     .until(ExpectedConditions.visibilityOfElementLocated(locator));
-            highlightElement(locator);
             WebElement element = driver.findElement(locator);
+            highlightElement(element);
             Actions builder = new Actions(driver);
             builder
                     .moveToElement(element)
@@ -1489,7 +1465,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         }
     }
 
-
     /**
      * MouseOver in a element located using webdriver Actions.
      * 
@@ -1499,7 +1474,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "MouseOver sobre %s...", locator);
         long currentTimeout = getTimeouts();
         try {
-            highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
@@ -1531,7 +1505,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "MouseOut sobre %s...", locator);
         long currentTimeout = getTimeouts();
         try {
-            highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
@@ -1607,12 +1580,12 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "ClickAt %s x=%d y=%d", locator, x, y);
         long currentTimeout = getTimeouts();
         try {
-            highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-            highlightElement(locator);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.elementToBeClickable(locator));
-            new Actions(driver).moveToElement(driver.findElement(locator), x, y).click().perform();
+            WebElement element = driver.findElement(locator);
+            highlightElement(element);
+            new Actions(driver).moveToElement(element, x, y).click().perform();
             printf(ANSI_YELLOW + "done.\n", locator);
             setTimeouts(currentTimeout);
         } catch (Exception e) {
@@ -1643,7 +1616,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for element %s on %d seconds...", locator.toString(), timeout);
         long currentTimeout = getTimeouts();
         try {
-            highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeout).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.presenceOfElementLocated(locator));
@@ -1677,7 +1649,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             throw new WebDriverException(e.getMessage());
         }
     }
-
 
     /**
      * Waits for an element to be visible and not fail if not found on timeout,
@@ -1932,20 +1903,19 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @param element
      */
     public void highlightElement(WebElement element) {
-        /*if (getDebugMode())
-            executeJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');",
-                    element);*/
-    }
 
-    /**
-     * Highlights an element By if debug mode is ON.
-     * 
-     * @param element
-     */
-    public void highlightElement(By element) {
-        /*if (getDebugMode())
-            executeJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');",
-                    driver.findElement(element));*/
+        if (getDebugMode()) {
+            try {
+                executeJsScript("arguments[0].setAttribute('style', 'background: yellow; border: 3px solid blue;');",
+                element);
+            }
+            catch (Exception e) {
+                printf( ANSI_GREEN+"WARNING: Can´t highlight. ");
+            }
+
+        }
+
+
     }
 
     /**
@@ -2528,10 +2498,90 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         return getDriver().manage().logs().getAvailableLogTypes();
     }
 
+    /**
+     * Obtains a set of handles for all the current windows.
+     * 
+     * @return
+     */
     @Override
     public Set<String> getWindowHandles() {
-        // TODO Auto-generated method stub
+        printf(ANSI_YELLOW + "GetWindowHandles...");
+        try {
+            Set<String> ventanasPrevias = new HashSet<String>(driver.getWindowHandles());
+            printf(ANSI_YELLOW + "done...\n");
+            return ventanasPrevias;
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    public JavascriptExecutor getJs() {
+        return js;
+    }
+
+    public void setJs(JavascriptExecutor js) {
+        this.js = js;
+    }
+
+    public long getTimeOutInSeconds() {
+        return timeOutInSeconds;
+    }
+
+    public void setTimeOutInSeconds(long timeOutInSeconds) {
+        this.timeOutInSeconds = timeOutInSeconds;
+    }
+
+    public BrowserStack getBrowserStack() {
+        return browserStack;
+    }
+
+    public void setBrowserStack(BrowserStack browserStack) {
+        this.browserStack = browserStack;
+    }
+
+    public Map<String, Object> getVars() {
+        return vars;
+    }
+
+    public void setVars(Map<String, Object> vars) {
+        this.vars = vars;
+    }
+
+    @Override
+    public void click() {
+    }
+
+    @Override
+    public void submit() {
+    }
+
+    @Override
+    public String getAttribute(String name) {
         return null;
+    }
+
+    @Override
+    public Point getLocation() {
+        return null;
+    }
+
+    @Override
+    public String getCssValue(String propertyName) {
+        return null;
+    }
+
+    @Override
+    public void clear() {
+
     }
 
 }

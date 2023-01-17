@@ -1,75 +1,62 @@
 /**
- * Experimental Thread safe web test.
+ * Tests different methods.
  */
 
 package cl.set.markito.samples.MarkitoWebApp.TheInternet;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
 
+import cl.set.markito.framework.MarkitoWebApp;
 import cl.set.markito.samples.MarkitoWebApp.TheInternet.pages.DragAndDropPage;
 import cl.set.markito.samples.MarkitoWebApp.TheInternet.pages.HomePage;
 
-public class TheInternetTests {
-    protected static ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<WebDriver>();
-
-
+public class TheInternetTests extends MarkitoWebApp{
+    HomePage homePage = null;
     @BeforeEach
-    public void Setup(){
-        WebDriver driver = BrowserManager.doBrowserSetup("chrome");
-        //set driver
-        threadLocalDriver.set(driver);
+    public void Setup() throws Exception {
+        // Arrange
+        setBrowserstackProjectInformation("Markito", "MultiBrowserPlatformTests", 
+                                            "Google Search-Chrome"+"-"+LOCAL_COMPUTER_DEVICE.getName());
+        setAutomaticDriverDownload(true); // Adds automatic driver download on local machine
+        setDriver(openBrowserSessionInDevice(CHROME_BROWSER, LOCAL_COMPUTER_DEVICE)); // Open web session on device
 
-        System.out.println("Before Test Thread ID: "+Thread.currentThread().getId());
-
-        //get URL
+        // get URL
         getDriver().get("http://the-internet.herokuapp.com/");
+        // Open Home Page
+        homePage = new HomePage(getDriver());
+        PageFactory.initElements(getDriver(), homePage);
     }
-
-    //get thread-safe driver
-    public static WebDriver getDriver(){
-        return threadLocalDriver.get();
-    }
-
 
     @AfterEach
-    public void tearDown(){
-        getDriver().quit();
-
-        System.out.println("After Test Thread ID: "+Thread.currentThread().getId());
-
-        threadLocalDriver.remove();
+    public void tearDown() throws Exception {
+       closeWebSessionInDevice();
     }
+
     @Test
     public void DragAndDropTest() throws Exception {
-
-        // Arrange
-        // Open Home Page
-        HomePage homePage = new HomePage(getDriver());
-        PageFactory.initElements(getDriver(), homePage);
         // Open link Drag And Drop
         homePage.clickDragAndDropLink();
 
         DragAndDropPage dragAndDropPage = new DragAndDropPage(getDriver());
         dragAndDropPage.verifyPageLoaded();
-        
+
         // Act & Assert
         // Test drag and drop
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 3; i++) {
             dragAndDropPage.DragObjectAOverObjectB();
             Thread.sleep(100);
             String header = dragAndDropPage.squareA.getText();
-            if ( (i % 2) == 0 ) { // Assert that header has changed after drag and drop.
-                assertEquals( header, "B" );
+            if ((i % 2) == 0) { // Assert that header has changed after drag and drop.
+                assertEquals(header, "B");
             } else {
-                assertEquals( header, "A" );
+                assertEquals(header, "A");
             }
         }
-
 
     }
 }
