@@ -205,25 +205,24 @@ public class HomePage {
     @CacheLookup
     private WebElement wysiwygEditor;
 
+    private String hostUrl;
+
+    public String getHostUrl(String hostUrl){
+        this.hostUrl = hostUrl;
+        return this.hostUrl;
+    }
+
     public HomePage() {
     }
 
-    public HomePage(WebDriver driver) {
+    public HomePage(WebDriver driver, String hostUrl) {
         this();
         this.driver = driver;
+        this.hostUrl = hostUrl;
+        driver.get(hostUrl);
     }
 
-    public HomePage(WebDriver driver, Map<String, String> data) {
-        this(driver);
-//        this.data = data;
-    }
-
-    public HomePage(WebDriver driver, Map<String, String> data, int timeout) {
-        this(driver, data);
-        this.timeout = timeout;
-    }
-
-    /**
+   /**
      * Click on Ab Testing Link.
      *
      * @return the Home class instance.

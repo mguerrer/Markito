@@ -1985,7 +1985,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     }
 
     /**
-     * 
+     * Waits till element by is invisible.
      * @param element
      */
     public void waitForElementInvisibility(By element) {
@@ -1995,6 +1995,25 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .until(ExpectedConditions.invisibilityOf(getDriver().findElement(element)));
+            printf(ANSI_YELLOW + "invisible!!!\n");
+            setTimeouts(currentTimeout);
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            setTimeouts(currentTimeout);
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
+        /**
+     * Waits till element by is invisible.
+     * @param element
+     */
+    public void waitForElementInvisibility(WebElement element) {
+        printf(ANSI_YELLOW + "Waiting for invisibility of element %s...", element.toString());
+        long currentTimeout = getTimeouts();
+        try {
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds).until(ExpectedConditions.invisibilityOf(element));
             printf(ANSI_YELLOW + "invisible!!!\n");
             setTimeouts(currentTimeout);
         } catch (Exception e) {
