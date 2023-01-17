@@ -54,15 +54,18 @@ In the case of Java (one the most used OOP languages) to automate using webdrive
 7. Automated browser drivers download to accomodate to current installed versions.  Build on top of [WebDriverManager](https://bonigarcia.dev/webdrivermanager/#webdriver-builder).
 
 ## Hello world
-With Markito you'll be writing code in seconds, creating a super readable code, making you productive and improving code maintainability. This is the way your Hello World code will look like this with Markito:
+With Markito you'll be writing code in minutes, creating a super readable code, making you productive and improving code maintainability. This is the way your Hello World code will look like this with Markito:
 ### Web App
 <pre><code>
 public void HelloWorldWebTest() {
-&nbsp;&nbsp;&nbsp;&nbsp;OpenWebDriver();
-&nbsp;&nbsp;&nbsp;&nbsp;Get("http://www.google.com");
-&nbsp;&nbsp;&nbsp;&nbsp;SendKeys( By.name("q"), "Hello world!!");
-&nbsp;&nbsp;&nbsp;&nbsp;Click( By.name("btnK"));
-&nbsp;&nbsp;&nbsp;&nbsp;CloseWebDriver();
+&nbsp;&nbsp;&nbsp;&nbsp;setBrowserstackProjectInformation("Markito", "MultiBrowserPlatformTests",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Google Search-Chrome"+"-"+LOCAL_COMPUTER_DEVICE.getName());
+&nbsp;&nbsp;&nbsp;&nbsp;setAutomaticDriverDownload(true); // Adds automatic driver download on local machine
+&nbsp;&nbsp;&nbsp;&nbsp;setDriver(openBrowserSessionInDevice(CHROME_BROWSER, LOCAL_COMPUTER_DEVICE)); // Open web session on device
+&nbsp;&nbsp;&nbsp;&nbsp;get("http://www.google.com");
+&nbsp;&nbsp;&nbsp;&nbsp;sendKeys( By.name("q"), "Hello world!!");
+&nbsp;&nbsp;&nbsp;&nbsp;click( By.name("btnK"));
+&nbsp;&nbsp;&nbsp;&nbsp;closeWebSessionInDevice();
 }
 </code></pre>
 ### Mobile App

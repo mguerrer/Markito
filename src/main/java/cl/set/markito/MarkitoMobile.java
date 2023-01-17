@@ -8,22 +8,17 @@ import java.io.File;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.DeviceRotation;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.html5.Location;
-import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -31,7 +26,7 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MobileElement;
 
-public class MarkitoMobile extends MarkitoBaseUtils implements MobileDriver<MobileElement>{
+public abstract class MarkitoMobile extends MarkitoBaseUtils {
     public MobileDriver<MobileElement> driver = null;
     public long timeOutInSeconds = 60;
 
@@ -50,7 +45,7 @@ public class MarkitoMobile extends MarkitoBaseUtils implements MobileDriver<Mobi
     public void setDriver(MobileDriver<MobileElement> driver) {
         this.driver = driver;
     }
-
+    @SuppressWarnings("unchecked")
     public void setDriver(WebDriver driver) {
         this.driver = (MobileDriver<MobileElement>) driver;
     }
@@ -308,7 +303,8 @@ public class MarkitoMobile extends MarkitoBaseUtils implements MobileDriver<Mobi
         println(ANSI_YELLOW+"SetContextHandle "+ContextName); //prints out something like NATIVE_APP \n WEBVIEW_1
         driver.context(ContextName);
     }
-
+    
+/*
     @Override
     public void get(String url) {
         // TODO Auto-generated method stub
@@ -560,4 +556,5 @@ public class MarkitoMobile extends MarkitoBaseUtils implements MobileDriver<Mobi
         // TODO Auto-generated method stub
         return null;
     }
+    */
 }

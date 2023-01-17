@@ -30,10 +30,11 @@ public class MarkitoAndroid extends MarkitoWeb {
     /**
      * Launch ANDROID App selected in capabilities.
      */
+    @SuppressWarnings("unchecked")
     public void LaunchApp() {
         printf(ANSI_YELLOW + "Android LaunchApp...");
         try {
-            AndroidDriver<AndroidElement> adriver = ();
+            AndroidDriver<AndroidElement> adriver = (AndroidDriver<AndroidElement>) driver;
             adriver.launchApp();
             printf(ANSI_YELLOW + "done!\n");
         } catch (Exception e) {
@@ -45,6 +46,7 @@ public class MarkitoAndroid extends MarkitoWeb {
     /**
      * Reset ANDROID App selected in capabilities.
      */
+    @SuppressWarnings("unchecked")
     public void ResetApp() {
         printf(ANSI_YELLOW + "Android ResetApp...");
         try {
@@ -61,6 +63,7 @@ public class MarkitoAndroid extends MarkitoWeb {
     /**
      * Close ANDROID App selected in capabilities.
      */
+    @SuppressWarnings("unchecked")
     public void CloseApp() {
         printf(ANSI_YELLOW + "Android CloseApp...");
         try {
@@ -289,6 +292,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * 
      * @return ContextNames: Obtained contexts from Android driver.
      */
+    @SuppressWarnings("unchecked")
     public Set<String> GetContextHandles() {
         adriver = (AndroidDriver<AndroidElement>) driver;
         Set<String> contextNames = adriver.getContextHandles();
@@ -297,14 +301,14 @@ public class MarkitoAndroid extends MarkitoWeb {
         }
         return contextNames;
     }
-
+    @SuppressWarnings("unchecked")
     public void SetContextHandle(String ContextName) {
         println(ANSI_YELLOW + "SetContextHandle " + ContextName); // prints out something like NATIVE_APP \n WEBVIEW_1
         adriver = (AndroidDriver<AndroidElement>) driver;
         adriver.context(ContextName);
         driver = adriver;
     }
-
+    @SuppressWarnings("unchecked")
     public void Tap(By locator) {
         printf(ANSI_YELLOW + "Tapping element %s...", locator.toString());
         try {
@@ -321,6 +325,7 @@ public class MarkitoAndroid extends MarkitoWeb {
         }
 
     }
+    @SuppressWarnings("unchecked")
     @Override
     public void setLocation( double x, double y, double z) {
         printf(ANSI_YELLOW + "Set location to %f, %f, %f...", x,y,z);

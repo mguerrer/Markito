@@ -117,7 +117,7 @@ public class BrowserStack extends DebugManager {
         String platform = capabilities.getCapability("platformName").toString();
         String browser;
         printf(ANSI_WHITE + "Opening %s Web Session in Browserstack in device %s...", platform,
-                capabilities.getCapability("device"));
+                capabilities.getCapability("deviceName"));
         if (capabilities.getCapability("browserName") != null) {
             browser = capabilities.getCapability("browserName").toString();
             printf(ANSI_WHITE + " on browser " + browser);
@@ -153,10 +153,12 @@ public class BrowserStack extends DebugManager {
         browserstackOptions.put("osVersion", os_version);
         browserstackOptions.put("deviceName", deviceName);
         browserstackOptions.put("local", "false");
+        capabilities.setCapability("platformName", platform);
+
         capabilities.setCapability("bstack:options", browserstackOptions);
         capabilities.setCapability("browserstack.appium_version", "1.21.0");
         capabilities.setCapability("browserstack.idleTimeout", "30");
-        LogCapabilities(capabilities);
+        //LogCapabilities(capabilities);
     }
 
     /** */
@@ -169,6 +171,7 @@ public class BrowserStack extends DebugManager {
         // Set browser
         capabilities.setCapability("browserName", browser);
         capabilities.setCapability("browserVersion", "latest");
+        capabilities.setCapability("platformName", platform);
         // Settings to support Mobile web testing.
         if (platform.equals(OS.IOS.name)) {
             capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
@@ -199,7 +202,7 @@ public class BrowserStack extends DebugManager {
             browserstackOptions.put("osVersion", os_version);
             capabilities.setCapability("bstack:options", browserstackOptions);
         }
-        LogCapabilities(capabilities);
+        //LogCapabilities(capabilities);
         return capabilities;
     }
 

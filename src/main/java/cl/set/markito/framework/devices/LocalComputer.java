@@ -5,7 +5,7 @@ public final class LocalComputer implements Device {
     public final String name = "Local Computer";
     public OS platform = OS.CURRENT;
     public final String platform_version = "";
-    public String getName() {
+    public final String getName() {
         return name;
     }
     public void setPlatform( OS os ) {

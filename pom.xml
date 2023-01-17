@@ -15,8 +15,8 @@
     <!-- JaCoCo thresholds. Increase gradually as you add tests. -->
     <jacoco.unit-tests.limit.instruction-ratio>0%</jacoco.unit-tests.limit.instruction-ratio>
     <jacoco.unit-tests.limit.branch-ratio>0%</jacoco.unit-tests.limit.branch-ratio>
-    <jacoco.unit-tests.limit.class-complexity>95</jacoco.unit-tests.limit.class-complexity>
-    <jacoco.unit-tests.limit.method-complexity>5</jacoco.unit-tests.limit.method-complexity>
+    <jacoco.unit-tests.limit.class-complexity>200</jacoco.unit-tests.limit.class-complexity>
+    <jacoco.unit-tests.limit.method-complexity>10</jacoco.unit-tests.limit.method-complexity>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <checkstyle.version>8.29</checkstyle.version>

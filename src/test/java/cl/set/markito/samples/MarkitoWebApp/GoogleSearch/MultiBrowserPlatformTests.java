@@ -1,9 +1,11 @@
 package cl.set.markito.samples.MarkitoWebApp.GoogleSearch;
 
+import java.util.List;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -13,8 +15,40 @@ import cl.set.markito.framework.MarkitoWebApp;
 import cl.set.markito.framework.browsers.*;
 import cl.set.markito.framework.devices.*;
 
+/**
+ * Tests to demonstrate Markito capability to run tests for web app on different scenarios.
+ */
 public class MultiBrowserPlatformTests extends MarkitoWebApp {
-    
+    /**
+     * Very simple "Hello world" style of Google's search on your local computer using Chrome."
+     */
+    @Test
+    public void HelloWorldTest() throws Exception {
+        // Arrange
+        setBrowserstackProjectInformation("Markito", "MultiBrowserPlatformTests", 
+                                            "Google Search-Chrome"+"-"+LOCAL_COMPUTER_DEVICE.getName());
+        setAutomaticDriverDownload(true); // Adds automatic driver download on local machine
+        setDriver(openBrowserSessionInDevice(CHROME_BROWSER, LOCAL_COMPUTER_DEVICE)); // Open web session on device
+
+        // Act
+        get("http://www.google.com");
+        // Search "Hello world!!" string
+        sendKeys( By.name("q"), "Hello world!!");
+        click( By.name("btnK"));
+
+        // Show all texts found in first page.
+        List<WebElement>results = findElements(By.tagName("h3"));
+        for (WebElement webElement : results) {
+            println(webElement.getText());
+        }
+        closeWebSessionInDevice();
+    }
+    /**
+     * A multi-browser and multi platform test (on BrowserStack) for Google search, using Selenium and Appium clients together. 
+     * @param browser
+     * @param device
+     * @throws Exception
+     */
     @ParameterizedTest
     @MethodSource("webScenarios")
     void GoogleSearchTest(Browser browser, Device device) throws Exception {
@@ -29,6 +63,7 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
         // Act: This search is not working on IOS https://discuss.appium.io/t/sendkeys-and-click-function-does-not-work-for-ios-simulator/5896
         sendKeys( searchPage.queryTextBox, "Markito" + Keys.ENTER );
 
+
         // Get screenshot as GoogleSearchTest-20230111T171104751078.png on TestResults folder.
         getScreenSnapshotWithDate("GoogleSearchTest"); 
 
@@ -39,7 +74,7 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
         }
         // Assert 
         if ( !isIOS())
-            Assert.assertTrue("FAILED", resultsPage.queryResults.size() > 0);
+            Assertions.assertTrue( resultsPage.queryResults.size() > 0);
     }
     @AfterEach
     void tearDown() throws Exception {
@@ -51,29 +86,28 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
      */
     private static Stream<Arguments> webScenarios() {
         return Stream.of(
-            /*Arguments.of(CHROME_BROWSER, LOCAL_COMPUTER_DEVICE),
+            Arguments.of(CHROME_BROWSER, LOCAL_COMPUTER_DEVICE),
             //Arguments.of(FIREFOX_BROWSER, LOCAL_COMPUTER_DEVICE),
             Arguments.of(IE_BROWSER, LOCAL_COMPUTER_DEVICE),
-            Arguments.of(EDGE_BROWSER, LOCAL_COMPUTER_DEVICE),*/
+            Arguments.of(EDGE_BROWSER, LOCAL_COMPUTER_DEVICE),
 
             Arguments.of(CHROME_BROWSER, WINDOWS10_COMPUTER_DEVICE),
-            /*Arguments.of(FIREFOX_BROWSER, WINDOWS10_COMPUTER_DEVICE),
+            Arguments.of(FIREFOX_BROWSER, WINDOWS10_COMPUTER_DEVICE),
             Arguments.of(IE_BROWSER, WINDOWS10_COMPUTER_DEVICE),
             Arguments.of(EDGE_BROWSER, WINDOWS10_COMPUTER_DEVICE),
 
             Arguments.of(CHROME_BROWSER, WINDOWS11_COMPUTER_DEVICE),
             Arguments.of(FIREFOX_BROWSER, WINDOWS11_COMPUTER_DEVICE),
-            Arguments.of(IE_BROWSER, WINDOWS11_COMPUTER_DEVICE),
-            Arguments.of(EDGE_BROWSER, WINDOWS11_COMPUTER_DEVICE),*/
+            Arguments.of(EDGE_BROWSER, WINDOWS11_COMPUTER_DEVICE),
 
-            /*Arguments.of(CHROME_BROWSER, MAC_VENTURA_COMPUTER_DEVICE),
+            Arguments.of(CHROME_BROWSER, MAC_VENTURA_COMPUTER_DEVICE),
             Arguments.of(FIREFOX_BROWSER, MAC_VENTURA_COMPUTER_DEVICE),
             Arguments.of(SAFARI_BROWSER, MAC_VENTURA_COMPUTER_DEVICE),
-            Arguments.of(EDGE_BROWSER, MAC_VENTURA_COMPUTER_DEVICE),*/
+            Arguments.of(EDGE_BROWSER, MAC_VENTURA_COMPUTER_DEVICE),
 
             Arguments.of(SAFARI_BROWSER, IPHONE11PRO_DEVICE),
-            Arguments.of(CHROME_BROWSER, GOOGLEPIXEL3_DEVICE)
-            /*Arguments.of(FIREFOX_BROWSER, GOOGLEPIXEL3_DEVICE)*/
+            Arguments.of(CHROME_BROWSER, GOOGLEPIXEL3_DEVICE),
+            Arguments.of(FIREFOX_BROWSER, GOOGLEPIXEL3_DEVICE)
 
         );
     }

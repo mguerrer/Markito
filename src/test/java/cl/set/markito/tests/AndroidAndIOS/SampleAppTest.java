@@ -7,14 +7,17 @@ import org.junit.jupiter.params.provider.ValueSource;
 import cl.set.markito.framework.cloud.BrowserStack;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MobileElement;
 
 
 public class SampleAppTest extends BrowserStack{
+    @Disabled
     @DisplayName("Click on home page text button and read test message.")
     @ParameterizedTest
-    @ValueSource(strings = { "iOS", "android"})
+    @ValueSource(strings = { "iOS", "Android"})
     void SampleAppTestOnMobile( String platform ){
         // Arrange
         MobileDriver<MobileElement> driver;

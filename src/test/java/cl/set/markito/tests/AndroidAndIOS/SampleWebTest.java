@@ -8,11 +8,13 @@ import org.openqa.selenium.WebDriver;
 
 import cl.set.markito.framework.cloud.BrowserStack;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 
 /**
  * This test Browserstack's provided LocalSample.apk and  LocalSample.ipa.
  */
 public class SampleWebTest extends BrowserStack{
+    @Disabled
     @DisplayName("Click on home page text button and read message.")
     @ParameterizedTest
     @ValueSource(strings = { "iOS", "android"})

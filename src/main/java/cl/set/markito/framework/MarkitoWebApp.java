@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 
 import org.openqa.selenium.html5.Location;
-import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -27,7 +26,6 @@ import cl.set.markito.framework.devices.Device;
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MultiTouchAction;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.appmanagement.ApplicationState;
 import io.appium.java_client.ios.IOSDriver;
 
@@ -39,6 +37,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.RemoteWebElement;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -46,13 +45,13 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * Generic interface to drive browsers in desktop and mobile devices.
  * Marcos Guerrero: 12-01-2023
  */
-public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWebDriver {
+public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebElement {
     private WebDriver driver = null;
     private JavascriptExecutor js;
     private long timeOutInSeconds = 60;
     private Boolean automaticDriverDownload = false;
     private BrowserStack browserStack = new BrowserStack();
-    public  Map<String, Object> vars = new HashMap<String, Object>();
+    public Map<String, Object> vars = new HashMap<String, Object>();
 
     public MarkitoWebApp() {
         println(ANSI_YELLOW + "\nMarkito WebDriver started.");
@@ -71,7 +70,9 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
     }
 
     /**
-     * For local execution download/update needed drivers for current installed browser version.  This method allows to do (true) or not (false).
+     * For local execution download/update needed drivers for current installed
+     * browser version. This method allows to do (true) or not (false).
+     * 
      * @param automaticDriverDownload: true or false
      */
     public void setAutomaticDriverDownload(Boolean automaticDriverDownload) {
@@ -83,17 +84,19 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
     }
 
     /**
-     * Setup of BrowserStack dashboard parameters to organize test results. 
+     * Setup of BrowserStack dashboard parameters to organize test results.
+     * 
      * @param projectName
      * @param buildName
      * @param testName
      */
-    public void setBrowserstackProjectInformation(String projectName, String buildName, String testName){
+    public void setBrowserstackProjectInformation(String projectName, String buildName, String testName) {
         browserStack.setProjectInformation(projectName, buildName, testName);
     }
 
     /**
      * Open a webbrowser session in a device.
+     * 
      * @param browser
      * @param device
      * @return
@@ -102,13 +105,14 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
     public WebDriver openBrowserSessionInDevice(Browser browser, Device device) throws Exception {
         WebDriver driver;
 
-        printf(ANSI_YELLOW + "Creating Markito WEB session on browser " + browser.getName() + " on device "
-                + device.getName() + " " + device.getPlatform());
+        printf(ANSI_WHITE + "Creating Markito WEB session on browser " + ANSI_YELLOW + browser.getName() + " on device "
+                +ANSI_WHITE+ device.getName() + "-" + device.getPlatform() +"...\n");
         try {
             if (device.getProviderURL().contains("browserstack")) {
-                browserStack.setDesiredWebTechnicalCapabilities(browser.getName().toString(), device.getName(), device.getPlatform().toString(),
+                browserStack.setDesiredWebTechnicalCapabilities(browser.getName().toString(), device.getName(),
+                        device.getPlatform().toString(),
                         device.getPlatform_version());
-                
+
             } else if (!device.getProviderURL().equals("")) {
                 throw new Exception(ANSI_RED + "ERROR: Provider " + device.getProviderURL()
                         + " not supported for device " + device.getName());
@@ -119,7 +123,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
                 driver = setRemoteWebDrivers(device, browserStack.getCapabilities());
             }
         } catch (Exception e) {
-            
+
             println("\n" + ANSI_RED + "ERROR on creating session." + e.getMessage());
             throw new Exception(e.getMessage());
         }
@@ -138,7 +142,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
                 // driver.close();
                 driver.quit();
                 driver = null;
-                println(ANSI_YELLOW + "Markito is destroyed.");
+                println(ANSI_WHITE + "Markito is destroyed.");
             } else
                 println(ANSI_YELLOW + "WARNING: Markito is null.  Please check your teardown process.");
         } catch (Exception e) {
@@ -153,83 +157,79 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
         return null;
     }
 
-    @Override
     public WebElement findElementByClassName(String className) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public WebElement findElementByCssSelector(String cssSelector) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public WebElement findElementById(String id) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public WebElement findElementByLinkText(String linkText) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public WebElement findElementByName(String name) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public WebElement findElementByPartialLinkText(String partialLinkText) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public WebElement findElementByTagName(String tagName) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public WebElement findElementByXPath(String xPath) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public boolean isIOS(){
+    public boolean isIOS() {
         return driver.toString().contains("io.appium.java_client.ios.IOSDriver");
     }
+
     public boolean isAndroid() {
-        return driver.toString().contains("automationName=UIAutomator2" );
+        return driver.toString().contains("automationName=UIAutomator2");
     }
+
     @SuppressWarnings("unchecked")
     public IOSDriver<WebElement> getIosDriver() {
-        return (IOSDriver<WebElement>)driver;
+        return (IOSDriver<WebElement>) driver;
     }
+
     @SuppressWarnings("unchecked")
     public AndroidDriver<WebElement> getAndroidDriver() {
-        return (AndroidDriver<WebElement>)driver;
+        return (AndroidDriver<WebElement>) driver;
     }
+
     @SuppressWarnings("unchecked")
     public MobileDriver<WebElement> getMobileDriver() {
-        return (MobileDriver<WebElement>)driver;
+        return (MobileDriver<WebElement>) driver;
     }
+
     @Override
     public List<WebElement> findElements(By by) {
         printf(ANSI_YELLOW + "Finding elements %s...", by);
-        try { 
+        try {
             List<WebElement> elements;
-            if ( isIOS()){ // iOS
+            if (isIOS()) { // iOS
                 elements = getIosDriver().findElements(by);
-            } else if ( isAndroid()) { // Android
+            } else if (isAndroid()) { // Android
                 elements = getAndroidDriver().findElements(by);
-            }
-            else 
+            } else
                 elements = driver.findElements(by);
             /*
              * TODO elements.forEach(element -> {
@@ -244,49 +244,41 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
         }
     }
 
-    @Override
     public List<WebElement> findElementsByClassName(String className) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public List<WebElement> findElementsByCssSelector(String cssSelector) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public List<WebElement> findElementsById(String id) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public List<WebElement> findElementsByLinkText(String linkText) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public List<WebElement> findElementsByName(String name) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public List<WebElement> findElementsByPartialLinkText(String partialLinkText) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public List<WebElement> findElementsByTagName(String tagName) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public List<WebElement> findElementsByXPath(String xPath) {
         // TODO Auto-generated method stub
         return null;
@@ -443,7 +435,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
                 default:
                     throw new Exception(ANSI_RED + "Browser " + browser.getName() + " not recognized by Markito.");
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new Exception(ANSI_RED + e.getMessage());
         }
         return driver;
@@ -593,33 +585,31 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
         return super.toString();
     }
 
-    @Override
     public void activateApp(String bundleId) {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.activateApp(bundleId);
+        getIosDriver().activateApp(bundleId);
     }
 
-    @Override
-    public void clear() {
+    public void clear(WebElement element) {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.clear();
+        element.clear();
     }
 
-    @Override
-    public void click() {
+    public void click(WebElement element) {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.click();
+        element.click();
     }
-     /**
+
+    /**
      * Waits for an element to be clickable located using By and click in it.
      * 
      * @param locator
      */
     public void click(By locator) {
-        printf(ANSI_YELLOW + "Clicking %s...", locator);
+        printf(ANSI_YELLOW + "click %s...", locator);
         long currentTimeout = getTimeOutInSeconds();
         try {
-            //highlightElement(locator);
+            // highlightElement(locator);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
@@ -635,17 +625,46 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
         }
     }
 
-    @Override
+    public void execute(By locator, WebDriverWait condition) {
+        printf(ANSI_YELLOW + "click %s...", locator);
+        long currentTimeout = getTimeOutInSeconds();
+        try {
+            // highlightElement(locator);
+            condition.wait();
+            driver.findElement(locator).click();
+            setTimeOutInSeconds(currentTimeout);
+            printf(ANSI_YELLOW + "done.\n", locator);
+        } catch (Exception e) {
+            setTimeOutInSeconds(currentTimeout);
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
     public void closeApp() {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.closeApp();
+        getMobileDriver().closeApp();
     }
+
+    /**
+     * Switch the focus of future commands for this driver to the context with the
+     * given name.
+     * https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/ContextAware.html
+     * 
+     * @param name
+     * @return
+     */
+    public WebDriver context(String name) {
+        println(ANSI_YELLOW + "SetContextHandle " + name); // prints out something like NATIVE_APP \n WEBVIEW_1
+        return getMobileDriver().context(name);
+    }
+
     /**
      * Get contexts for Hybrid Apps.
      * 
      * @return ContextNames: Obtained contexts from Android driver.
      */
-    /*public Set<String> getContextHandles() {
+    public Set<String> getContextHandles() {
         Set<String> contextNames = getMobileDriver().getContextHandles();
         for (String contextName : contextNames) {
             println(ANSI_YELLOW + contextName); // prints out something like NATIVE_APP \n WEBVIEW_1
@@ -653,136 +672,150 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
         return contextNames;
     }
 
-    public void context(String ContextName) {
-        println(ANSI_YELLOW + "SetContextHandle " + ContextName); // prints out something like NATIVE_APP \n WEBVIEW_1
-        getMobileDriver().context(ContextName);
-    }*/
-    @Override
-    public WebDriver context(String name) {
-        // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.context(name);
+    /**
+     * Get contexts for Hybrid Apps.
+     * 
+     * @return ContextNames: Obtained contexts from Android driver.
+     */
+    public String getContextHandle() {
+        String contextName = getMobileDriver().getContext();
+        println(ANSI_YELLOW + contextName); // prints out something like NATIVE_APP \n WEBVIEW_1
+        return contextName;
     }
 
-    @Override
-    public Response execute(String driverCommand) {
-        // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.execute(driverCommand);
+    /**
+     * Execute a JavaScript script.
+     * Please refer to
+     * "https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/remote/server/handler/ExecuteScript.html"
+     * 
+     * @param script
+     * @param args
+     */
+    public void executeJsScript(String script, java.lang.Object... args) {
+        js.executeScript(script, args);
     }
 
-    @Override
-    public Response execute(String driverCommand, Map<String, ?> parameters) {
-        // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.execute(driverCommand, parameters);
+    /**
+     * Execute an asynchronous JavaScript script.
+     * 
+     * @param script
+     * @param args
+     */
+    public void executeAsynchromousJsScript(String script, String args) {
+        js.executeAsyncScript(script, args);
     }
 
-    @Override
     public WebElement findElement(String by, String using) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.findElement(by, using);
+        return getMobileDriver().findElement(by, using);
     }
 
-    @Override
     public WebElement findElementByAccessibilityId(String using) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.findElementByAccessibilityId(using);
+        return getMobileDriver().findElementByAccessibilityId(using);
     }
 
-    @Override
     public List<WebElement> findElements(String by, String using) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.findElements(by, using);
+        return getMobileDriver().findElements(by, using);
     }
 
-    @Override
     public List<WebElement> findElementsByAccessibilityId(String using) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.findElementsByAccessibilityId(using);
+        return getMobileDriver().findElementsByAccessibilityId(using);
     }
 
-    @Override
     public Map<String, String> getAppStringMap() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getAppStringMap();
+        return getMobileDriver().getAppStringMap();
     }
 
-    @Override
     public Map<String, String> getAppStringMap(String language) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getAppStringMap(language);
+        return getMobileDriver().getAppStringMap(language);
     }
 
-    @Override
     public Map<String, String> getAppStringMap(String language, String stringFile) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getAppStringMap(language, stringFile);
+        return getMobileDriver().getAppStringMap(language, stringFile);
     }
 
-    @Override
-    public String getAttribute(String name) {
-        // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getAttribute(name);
+    /**
+     * Get Value of an element located by.
+     * 
+     * @param by
+     */
+    public String getValue(By by) {
+        printf(ANSI_YELLOW + "GetValue ");
+        long currentTimeout = getTimeOutInSeconds();
+        try {
+            // highlightElement(by);
+            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            String text = new WebDriverWait(driver, timeOutInSeconds)
+                    .until(ExpectedConditions.presenceOfElementLocated(by))
+                    .getAttribute("value");
+            printf(ANSI_YELLOW + "done [%s] in object %s\n", text, by);
+            setTimeOutInSeconds(currentTimeout);
+            return text;
+        } catch (Exception e) {
+            setTimeOutInSeconds(currentTimeout);
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
     }
 
-    @Override
+    /**
+     * Get Attribute of an element located by.
+     * 
+     * @param by
+     * @param attributeName
+     */
+    public String getAttribute(By by, String attributeName) {
+        printf(ANSI_YELLOW + "GetAttribute [" + attributeName + "]...");
+        long currentTimeout = getTimeOutInSeconds();
+        try {
+            // highlightElement(by);
+            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            String text = new WebDriverWait(driver, timeOutInSeconds)
+                    .until(ExpectedConditions.presenceOfElementLocated(by))
+                    .getAttribute(attributeName);
+            printf(ANSI_YELLOW + "done [%s] in object %s\n", text, by);
+            setTimeOutInSeconds(currentTimeout);
+            return text;
+        } catch (Exception e) {
+            setTimeOutInSeconds(currentTimeout);
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
     @Nullable
     public String getAutomationName() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getAutomationName();
+        return getMobileDriver().getAutomationName();
     }
 
-    @Override
-    public String getContext() {
-        // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getContext();
-    }
-
-    @Override
-    public Set<String> getContextHandles() {
-        // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getContextHandles();
-    }
-
-    @Override
-    public String getCssValue(String propertyName) {
-        // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getCssValue(propertyName);
-    }
-
-    @Override
     public String getDeviceTime() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getDeviceTime();
+        return getMobileDriver().getDeviceTime();
     }
 
-    @Override
-    public Point getLocation() {
-        // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getLocation();
-    }
-
-    @Override
-    public ScreenOrientation getOrientation() {
-        // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getOrientation();
-    }
-
-    @Override
     @Nullable
     public String getPlatformName() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getPlatformName();
+        return getMobileDriver().getPlatformName();
     }
 
     @Override
     public Rectangle getRect() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getRect();
+        return ((RemoteWebElement) getDriver()).getRect();
     }
 
     @Override
     public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getScreenshotAs(target);
+        return ((RemoteWebDriver) getDriver()).getScreenshotAs(target);
     }
 
     /**
@@ -790,7 +823,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
      * 
      * @param fileWithPath: Pathname of the file to be generated.
      */
-    public void takeScreenSnapshot(String fileWithPath) throws Exception {
+    public void getScreenshotAs(String fileWithPath) throws Exception {
         // Convert web driver object to TakeScreenshot
         TakesScreenshot scrShot = ((TakesScreenshot) driver);
         // Call getScreenshotAs method to create image file
@@ -810,52 +843,52 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
         LocalDateTime ldt = LocalDateTime.now();
         String date = ldt.toString().replaceAll("\\W+", "");
         try {
-            takeScreenSnapshot("TestResults\\" + Name + "-" + date + ".png");
+            getScreenshotAs("TestResults\\" + Name + "-" + date + ".png");
         } catch (Exception e) {
             printf("ERROR al tomar snapshot. Stack:%s\n", e.getMessage());
         }
     }
 
-    @Override
     @Nullable
     public Object getSessionDetail(String detail) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getSessionDetail(detail);
+        return getMobileDriver().getSessionDetail(detail);
     }
 
-    @Override
     public Map<String, Object> getSessionDetails() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getSessionDetails();
+        return getMobileDriver().getSessionDetails();
     }
 
     @Override
     public Dimension getSize() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getSize();
+        return ((RemoteWebElement) getDriver()).getSize();
     }
 
     @Override
     public String getTagName() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getTagName();
+        return ((RemoteWebElement) getDriver()).getTagName();
     }
 
     @Override
     public String getText() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.getText();
+        return ((RemoteWebElement) getDriver()).getText();
     }
-     /**
-     * Get Text of an web element.
+
+    /**
+     * Get Text of a web element.
      * 
      * @param element
+     * @throws Exception
      */
-    public String getText(WebElement element) {
+    public String getText(WebElement element) throws Exception {
         printf(ANSI_YELLOW + "GetText from WebElement...");
         long currentTimeout = getTimeOutInSeconds();
         try {
-            //highlightElement(by);
+            // highlightElement(by);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             String text = element.getText();
             printf(ANSI_YELLOW + "done [%s].\n", text);
@@ -864,40 +897,21 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
         } catch (Exception e) {
             setTimeOutInSeconds(currentTimeout);
             printf(ANSI_RED + "failed!!!\n", e.getMessage());
-            throw new WebDriverException(e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
-     /**
-     * Get Text of an web element.
-     * 
-     * @param element
-     */
-    public String getText(AndroidElement element) {
-        printf(ANSI_YELLOW + "GetText from %s...", element.toString());
-        long currentTimeout = getTimeOutInSeconds();
-        try {
-            //highlightElement(by);
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-            String text = element.getText();
-            printf(ANSI_YELLOW + "done [%s].\n", text);
-            setTimeOutInSeconds(currentTimeout);
-            return text;
-        } catch (Exception e) {
-            setTimeOutInSeconds(currentTimeout);
-            printf(ANSI_RED + "failed!!!\n", e.getMessage());
-            throw new WebDriverException(e.getMessage());
-        }
-    }
-     /**
+
+    /**
      * Get Text of an element located by.
      * 
      * @param by
+     * @throws Exception
      */
-    public String getText(By by) {
+    public String getText(By by) throws Exception {
         printf(ANSI_YELLOW + "GetText from %s...", by);
         long currentTimeout = getTimeOutInSeconds();
         try {
-            //highlightElement(by);
+            // highlightElement(by);
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             String text = new WebDriverWait(driver, timeOutInSeconds)
                     .until(ExpectedConditions.presenceOfElementLocated(by))
@@ -908,127 +922,110 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
         } catch (Exception e) {
             setTimeOutInSeconds(currentTimeout);
             printf(ANSI_RED + "failed!!!\n", e.getMessage());
-            throw new WebDriverException(e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
 
-    @Override
     public void hideKeyboard() {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.hideKeyboard();
+        getMobileDriver().hideKeyboard();
     }
 
-    @Override
     public void installApp(String appPath) {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.installApp(appPath);
+        getMobileDriver().installApp(appPath);
     }
 
-    @Override
     public boolean isAppInstalled(String bundleId) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.isAppInstalled(bundleId);
+        return getMobileDriver().isAppInstalled(bundleId);
     }
 
-    @Override
     public boolean isBrowser() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.isBrowser();
+        return getMobileDriver().isBrowser();
     }
 
     @Override
     public boolean isDisplayed() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.isDisplayed();
+        return ((RemoteWebElement) getDriver()).isDisplayed();
     }
 
     @Override
     public boolean isEnabled() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.isEnabled();
+        return ((RemoteWebElement) getDriver()).isEnabled();
     }
 
     @Override
     public boolean isSelected() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.isSelected();
+        return ((RemoteWebElement) getDriver()).isSelected();
     }
 
-    @Override
     public void launchApp() {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.launchApp();
+        getMobileDriver().launchApp();
     }
 
-    @Override
     public Location location() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.location();
+        return getMobileDriver().location();
     }
 
-    @Override
     public void performMultiTouchAction(MultiTouchAction multiAction) {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.performMultiTouchAction(multiAction);
+        getMobileDriver().performMultiTouchAction(multiAction);
     }
 
-    @Override
     public byte[] pullFile(String remotePath) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.pullFile(remotePath);
+        return getMobileDriver().pullFile(remotePath);
     }
 
-    @Override
     public byte[] pullFolder(String remotePath) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.pullFolder(remotePath);
+        return getMobileDriver().pullFolder(remotePath);
     }
 
-    @Override
     public ApplicationState queryAppState(String bundleId) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.queryAppState(bundleId);
+        return getMobileDriver().queryAppState(bundleId);
     }
 
-    @Override
     public boolean removeApp(String bundleId) {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.removeApp(bundleId);
+        return getMobileDriver().removeApp(bundleId);
     }
 
-    @Override
     public void resetApp() {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.resetApp();
+        getMobileDriver().resetApp();
     }
 
-    @Override
     public void rotate(ScreenOrientation orientation) {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.rotate(orientation);
+        getMobileDriver().rotate(orientation);
     }
 
-    @Override
     public void rotate(DeviceRotation rotation) {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.rotate(rotation);
+        getMobileDriver().rotate(rotation);
     }
 
-    @Override
     public DeviceRotation rotation() {
         // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.rotation();
+        return getMobileDriver().rotation();
     }
 
-    @Override
     public void runAppInBackground(Duration duration) {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.runAppInBackground(duration);
+        getMobileDriver().runAppInBackground(duration);
     }
 
-    @Override
     public void sendKeys(CharSequence... keysToSend) {
-        MarkitoGenericWebDriver.super.sendKeys(keysToSend);
+        ((RemoteWebElement) getDriver()).sendKeys(keysToSend);
     }
 
     /**
@@ -1043,7 +1040,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
         try {
             driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
-                    .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOfElementLocated(locator));
+                    .ignoring(WebDriverException.class).until(ExpectedConditions.elementToBeClickable(locator));
             WebElement textBox = driver.findElement(locator);
             // highlightElement( textBox);
             if (textBox == null) {
@@ -1058,6 +1055,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
             throw new WebDriverException(e.getMessage());
         }
     }
+
     /**
      * Simulates typing Keys over an editable element located By.
      * 
@@ -1075,57 +1073,86 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements MarkitoGenericWeb
             throw new WebDriverException(e.getMessage());
         }
     }
-    @Override
+
     public void setLocation(Location location) {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.setLocation(location);
+        getMobileDriver().setLocation(location);
+    }
+
+    public boolean terminateApp(String bundleId) {
+        // TODO Auto-generated method stub
+        return getMobileDriver().terminateApp(bundleId);
+    }
+
+    @Override
+    public void click() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void clear() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public String getAttribute(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getCssValue(String propertyName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Point getLocation() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void submit() {
         // TODO Auto-generated method stub
-        MarkitoGenericWebDriver.super.submit();
-    }
 
-    @Override
-    public boolean terminateApp(String bundleId) {
-        // TODO Auto-generated method stub
-        return MarkitoGenericWebDriver.super.terminateApp(bundleId);
     }
 
     /*
      * @Override
      * public TouchAction performTouchAction(TouchAction touchAction) {
      * // TODO Auto-generated method stub
-     * return MarkitoGenericWebDriver.super.performTouchAction(touchAction);
+     * return getMobileDriver().performTouchAction(touchAction);
      * }
      * 
      * @Override
      * public void activateApp(String bundleId, @Nullable
      * BaseActivateApplicationOptions options) {
      * // TODO Auto-generated method stub
-     * MarkitoGenericWebDriver.super.activateApp(bundleId, options);
+     * getMobileDriver().activateApp(bundleId, options);
      * }
      * 
      * @Override
      * public void installApp(String appPath, @Nullable
      * BaseInstallApplicationOptions options) {
      * // TODO Auto-generated method stub
-     * MarkitoGenericWebDriver.super.installApp(appPath, options);
+     * getMobileDriver().installApp(appPath, options);
      * }
      * 
      * @Override
      * public boolean removeApp(String bundleId, @Nullable
      * BaseRemoveApplicationOptions options) {
      * // TODO Auto-generated method stub
-     * return MarkitoGenericWebDriver.super.removeApp(bundleId, options);
+     * return getMobileDriver().removeApp(bundleId, options);
      * }
      * 
      * @Override
      * public boolean terminateApp(String bundleId, @Nullable
      * BaseTerminateApplicationOptions options) {
      * // TODO Auto-generated method stub
-     * return MarkitoGenericWebDriver.super.terminateApp(bundleId, options);
+     * return getMobileDriver().terminateApp(bundleId, options);
      * }
      */
 }

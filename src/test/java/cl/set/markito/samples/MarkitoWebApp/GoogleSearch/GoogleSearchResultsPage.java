@@ -21,11 +21,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class GoogleSearchResultsPage {
+    @SuppressWarnings("unused")
     private Map<String, String> data;
+    @SuppressWarnings("unused")
     private WebDriver driver;
-    private int timeout = 15;
-
-
 
     @FindAll({
         @FindBy( xpath =  "//*/div[@class='MjjYud']/div/div/div/div/div/div/a/div/div[@role='heading']"),  
@@ -53,16 +52,4 @@ public class GoogleSearchResultsPage {
         this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
-
-    public GoogleSearchResultsPage(WebDriver driver, Map<String, String> data) {
-        this(driver);
-        this.data = data;
-    }
-
-    public GoogleSearchResultsPage(WebDriver driver, Map<String, String> data, int timeout) {
-        this(driver, data);
-        this.timeout = timeout;
-    }
-
 }
-

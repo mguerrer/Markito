@@ -63,7 +63,7 @@ public class GoogleSearchHomePage {
 
     @FindBy(name = "btnK")
     @CacheLookup
-    private WebElement googleSearch1;
+    public static WebElement googleSearch1;
 
     @FindBy(name = "btnK")
     @CacheLookup
