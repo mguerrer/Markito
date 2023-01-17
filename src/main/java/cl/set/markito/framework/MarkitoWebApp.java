@@ -76,11 +76,11 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     }
 
     public boolean isIOS() {
-        return driver.toString().contains("io.appium.java_client.ios.IOSDriver");
+        return getDriver().toString().contains("io.appium.java_client.ios.IOSDriver");
     }
 
     public boolean isAndroid() {
-        return driver.toString().contains("automationName=UIAutomator2");
+        return getDriver().toString().contains("automationName=UIAutomator2");
     }
 
     @SuppressWarnings("unchecked")
@@ -168,9 +168,9 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
 
         try {
             if (driver != null) {
-                // driver.close();
-                driver.quit();
-                driver = null;
+                // getDriver().close();
+                getDriver().quit();
+                setDriver( null );
                 println(ANSI_WHITE + "Markito is destroyed.");
             } else
                 println(ANSI_YELLOW + "WARNING: Markito is null.  Please check your teardown process.");
@@ -191,7 +191,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public WebElement findElement(By by) {
         printf(ANSI_YELLOW + "Finding element %s...", by);
         try {
-            WebElement element = driver.findElement(by);
+            WebElement element = getDriver().findElement(by);
             highlightElement(element);
             printf(ANSI_YELLOW + "found.\n", by);
             return element;
@@ -243,7 +243,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             } else if (isAndroid()) { // Android
                 elements = getAndroidDriver().findElements(by);
             } else
-                elements = driver.findElements(by);
+                elements = getDriver().findElements(by);
             elements.forEach(element -> {// Highlights on debug mode.
                  highlightElement(element);
             }); 
@@ -312,7 +312,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public void get(String url) {
         printf(ANSI_YELLOW + "Get [%s]...", url);
         try {
-            driver.get(url);
+            getDriver().get(url);
             printf(ANSI_YELLOW + "done!!!\n");
         } catch (Exception e) {
             printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
@@ -342,7 +342,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public String getWindowHandle() {
         printf(ANSI_YELLOW + "GetWindowHandle...");
         try {
-            String currentWindowHandle = driver.getWindowHandle();
+            String currentWindowHandle = getDriver().getWindowHandle();
             printf(ANSI_YELLOW + "done...\n");
             return currentWindowHandle;
         } catch (Exception e) {
@@ -359,12 +359,12 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @return: A window handle or null if not found.
      */
     public String getWindowHandleByTitle(String title) {
-        Set<String> windowsHandles = driver.getWindowHandles();
+        Set<String> windowsHandles = getDriver().getWindowHandles();
         String handle = null;
         printf(ANSI_YELLOW + "GetWindowHandle...");
         for (String windowHandle : windowsHandles) {
-            driver.switchTo().window(windowHandle);
-            if (driver.getTitle().equals(title)) {
+            getDriver().switchTo().window(windowHandle);
+            if (getDriver().getTitle().equals(title)) {
                 handle = windowHandle;
                 break;
             }
@@ -596,12 +596,12 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "click %s...", locator);
         long currentTimeout = getTimeOutInSeconds();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(Exception.class)
                     .until(ExpectedConditions.elementToBeClickable(locator));
-            WebElement element = driver.findElement(locator);
+            WebElement element = getDriver().findElement(locator);
             highlightElement(element);
             element.click();
             setTimeOutInSeconds(currentTimeout);
@@ -711,7 +711,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "GetValue ");
         long currentTimeout = getTimeOutInSeconds();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             String text = new WebDriverWait(driver, timeOutInSeconds)
                     .until(ExpectedConditions.presenceOfElementLocated(by))
                     .getAttribute("value");
@@ -897,10 +897,10 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "SendKeys %s to object %s...", keys, locator);
         long currentTimeout = getTimeOutInSeconds();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(Exception.class).until(ExpectedConditions.elementToBeClickable(locator));
-            WebElement textBox = driver.findElement(locator);
+            WebElement textBox = getDriver().findElement(locator);
             highlightElement( textBox);
             if (textBox == null) {
                 throw new Exception(ANSI_RED + " Can not find element " + locator);
@@ -1027,7 +1027,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             }
             for (String newWindow : newCurrentWindows) {
                 if (!currentWindows.contains(newWindow)) {
-                    driver.switchTo().window(newWindow);
+                    getDriver().switchTo().window(newWindow);
                     printf(ANSI_YELLOW + "done...\n");
                     return newWindow;
                 } else
@@ -1048,8 +1048,8 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public void selectWindow(String windowHandle) {
         printf(ANSI_YELLOW + "SelectWindow...");
         try {
-            driver.switchTo().window(windowHandle);
-            printf(ANSI_YELLOW + "done... Window title %s\n", driver.getTitle());
+            getDriver().switchTo().window(windowHandle);
+            printf(ANSI_YELLOW + "done... Window title %s\n", getDriver().getTitle());
         } catch (Exception e) {
             printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
             throw new WebDriverException(e.getMessage());
@@ -1086,8 +1086,8 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             }
             for (String newWindow : newCurrentWindows) {
                 if (!currentWindows.contains(newWindow)) {
-                    driver.switchTo().window(newWindow);
-                    printf(ANSI_YELLOW + "done... Window title %s\n", driver.getTitle());
+                    getDriver().switchTo().window(newWindow);
+                    printf(ANSI_YELLOW + "done... Window title %s\n", getDriver().getTitle());
                     return newWindow;
                 } else
                     printf(".");
@@ -1113,7 +1113,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for new window...");
         try {
             Stopwatch stopwatch = Stopwatch.createStarted();
-            while (driver.getWindowHandles().size() != NWindows) {
+            while (getDriver().getWindowHandles().size() != NWindows) {
                 if (stopwatch.elapsed(TimeUnit.SECONDS) > timeoutSeconds)
                     throw new WebDriverException("ERROR: New Window not found in " + timeoutSeconds + " seconds.\n");
                 else
@@ -1132,7 +1132,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      */
     public void closeCurrentWindow() {
         println(ANSI_YELLOW + "CloseCurrentWindow.");
-        driver.close();
+        getDriver().close();
     }
 
     /**
@@ -1146,7 +1146,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         long currentTimeout = getTimeOutInSeconds();
         try {
             highlightElement(element);
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             String text = element.getText();
             printf(ANSI_YELLOW + "done [%s].\n", text);
             setTimeOutInSeconds(currentTimeout);
@@ -1168,7 +1168,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "GetText from %s...", by);
         long currentTimeout = getTimeOutInSeconds();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             String text = new WebDriverWait(driver, timeOutInSeconds)
                     .until(ExpectedConditions.presenceOfElementLocated(by))
                     .getText();
@@ -1193,7 +1193,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "GetAttribute [" + attributeName + "]...");
         long currentTimeout = getTimeOutInSeconds();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             String text = new WebDriverWait(driver, timeOutInSeconds)
                     .until(ExpectedConditions.presenceOfElementLocated(by))
                     .getAttribute(attributeName);
@@ -1219,11 +1219,11 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "SetAttributeValue ");
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).until(ExpectedConditions.presenceOfElementLocated(by))
                     .getAttribute(attributeName);
             setTimeouts(currentTimeout);
-            WebElement element = driver.findElement(by);
+            WebElement element = getDriver().findElement(by);
             highlightElement(element);
 
             executeJsScript("arguments[0].setAttribute(arguments[1], arguments[2]);", element, attributeName, value);
@@ -1245,7 +1245,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "SelectFrameByHandle %d...", frameHandle);
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
@@ -1269,14 +1269,14 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "SelectFrameBy %s...", frameLocator);
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
                     .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameLocator));
             /*
-             * WebElement frame = driver.findElement(frameLocator);
-             * driver.switchTo().defaultContent();
-             * driver.switchTo().frame( frame );
+             * WebElement frame = getDriver().findElement(frameLocator);
+             * getDriver().switchTo().defaultContent();
+             * getDriver().switchTo().frame( frame );
              */
             setTimeouts(currentTimeout);
             printf(ANSI_YELLOW + "done...\n");
@@ -1298,7 +1298,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "SelectFrameBy %s...", frameID);
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
@@ -1321,7 +1321,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public void clickJS(By locator) {
         printf(ANSI_YELLOW + "Clicking JS %s...", locator);
         try {
-            WebElement element = driver.findElement(locator);
+            WebElement element = getDriver().findElement(locator);
             highlightElement(element);
             clickJS(element);
         } catch (Exception e) {
@@ -1358,13 +1358,13 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Clicking simulated %s...", locator);
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
                     .until(ExpectedConditions.elementToBeClickable(locator));
 
-            WebElement element = driver.findElement(locator);
+            WebElement element = getDriver().findElement(locator);
             highlightElement(element);
             // Do not add waits.
             Actions builder = new Actions(driver);
@@ -1391,12 +1391,12 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "DoubleClick %s...", locator);
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
                     .until(ExpectedConditions.visibilityOfElementLocated(locator));
-            WebElement element = driver.findElement(locator);
+            WebElement element = getDriver().findElement(locator);
             highlightElement(element);
             Actions builder = new Actions(driver);
             builder
@@ -1422,7 +1422,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         long currentTimeout = getTimeouts();
         try {
             highlightElement(webElement);
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
@@ -1451,13 +1451,13 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "MouseOver sobre %s...", locator);
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
                     .until(ExpectedConditions.elementToBeClickable(locator));
 
-            WebElement element = driver.findElement(locator);
+            WebElement element = getDriver().findElement(locator);
             highlightElement(element);
             // Do not add waits.
             Actions builder = new Actions(driver);
@@ -1482,13 +1482,13 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "MouseOut sobre %s...", locator);
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
                     .until(ExpectedConditions.elementToBeClickable(locator));
 
-            WebElement element = driver.findElement(locator);
+            WebElement element = getDriver().findElement(locator);
             highlightElement(element);
 
             // Do not add waits.
@@ -1521,7 +1521,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             List<WebElement> elements = new ArrayList<WebElement>();
             elements.add(sourceObject);
             elements.add(targetObject);
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
@@ -1557,10 +1557,10 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "ClickAt %s x=%d y=%d", locator, x, y);
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.elementToBeClickable(locator));
-            WebElement element = driver.findElement(locator);
+            WebElement element = getDriver().findElement(locator);
             highlightElement(element);
             new Actions(driver).moveToElement(element, x, y).click().perform();
             printf(ANSI_YELLOW + "done.\n", locator);
@@ -1593,7 +1593,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for element %s on %d seconds...", locator.toString(), timeout);
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeout).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.presenceOfElementLocated(locator));
             printf(ANSI_YELLOW + "visible!!!\n");
@@ -1615,7 +1615,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for element %s...", locator.toString());
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOfElementLocated(locator));
             printf(ANSI_YELLOW + "visible!!!\n");
@@ -1639,7 +1639,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for element %s on %d seconds...", locator.toString(), timeout);
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeout).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOfElementLocated(locator));
             printf(ANSI_YELLOW + "visible!!!\n");
@@ -1664,7 +1664,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for element %s on %d seconds...", webElement.toString(), timeout);
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeout).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOf(webElement));
             printf(ANSI_YELLOW + "visible!!!\n");
@@ -1686,7 +1686,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for element %s...", webElement.toString());
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.visibilityOf(webElement));
             printf(ANSI_YELLOW + "visible!!!\n");
@@ -1709,7 +1709,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for text %s in element %s...", text, locator.toString());
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
@@ -1737,7 +1737,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for text %s in element %s...", text, locator.toString());
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeout)
                     .ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
@@ -1764,12 +1764,12 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         long currentTimeout = getTimeouts();
         try {
             By by = By.xpath("//*[@text='" + text + "']");
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class)
                     .until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
 
-            if (driver.getPageSource().contains(text)) {
+            if (getDriver().getPageSource().contains(text)) {
                 printf(ANSI_YELLOW + "visible!!!\n");
             }
             setTimeouts(currentTimeout);
@@ -1787,7 +1787,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Clicking OK on alert...");
         try {
             waitForAlertPresent(timeOutInSeconds);
-            Alert alert = driver.switchTo().alert();
+            Alert alert = getDriver().switchTo().alert();
             alert.accept();
             printf(ANSI_YELLOW + "done.\n");
         } catch (Exception e) {
@@ -1803,7 +1803,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         try {
             printf(ANSI_YELLOW + "Clicking CANCEL on alert...");
             waitForAlertPresent(timeOutInSeconds);
-            Alert alert = driver.switchTo().alert();
+            Alert alert = getDriver().switchTo().alert();
             alert.dismiss();
             printf(ANSI_YELLOW + "done.\n");
         } catch (Exception e) {
@@ -1822,7 +1822,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             printf(ANSI_YELLOW + "GetTextOfAlert: Waiting for alert present...");
             waitForAlertPresent(timeOutInSeconds);
             printf(ANSI_YELLOW + "Present!  Now getting text!!..");
-            Alert alert = driver.switchTo().alert();
+            Alert alert = getDriver().switchTo().alert();
             String text = alert.getText();
             printf(ANSI_YELLOW + "Text retrieved=%s\n", text);
             return text;
@@ -1841,7 +1841,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "TypeTextOnAlert: Waiting for alert present...");
         waitForAlertPresent(timeOutInSeconds);
         try {
-            Alert alert = driver.switchTo().alert();
+            Alert alert = getDriver().switchTo().alert();
             alert.sendKeys(text);
             printf(ANSI_YELLOW + "Text sent=%s\n", text);
         } catch (Exception e) {
@@ -1861,7 +1861,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         long currentTimeout = getTimeouts();
 
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .until(ExpectedConditions.alertIsPresent());
             setTimeouts(currentTimeout);
@@ -1904,8 +1904,8 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public void selectOptionByVisibleText(By selectObject, String VisibleText) {
         printf(ANSI_YELLOW + "SelectOptionByVisibleText from %s option %s...", selectObject, VisibleText);
         try {
-            highlightElement(driver.findElement(selectObject));
-            Select dropdown = new Select(driver.findElement(selectObject));
+            highlightElement(getDriver().findElement(selectObject));
+            Select dropdown = new Select(getDriver().findElement(selectObject));
             dropdown.selectByVisibleText(VisibleText);
             println(ANSI_YELLOW + "done.");
         } catch (Exception e) {
@@ -1923,8 +1923,8 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public void selectOptionByIndex(By by, int index) {
         printf(ANSI_YELLOW + "SelectOptionByIndex from %s index %s\n", by, index);
         try {
-            highlightElement(driver.findElement(by));
-            Select dropdown = new Select(driver.findElement(by));
+            highlightElement(getDriver().findElement(by));
+            Select dropdown = new Select(getDriver().findElement(by));
             dropdown.selectByIndex(index);
             println(ANSI_YELLOW + "done.");
         } catch (Exception e) {
@@ -1943,8 +1943,8 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public void selectOptionByValue(By by, String value) {
         printf(ANSI_YELLOW + "SelectOptionByValue from %s value %s...", by, value);
         try {
-            Select dropdown = new Select(driver.findElement(by));
-            highlightElement(driver.findElement(by));
+            Select dropdown = new Select(getDriver().findElement(by));
+            highlightElement(getDriver().findElement(by));
             dropdown.selectByValue(value);
             println(ANSI_YELLOW + "done.");
         } catch (Exception e) {
@@ -1992,9 +1992,9 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for invisibility of element %s...", element.toString());
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
-                    .until(ExpectedConditions.invisibilityOf(driver.findElement(element)));
+                    .until(ExpectedConditions.invisibilityOf(getDriver().findElement(element)));
             printf(ANSI_YELLOW + "invisible!!!\n");
             setTimeouts(currentTimeout);
         } catch (Exception e) {
@@ -2008,7 +2008,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for Clickeable of element %s...", element.toString());
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).until(ExpectedConditions.elementToBeClickable(element));
             printf(ANSI_YELLOW + "Clickeable!!!\n");
             setTimeouts(currentTimeout);
@@ -2023,7 +2023,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         printf(ANSI_YELLOW + "Waiting for element %s...", chkDO.toString());
         long currentTimeout = getTimeouts();
         try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOut).until(ExpectedConditions.elementSelectionStateToBe(chkDO, true));
             printf(ANSI_YELLOW + "Seleccionado!!!\n");
             setTimeouts(currentTimeout);
@@ -2040,7 +2040,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     /**
      * Move back a single "item" in the browser's history.
      */
-    void back() {
+    public void back() {
         getDriver().navigate().back();
     }
 
@@ -2049,7 +2049,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * on the latest
      * page viewed.
      */
-    void forward() {
+    public void forward() {
         getDriver().navigate().forward();
     }
 
@@ -2068,7 +2068,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @param url The URL to load. It is best to use a fully qualified URL
      */
-    void to(String url) {
+    public void to(String url) {
         getDriver().navigate().to(url);
     }
 
@@ -2078,14 +2078,14 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @param url URL
      */
-    void to(URL url) {
+    public void to(URL url) {
         getDriver().navigate().to(url);
     }
 
     /**
      * Refresh the current page
      */
-    void refresh() {
+    public void refresh() {
         getDriver().navigate().refresh();
     }
 
@@ -2097,7 +2097,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @param cookie The cookie to add.
      */
-    void addCookie(Cookie cookie) {
+    public void addCookie(Cookie cookie) {
         getDriver().manage().addCookie(cookie);
     }
 
@@ -2108,7 +2108,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @param name The name of the cookie to delete
      */
-    void deleteCookieNamed(String name) {
+    public void deleteCookieNamed(String name) {
         getDriver().manage().deleteCookieNamed(name);
     }
 
@@ -2118,14 +2118,14 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @param cookie nom nom nom
      */
-    void deleteCookie(Cookie cookie) {
+    public void deleteCookie(Cookie cookie) {
         getDriver().manage().deleteCookie(cookie);
     }
 
     /**
      * Delete all the cookies for the current domain.
      */
-    void deleteAllCookies() {
+    public void deleteAllCookies() {
         getDriver().manage().deleteAllCookies();
     }
 
@@ -2135,7 +2135,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @return A Set of cookies for the current domain.
      */
-    Set<Cookie> getCookies() {
+    public Set<Cookie> getCookies() {
         return getDriver().manage().getCookies();
     }
 
@@ -2145,7 +2145,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @param name the name of the cookie
      * @return the cookie, or null if no cookie with the given name is present
      */
-    Cookie getCookieNamed(String name) {
+    public Cookie getCookieNamed(String name) {
         return getDriver().manage().getCookieNamed(name);
     }
 
@@ -2172,7 +2172,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @param unit The unit of measure for {@code time}.
      * @return A self reference.
      */
-    Timeouts implicitlyWait(long time, TimeUnit unit) {
+    public Timeouts implicitlyWait(long time, TimeUnit unit) {
         return getDriver().manage().timeouts().implicitlyWait(time, unit);
     }
 
@@ -2188,7 +2188,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @return A self reference.
      * @see JavascriptExecutor#executeAsyncScript(String, Object...)
      */
-    Timeouts setScriptTimeout(long time, TimeUnit unit) {
+    public Timeouts setScriptTimeout(long time, TimeUnit unit) {
         return getDriver().manage().timeouts().setScriptTimeout(time, unit);
     }
 
@@ -2201,7 +2201,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @param unit The unit of time.
      * @return A Timeouts interface.
      */
-    Timeouts pageLoadTimeout(long time, TimeUnit unit) {
+    public Timeouts pageLoadTimeout(long time, TimeUnit unit) {
         return getDriver().manage().timeouts().pageLoadTimeout(time, unit);
     }
 
@@ -2219,7 +2219,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @return This driver focused on the given frame
      * @throws NoSuchFrameException If the frame cannot be found
      */
-    WebDriver switchToFrame(int index) {
+    public WebDriver switchToFrame(int index) {
         return getDriver().switchTo().frame(index);
     }
 
@@ -2234,7 +2234,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @return This driver focused on the given frame
      * @throws NoSuchFrameException If the frame cannot be found
      */
-    WebDriver switchToFrame(String nameOrId) {
+    public WebDriver switchToFrame(String nameOrId) {
         return getDriver().switchTo().frame(nameOrId);
     }
 
@@ -2248,7 +2248,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @throws StaleElementReferenceException If the WebElement has gone stale.
      * @see WebDriver#findElement(By)
      */
-    WebDriver switchToFrame(WebElement frameElement) {
+    public WebDriver switchToFrame(WebElement frameElement) {
         return getDriver().switchTo().frame(frameElement);
     }
 
@@ -2259,7 +2259,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @return This driver focused on the parent frame
      */
-    WebDriver switchToParentFrame() {
+    public WebDriver switchToParentFrame() {
         return getDriver().switchTo().parentFrame();
     }
 
@@ -2272,7 +2272,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @return This driver focused on the given window
      * @throws NoSuchWindowException If the window cannot be found
      */
-    WebDriver switchToWindow(String nameOrHandle) {
+    public WebDriver switchToWindow(String nameOrHandle) {
         return getDriver().switchTo().window(nameOrHandle);
     }
 
@@ -2283,7 +2283,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @return This driver focused on the top window/first frame.
      */
-    WebDriver switchToDefaultContent() {
+    public WebDriver switchToDefaultContent() {
         return getDriver().switchTo().defaultContent();
     }
 
@@ -2298,7 +2298,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *         focus can be
      *         detected.
      */
-    WebElement switchToActiveElement() {
+    public WebElement switchToActiveElement() {
         return getDriver().switchTo().activeElement();
     }
 
@@ -2309,7 +2309,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @return A handle to the dialog.
      * @throws NoAlertPresentException If the dialog cannot be found
      */
-    Alert switchToAlert() {
+    public Alert switchToAlert() {
         return getDriver().switchTo().alert();
     }
 
@@ -2323,7 +2323,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @return list of available IME engines.
      * @throws ImeNotAvailableException if the host does not support IME.
      */
-    List<String> getAvailableEngines() {
+    public List<String> getAvailableEngines() {
         return getMobileDriver().manage().ime().getAvailableEngines();
     }
 
@@ -2333,7 +2333,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @return name of the active IME engine.
      * @throws ImeNotAvailableException if the host does not support IME.
      */
-    String getActiveEngine() {
+    public String getActiveEngine() {
         return getMobileDriver().manage().ime().getActiveEngine();
     }
 
@@ -2343,7 +2343,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @return true if IME input is available and currently active, false otherwise.
      * @throws ImeNotAvailableException if the host does not support IME.
      */
-    boolean isActivated() {
+    public boolean isActivated() {
         return getMobileDriver().manage().ime().isActivated();
     }
 
@@ -2354,7 +2354,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @throws ImeNotAvailableException if the host does not support IME.
      */
-    void deactivate() {
+    public void deactivate() {
         getMobileDriver().manage().ime().deactivate();
     }
 
@@ -2376,7 +2376,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *                                      activation failed
      *                                      for other reasons.
      */
-    void activateEngine(String engine) {
+    public void activateEngine(String engine) {
         getMobileDriver().manage().ime().activateEngine(engine);
     }
 
@@ -2390,7 +2390,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @param targetSize The target size.
      */
-    void setSize(Dimension targetSize) {
+    public void setSize(Dimension targetSize) {
         getDriver().manage().window().setSize(targetSize);
     }
 
@@ -2401,7 +2401,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @param targetPosition The target position of the window.
      */
-    void setPosition(Point targetPosition) {
+    public void setPosition(Point targetPosition) {
         getDriver().manage().window().setPosition(targetPosition);
     }
 
@@ -2412,7 +2412,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @return The current window size.
      */
-    Dimension getCurrentWindowSize() {
+    public Dimension getCurrentWindowSize() {
         return getDriver().manage().window().getSize();
     }
 
@@ -2422,21 +2422,21 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @return The current window position.
      */
-    Point getPosition() {
+    public Point getPosition() {
         return getDriver().manage().window().getPosition();
     }
 
     /**
      * Maximizes the current window if it is not already maximized
      */
-    void maximize() {
+    public void maximize() {
         getDriver().manage().window().maximize();
     }
 
     /**
      * Fullscreen the current window if it is not already fullscreen
      */
-    void fullscreen() {
+    public void fullscreen() {
         getDriver().manage().window().fullscreen();
     }
 
@@ -2462,7 +2462,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @param logType The log type.
      * @return Available log entries for the specified log type.
      */
-    LogEntries getLogEntries(String logType) {
+    public LogEntries getLogEntries(String logType) {
         return getDriver().manage().logs().get(logType);
     }
 
@@ -2471,7 +2471,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @return A set of available log types.
      */
-    Set<String> getAvailableLogTypes() {
+    public Set<String> getAvailableLogTypes() {
         return getDriver().manage().logs().getAvailableLogTypes();
     }
 
@@ -2484,7 +2484,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public Set<String> getWindowHandles() {
         printf(ANSI_YELLOW + "GetWindowHandles...");
         try {
-            Set<String> ventanasPrevias = new HashSet<String>(driver.getWindowHandles());
+            Set<String> ventanasPrevias = new HashSet<String>(getDriver().getWindowHandles());
             printf(ANSI_YELLOW + "done...\n");
             return ventanasPrevias;
         } catch (Exception e) {

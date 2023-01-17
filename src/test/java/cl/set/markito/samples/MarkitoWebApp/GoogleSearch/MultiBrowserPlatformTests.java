@@ -28,12 +28,14 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
     public void HelloWorldTest() throws Exception {
         // Arrange
         setBrowserstackProjectInformation("Markito", "MultiBrowserPlatformTests", 
-                                            "Google Search-Chrome"+"-"+LOCAL_COMPUTER_DEVICE.getName());
+                                            "Google Search Hello world-Chrome"+"-"+LOCAL_COMPUTER_DEVICE.getName());
         setAutomaticDriverDownload(true); // Adds automatic driver download on local machine
         setDriver(openBrowserSessionInDevice(CHROME_BROWSER, LOCAL_COMPUTER_DEVICE)); // Open web session on device
 
         // Act
         get("http://www.google.com");
+        maximize();
+        
         // Search "Hello world!!" string
         sendKeys( By.name("q"), "Hello world!!");
         click( By.name("btnK"));
