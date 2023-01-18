@@ -244,7 +244,7 @@ public class HomePage extends MarkitoWebApp {
         this();
         setDriver( driver );
         this.hostUrl = hostUrl;
-        driver.get(hostUrl);
+        get(hostUrl);
     }
 
    /**

@@ -233,4 +233,13 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
     public int RandomNumber(int min, int max){
         return randomUtils.randomNumber(min, max);
     }
+
+    /** Return the name of the calling method.
+     */
+    public String getMethodName() {
+        StackTraceElement stackTraceElements[] = (new Throwable()).getStackTrace();
+        return stackTraceElements[1].getMethodName();
+    }
+
+    
 }

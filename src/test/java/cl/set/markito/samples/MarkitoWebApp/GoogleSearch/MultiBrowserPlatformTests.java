@@ -63,9 +63,10 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
         setDriver(openBrowserSessionInDevice(browser, device)); // Open web session on device
         GoogleSearchHomePage searchPage = new GoogleSearchHomePage( getDriver());
         get("https://www.google.cl");
-        if (isIOS() || isAndroid())
+        if (isIOS() || isAndroid()) {
             rotate(ScreenOrientation.LANDSCAPE);
-        else
+            //rotate(new DeviceRotation(0, 0, 270));
+        } else
             maximize();
 
         // Act: This search is not working on IOS https://discuss.appium.io/t/sendkeys-and-click-function-does-not-work-for-ios-simulator/5896
