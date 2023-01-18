@@ -78,6 +78,8 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
 
         // Print found titles
         GoogleSearchResultsPage resultsPage = new GoogleSearchResultsPage( getDriver());
+        setZoomLevelToPercentage(50); // Set zoom level to 50%
+
         for (WebElement result : resultsPage.queryResults) {
             getText( result );
         }

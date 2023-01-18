@@ -103,8 +103,14 @@ public class TheInternetTests extends MarkitoWebApp {
         setWindowSize( new Dimension(300,300));
         setPosition(new Point(100, 100));
         Point currentPosition = getPosition();
-        maximize();
+        maximize(); // Tests zooming
+        setZoomLevelToPercentage(30);
+        setZoomLevelToPercentage(100);
+        setZoomLevelToPercentage(200);
+        setZoomLevelToPercentage(30);
+        
         setPosition( currentPosition);
+
         Assertions.assertEquals( currentPosition,  getPosition());
         fullscreen();
     }

@@ -335,19 +335,38 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             throw new WebDriverException(e.getMessage());
         }
     }
-
+    /**
+     * Get a string representing the current URL that the browser is looking at.
+     *
+     * @return The URL of the page currently loaded in the browser
+     */
     @Override
     public String getCurrentUrl() {
         printf(ANSI_YELLOW + getMethodName() +" [%s]...", getDriver().getCurrentUrl());
         return getDriver().getCurrentUrl();
     }
-
+    /**
+     * Get the source of the last loaded page. If the page has been modified after loading (for
+     * example, by Javascript) there is no guarantee that the returned text is that of the modified
+     * page. Please consult the documentation of the particular driver being used to determine whether
+     * the returned text reflects the current state of the page or the text last sent by the web
+     * server. The page source returned is a representation of the underlying DOM: do not expect it to
+     * be formatted or escaped in the same way as the response sent from the web server. Think of it as
+     * an artist's impression.
+     *
+     * @return The source of the current page
+     */
     @Override
     public String getPageSource() {
         printf(ANSI_YELLOW + getMethodName() +" [%s]...", getDriver().getPageSource());
         return getDriver().getPageSource();
     }
-
+    /**
+     * The title of the current page.
+     *
+     * @return The title of the current page, with leading and trailing whitespace stripped, or null
+     *         if one is not already set
+     */
     @Override
     public String getTitle() {
         printf(ANSI_YELLOW + getMethodName() +" [%s]...", getDriver().getTitle());
@@ -395,6 +414,16 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             printf(ANSI_YELLOW + "found.\n");
 
         return handle;
+    }
+    /**
+     * Sets the browser level of the browser by using Javascript.
+     * @param percentage
+     */
+    public void setZoomLevelToPercentage(int percentage) {
+        printf(ANSI_YELLOW + getMethodName() +" "+percentage+"%s...", "%");
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        js.executeScript( "document.body.style.zoom='"+percentage+"%'" );
+        println(ANSI_YELLOW + "done...");
     }
 
     @Override
@@ -2558,7 +2587,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @param targetSize The target size.
      */
     public void setWindowSize(Dimension targetSize) {
-        println(ANSI_YELLOW + getMethodName() +"..." + targetSize);
+        printf(ANSI_YELLOW + getMethodName() +"..." + targetSize);
         getDriver().manage().window().setSize(targetSize);
         println(ANSI_YELLOW + "done.");
     }
@@ -2571,7 +2600,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @param targetPosition The target position of the window.
      */
     public void setPosition(Point targetPosition) {
-        println(ANSI_YELLOW + getMethodName() +"..." + targetPosition);
+        printf(ANSI_YELLOW + getMethodName() +"..." + targetPosition);
         getDriver().manage().window().setPosition(targetPosition);
         println(ANSI_YELLOW + "done.");
     }
