@@ -11,7 +11,7 @@ import cl.set.markito.MarkitoiOS;
 import io.appium.java_client.MobileBy;
 
 
-
+@Deprecated
 public class iOSBrowserStackSample extends MarkitoiOS{
 
 	@Disabled("not implemented yet")

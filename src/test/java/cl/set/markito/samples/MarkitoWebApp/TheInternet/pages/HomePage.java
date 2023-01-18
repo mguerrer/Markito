@@ -5,15 +5,41 @@ Not for reuse without permission.
 */
 
 package cl.set.markito.samples.MarkitoWebApp.TheInternet.pages;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
-public class HomePage {
-    private WebDriver driver;
+import cl.set.markito.framework.MarkitoWebApp;
+
+public class HomePage extends MarkitoWebApp {
+
+    @BeforeAll
+    static void beforeClass() {
+        
+    }
+
+    @BeforeEach
+    void setUp() {
+        
+    }
+
+    @AfterEach
+    void tearDown() {
+        
+    }
+
+    @AfterAll
+    static void afterClass() {
+        
+    }
+
     private int timeout = 15;
 
     @FindBy(css = "a[href='/abtest']")
@@ -216,7 +242,7 @@ public class HomePage {
 
     public HomePage(WebDriver driver, String hostUrl) {
         this();
-        this.driver = driver;
+        setDriver( driver );
         this.hostUrl = hostUrl;
         driver.get(hostUrl);
     }
@@ -227,7 +253,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickAbTestingLink() {
-        abTesting.click();
+        click(abTesting);
         return this;
     }
 
@@ -237,7 +263,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickAddremoveElementsLink() {
-        addremoveElements.click();
+        click(addremoveElements);
         return this;
     }
 
@@ -247,7 +273,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickBasicAuthLink() {
-        basicAuth.click();
+        click(basicAuth);
         return this;
     }
 
@@ -257,7 +283,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickBrokenImagesLink() {
-        brokenImages.click();
+        click(brokenImages);
         return this;
     }
 
@@ -267,7 +293,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickChallengingDomLink() {
-        challengingDom.click();
+        click(challengingDom);
         return this;
     }
 
@@ -277,7 +303,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickCheckboxesLink() {
-        checkboxes.click();
+        click(checkboxes);
         return this;
     }
 
@@ -287,7 +313,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickContextMenuLink() {
-        contextMenu.click();
+        click(contextMenu);
         return this;
     }
 
@@ -297,7 +323,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickDigestAuthenticationLink() {
-        digestAuthentication.click();
+        click(digestAuthentication);
         return this;
     }
 
@@ -307,7 +333,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickDisappearingElementsLink() {
-        disappearingElements.click();
+        click(disappearingElements);
         return this;
     }
 
@@ -317,7 +343,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickDragAndDropLink() {
-        dragAndDrop.click();
+        click(dragAndDrop);
         return this;
     }
 
@@ -327,7 +353,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickDropdownLink() {
-        dropdown.click();
+        click(dropdown);
         return this;
     }
 
@@ -337,7 +363,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickDynamicContentLink() {
-        dynamicContent.click();
+        click(dynamicContent);
         return this;
     }
 
@@ -347,7 +373,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickDynamicControlsLink() {
-        dynamicControls.click();
+        click(dynamicControls);
         return this;
     }
 
@@ -357,7 +383,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickDynamicLoadingLink() {
-        dynamicLoading.click();
+        click(dynamicLoading);
         return this;
     }
 
@@ -367,7 +393,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickElementalSeleniumLink() {
-        elementalSelenium.click();
+        click(elementalSelenium);
         return this;
     }
 
@@ -377,7 +403,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickEntryAdLink() {
-        entryAd.click();
+        click(entryAd);
         return this;
     }
 
@@ -387,7 +413,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickExitIntentLink() {
-        exitIntent.click();
+        click(exitIntent);
         return this;
     }
 
@@ -397,7 +423,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickFileDownloadLink() {
-        fileDownload.click();
+        click(fileDownload);
         return this;
     }
 
@@ -407,7 +433,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickFileUploadLink() {
-        fileUpload.click();
+        click(fileUpload);
         return this;
     }
 
@@ -417,7 +443,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickFloatingMenuLink() {
-        floatingMenu.click();
+        click(floatingMenu);
         return this;
     }
 
@@ -427,7 +453,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickForgotPasswordLink() {
-        forgotPassword.click();
+        click(forgotPassword);
         return this;
     }
 
@@ -437,7 +463,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickForkMeOnGithubLink() {
-        forkMeOnGithub.click();
+        click(forkMeOnGithub);
         return this;
     }
 
@@ -447,7 +473,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickFormAuthenticationLink() {
-        formAuthentication.click();
+        click(formAuthentication);
         return this;
     }
 
@@ -457,7 +483,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickFramesLink() {
-        frames.click();
+        click(frames);
         return this;
     }
 
@@ -467,7 +493,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickGeolocationLink() {
-        geolocation.click();
+        click(geolocation);
         return this;
     }
 
@@ -477,7 +503,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickHorizontalSliderLink() {
-        horizontalSlider.click();
+        click(horizontalSlider);
         return this;
     }
 
@@ -487,7 +513,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickHoversLink() {
-        hovers.click();
+        click(hovers);
         return this;
     }
 
@@ -497,7 +523,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickInfiniteScrollLink() {
-        infiniteScroll.click();
+        click(infiniteScroll);
         return this;
     }
 
@@ -507,7 +533,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickInputsLink() {
-        inputs.click();
+        click(inputs);
         return this;
     }
 
@@ -517,7 +543,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickJavascriptAlertsLink() {
-        javascriptAlerts.click();
+        click(javascriptAlerts);
         return this;
     }
 
@@ -527,7 +553,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickJavascriptOnloadEventErrorLink() {
-        javascriptOnloadEventError.click();
+        click(javascriptOnloadEventError);
         return this;
     }
 
@@ -537,7 +563,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickJqueryUiMenusLink() {
-        jqueryUiMenus.click();
+        click(jqueryUiMenus);
         return this;
     }
 
@@ -547,7 +573,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickKeyPressesLink() {
-        keyPresses.click();
+        click(keyPresses);
         return this;
     }
 
@@ -557,7 +583,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickLargeDeepDomLink() {
-        largeDeepDom.click();
+        click(largeDeepDom);
         return this;
     }
 
@@ -567,7 +593,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickMultipleWindowsLink() {
-        multipleWindows.click();
+        click(multipleWindows);
         return this;
     }
 
@@ -577,7 +603,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickNestedFramesLink() {
-        nestedFrames.click();
+        click(nestedFrames);
         return this;
     }
 
@@ -587,7 +613,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickNotificationMessagesLink() {
-        notificationMessages.click();
+        click(notificationMessages);
         return this;
     }
 
@@ -597,7 +623,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickRedirectLinkLink() {
-        redirectLink.click();
+        click(redirectLink);
         return this;
     }
 
@@ -607,7 +633,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickSecureFileDownloadLink() {
-        secureFileDownload.click();
+        click(secureFileDownload);
         return this;
     }
 
@@ -617,7 +643,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickShadowDomLink() {
-        shadowDom.click();
+        click(shadowDom);
         return this;
     }
 
@@ -627,7 +653,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickShiftingContentLink() {
-        shiftingContent.click();
+        click(shiftingContent);
         return this;
     }
 
@@ -637,7 +663,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickSlowResourcesLink() {
-        slowResources.click();
+        click(slowResources);
         return this;
     }
 
@@ -647,7 +673,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickSortableDataTablesLink() {
-        sortableDataTables.click();
+        click(sortableDataTables);
         return this;
     }
 
@@ -657,7 +683,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickStatusCodesLink() {
-        statusCodes.click();
+        click(statusCodes);
         return this;
     }
 
@@ -667,7 +693,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickTyposLink() {
-        typos.click();
+        click(typos);
         return this;
     }
 
@@ -677,7 +703,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage clickWysiwygEditorLink() {
-        wysiwygEditor.click();
+        click(wysiwygEditor);
         return this;
     }
 
@@ -687,7 +713,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage verifyPageLoaded() {
-        (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
+        (new WebDriverWait(getDriver(), timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getPageSource().contains(pageLoadedText);
             }
@@ -701,7 +727,7 @@ public class HomePage {
      * @return the Home class instance.
      */
     public HomePage verifyPageUrl() {
-        (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
+        (new WebDriverWait(getDriver(), timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getCurrentUrl().contains(pageUrl);
             }

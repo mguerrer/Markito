@@ -19,6 +19,7 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
     private FileManagement fileManager = null;
     private Debugger debugManager = null;
     private RandomDataManagement randomUtils = null;
+    private String markitoVersion = "v0.7";
 
     public MarkitoBaseUtils(ProcessManagement processManager, FileManagement fileManager, DebugManager debugManager, RandomDataManagement randomUtils) {
         this.processManager = processManager;
@@ -33,7 +34,9 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
         this.debugManager = new DebugManager();
         this.randomUtils = new RandomUtils();
     }
-
+    public String getMarkitoVersion() {
+        return markitoVersion;
+    }
     /* This is a group of simple methods to manage OS processes. */
     /**
      * Kill a process by name.

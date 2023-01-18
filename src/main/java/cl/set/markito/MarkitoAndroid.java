@@ -22,7 +22,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
 
-
+@Deprecated
 public class MarkitoAndroid extends MarkitoWeb {
     public AndroidDriver<AndroidElement> adriver = null;
     public long timeOutInSeconds = 60;

@@ -582,9 +582,27 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     }
 
     /**
+     * Waits for a web element to be clickable and click in it.
      * @param element
      */
     public void click(WebElement element) {
+        printf(ANSI_YELLOW + "click %s...", element.toString());
+        long currentTimeout = getTimeOutInSeconds();
+        try {
+            implicitlyWait(0, TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+                    .ignoring(StaleElementReferenceException.class)
+                    .ignoring(Exception.class)
+                    .until(ExpectedConditions.elementToBeClickable(element));
+            highlightElement(element);
+            element.click();
+            setTimeOutInSeconds(currentTimeout);
+            println(ANSI_YELLOW + "done.");
+        } catch (Exception e) {
+            setTimeOutInSeconds(currentTimeout);
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
     }
 
     /**
@@ -2549,10 +2567,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     }
 
     @Override
-    public void submit() {
-    }
-
-    @Override
     public String getAttribute(String name) {
         return null;
     }
@@ -2570,6 +2584,11 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     @Override
     public void clear() {
 
+    }
+
+    @Override
+    public void submit() {
+       
     }
 
 }

@@ -41,6 +41,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * This is the legacy class to drive web test up to version 0.7.
  */
+@Deprecated
 public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver, IMarkitoWeb {
     public WebDriver driver = null;
     public JavascriptExecutor js;

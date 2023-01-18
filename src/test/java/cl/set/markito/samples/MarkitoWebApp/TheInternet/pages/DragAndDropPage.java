@@ -11,16 +11,13 @@ import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import cl.set.markito.IMarkitoWeb;
-import cl.set.markito.MarkitoWeb;
+import cl.set.markito.framework.MarkitoWebApp;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class DragAndDropPage {
-    private WebDriver driver;
+public class DragAndDropPage extends MarkitoWebApp {
     private int timeout = 15;
 
     @FindBy(css = "a[href='http://elementalselenium.com/']")
@@ -48,11 +45,11 @@ public class DragAndDropPage {
 
     public DragAndDropPage(WebDriver driver) {
         this();
-        this.driver = driver;
+        setDriver( driver );
     }
 
     public DragAndDropPage(WebDriver driver, Map<String, String> data) {
-        this(driver);
+        setDriver( driver );
     }
 
     public DragAndDropPage(WebDriver driver, Map<String, String> data, int timeout) {
@@ -64,14 +61,11 @@ public class DragAndDropPage {
      * Do drag and drop of squareA over squareB.
      */
     public void DragObjectAOverObjectB() {
-        //Actions act = new Actions(this.driver);
-        IMarkitoWeb markito = new MarkitoWeb(driver);
-
         // Dragged and dropped.
-        squareA = driver.findElement(By.id("column-a"));
-        squareB = driver.findElement(By.id("column-b"));
+        squareA = findElement(By.id("column-a"));
+        squareB = findElement(By.id("column-b"));
 
-        markito.dragAndDrop(squareA, squareB);
+        dragAndDrop(squareA, squareB);
 
      }
 
@@ -81,7 +75,7 @@ public class DragAndDropPage {
      * @return the DragAndDrop class instance.
      */
     public DragAndDropPage clickElementalSeleniumLink() {
-        elementalSelenium.click();
+        click( elementalSelenium );
         return this;
     }
 
@@ -91,7 +85,7 @@ public class DragAndDropPage {
      * @return the DragAndDrop class instance.
      */
     public DragAndDropPage clickForkMeOnGithubLink() {
-        forkMeOnGithub.click();
+        click( forkMeOnGithub );
         return this;
     }
 
@@ -101,7 +95,7 @@ public class DragAndDropPage {
      * @return the DragAndDrop class instance.
      */
     public DragAndDropPage verifyPageLoaded() {
-        (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
+        (new WebDriverWait(getDriver(), timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getPageSource().contains(pageLoadedText);
             }
@@ -115,7 +109,7 @@ public class DragAndDropPage {
      * @return the DragAndDrop class instance.
      */
     public DragAndDropPage verifyPageUrl() {
-        (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
+        (new WebDriverWait(getDriver(), timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getCurrentUrl().contains(pageUrl);
             }

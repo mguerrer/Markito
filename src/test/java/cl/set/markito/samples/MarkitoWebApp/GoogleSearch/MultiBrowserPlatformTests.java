@@ -27,7 +27,7 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
     @Test
     public void HelloWorldTest() throws Exception {
         // Arrange
-        setBrowserstackProjectInformation("Markito", "MultiBrowserPlatformTests", 
+        setBrowserstackProjectInformation("Markito", "Markito "+getMarkitoVersion(), 
                                             "Google Search Hello world-Chrome"+"-"+LOCAL_COMPUTER_DEVICE.getName());
         setAutomaticDriverDownload(true); // Adds automatic driver download on local machine
         setDriver(openBrowserSessionInDevice(CHROME_BROWSER, LOCAL_COMPUTER_DEVICE)); // Open web session on device
@@ -57,13 +57,17 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
     @MethodSource("webScenarios")
     void GoogleSearchTest(Browser browser, Device device) throws Exception {
         // Arrange
-        setBrowserstackProjectInformation("Markito", "MultiBrowserPlatformTests", 
+        setBrowserstackProjectInformation("Markito", "Markito "+getMarkitoVersion(), 
                                             "Google Search-"+browser.getName()+"-"+device.getName());
         setAutomaticDriverDownload(true); // Adds automatic driver download on local machine
         setDriver(openBrowserSessionInDevice(browser, device)); // Open web session on device
         GoogleSearchHomePage searchPage = new GoogleSearchHomePage( getDriver());
         get("https://www.google.cl");
-        
+        if (isIOS() || isAndroid())
+            rotate(ScreenOrientation.LANDSCAPE);
+        else
+            maximize();
+
         // Act: This search is not working on IOS https://discuss.appium.io/t/sendkeys-and-click-function-does-not-work-for-ios-simulator/5896
         sendKeys( searchPage.queryTextBox, "Markito" + Keys.ENTER );
 

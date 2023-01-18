@@ -10,11 +10,13 @@ import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import cl.set.markito.framework.MarkitoWebApp;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class AddRemoveElementsPage {
-    private WebDriver driver;
+public class AddRemoveElementsPage extends MarkitoWebApp {
     private int timeout = 15;
 
     @FindBy(css = "#content div.example button")
@@ -46,9 +48,7 @@ public class AddRemoveElementsPage {
 
     public AddRemoveElementsPage(WebDriver driver, String hostUrl) {
         this();
-        this.driver = driver;
-        pageUrl = hostUrl + pageUrl;
-        driver.get( pageUrl);
+        setDriver( driver );
     }
 
     /**
@@ -57,7 +57,7 @@ public class AddRemoveElementsPage {
      * @return the AddRemoveElementsPage class instance.
      */
     public AddRemoveElementsPage clickAddElementButton() {
-        addElement.click();
+        click(addElement);
         return this;
     }
 
@@ -67,7 +67,7 @@ public class AddRemoveElementsPage {
      * @return the AddRemoveElementsPage class instance.
      */
     public AddRemoveElementsPage clickDeleteButton() {
-        deleteElement.click();
+        click(deleteElement);
         return this;
     }
 
@@ -77,7 +77,7 @@ public class AddRemoveElementsPage {
      * @return the AddRemoveElementsPage class instance.
      */
     public AddRemoveElementsPage clickElementalSeleniumLink() {
-        elementalSelenium.click();
+        click(elementalSelenium);
         return this;
     }
 
@@ -87,7 +87,7 @@ public class AddRemoveElementsPage {
      * @return the AddRemoveElementsPage class instance.
      */
     public AddRemoveElementsPage clickForkMeOnGithubLink() {
-        forkMeOnGithub.click();
+        click(forkMeOnGithub);
         return this;
     }
 
@@ -96,7 +96,7 @@ public class AddRemoveElementsPage {
      *
      * @return the AddRemoveElementsPage class instance.
      */
-    public AddRemoveElementsPage submit() {
+    public AddRemoveElementsPage submitPage() {
         clickAddElementButton();
         return this;
     }
@@ -107,7 +107,7 @@ public class AddRemoveElementsPage {
      * @return the AddRemoveElementsPage class instance.
      */
     public AddRemoveElementsPage verifyPageLoaded() {
-        (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
+        (new WebDriverWait(getDriver(), timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getPageSource().contains(pageLoadedText);
             }
@@ -121,7 +121,7 @@ public class AddRemoveElementsPage {
      * @return the AddRemoveElementsPage class instance.
      */
     public AddRemoveElementsPage verifyPageUrl() {
-        (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
+        (new WebDriverWait(getDriver(), timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 return d.getCurrentUrl().contains(pageUrl);
             }

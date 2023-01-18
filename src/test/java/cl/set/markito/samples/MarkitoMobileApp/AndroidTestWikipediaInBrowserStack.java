@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -16,8 +17,10 @@ import io.appium.java_client.MobileBy;
  * This test is an example of testing Wikipedia App running on Browserstack.
  * NOTE: In order to run this test you have to set your BrowserStack credentials by setting their values on environment variables named BSUSERNAME and BSPASSWORD.
  */
-public class AndroidTestWikipediaInBrowserStack extends MarkitoAndroid {
+@Deprecated
 
+public class AndroidTestWikipediaInBrowserStack extends MarkitoAndroid {
+	@Disabled
 	@Test
 	public void TestWikipediaInBrowserStack() throws MalformedURLException, InterruptedException {
 		

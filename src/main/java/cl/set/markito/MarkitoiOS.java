@@ -22,6 +22,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.IOSElement;
+
+@Deprecated
 public class MarkitoiOS extends MarkitoBaseUtils{
     public  IOSDriver<IOSElement> driver = null;
     public long timeOutInSeconds = 60;

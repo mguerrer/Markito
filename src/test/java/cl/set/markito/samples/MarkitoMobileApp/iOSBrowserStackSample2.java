@@ -17,6 +17,7 @@ import io.appium.java_client.ios.IOSElement;
  * This test is an example of testing Wikipedia App running on Browserstack.
  * NOTE: In order to run this test you have to set your BrowserStack credentials by setting their values on environment variables named BSUSERNAME and BSPASSWORD.
  */
+@Deprecated
 public class iOSBrowserStackSample2 extends MarkitoiOS {
 
 	@Test

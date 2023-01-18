@@ -7,14 +7,15 @@ package cl.set.markito.samples.MarkitoWebApp.TheInternet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.openqa.selenium.support.PageFactory;
 
 import cl.set.markito.framework.MarkitoWebApp;
+import cl.set.markito.framework.devices.Device;
 import cl.set.markito.samples.MarkitoWebApp.TheInternet.pages.AddRemoveElementsPage;
 import cl.set.markito.samples.MarkitoWebApp.TheInternet.pages.DragAndDropPage;
 import cl.set.markito.samples.MarkitoWebApp.TheInternet.pages.HomePage;
@@ -22,19 +23,20 @@ import cl.set.markito.samples.MarkitoWebApp.TheInternet.pages.HomePage;
 @TestInstance(Lifecycle.PER_CLASS)
 public class TheInternetTests extends MarkitoWebApp {
     HomePage homePage = null;
-    String hostUrl="http://the-internet.herokuapp.com/";
+    String hostUrl = "http://the-internet.herokuapp.com";
+    Device device = LOCAL_COMPUTER_DEVICE;
 
     @BeforeAll
     public void beforeAll() throws Exception {
-        // Arrange overall session
-        setBrowserstackProjectInformation("Markito", "TheInternet",
-                "Google Search-Chrome" + "-" + LOCAL_COMPUTER_DEVICE.getName());
-        setAutomaticDriverDownload(true); // Adds automatic driver download on local machine
-        setDriver(openBrowserSessionInDevice(CHROME_BROWSER, LOCAL_COMPUTER_DEVICE)); // Open web session on device
+
     }
 
-    @BeforeEach
-    public void Setup() throws Exception {
+    public void setup(String testName) throws Exception {
+        // Arrange overall session
+        setBrowserstackProjectInformation("Markito", "Markito " + getMarkitoVersion(),
+                "The Internet" + testName + CHROME_BROWSER.getName() + "-" +  device.getName());
+        setAutomaticDriverDownload(true); // Adds automatic driver download on local machine
+        setDriver(openBrowserSessionInDevice(CHROME_BROWSER, device)); // Open web session on device
         // get URL
         // Open Home Page
         homePage = new HomePage(getDriver(), hostUrl);
@@ -47,8 +49,11 @@ public class TheInternetTests extends MarkitoWebApp {
     }
 
     @Test
-    public void AddRemoveElementsTest() {
+    public void AddRemoveElementsTest() throws Exception {
+        setup("AddRemoveElementsTest");
         // Open AddRemoveElements Page
+        homePage.clickAddremoveElementsLink();
+
         AddRemoveElementsPage addRemovePage = new AddRemoveElementsPage(getDriver(), hostUrl);
         PageFactory.initElements(getDriver(), addRemovePage);
         addRemovePage.verifyPageUrl();
@@ -58,10 +63,12 @@ public class TheInternetTests extends MarkitoWebApp {
         addRemovePage.clickDeleteButton();
         // Assert element is invisible
         waitForElementInvisibility(addRemovePage.deleteElement);
+        Assertions.assertTrue(true);
     }
 
     @Test
     public void DragAndDropTest() throws Exception {
+        setup("DragAndDropTest");
         // Open link Drag And Drop
         homePage.clickDragAndDropLink();
 
