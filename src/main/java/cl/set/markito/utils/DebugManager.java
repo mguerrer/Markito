@@ -5,7 +5,7 @@ import java.io.PrintStream;
 /**
  * This class implements a simple facility to add debug or trace comments with the ability to enable or stop verbose on runtime.
  */
-public class DebugManager extends MarkitoBaseUtilsValues implements IDebugManager {
+public class DebugManager extends MarkitoBaseUtilsValues implements Debugger {
     public boolean debug = true; // Indicates whether or not debug mode is ON or OFF.
     PrintStream output = System.out; // Defaults to console.
 

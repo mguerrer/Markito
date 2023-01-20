@@ -17,6 +17,7 @@ import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -25,9 +26,39 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileDriver;
 import io.appium.java_client.MobileElement;
 
-public class MarkitoMobile extends MarkitoBaseUtils {
+@Deprecated
+public abstract class MarkitoMobile extends MarkitoBaseUtils {
     public MobileDriver<MobileElement> driver = null;
     public long timeOutInSeconds = 60;
+
+    
+    /**
+     * Default constructor indicates to webdriver that platform is Mobile.
+     */
+    public MarkitoMobile() {
+        printf(ANSI_YELLOW + "Markito MobileDriver has born.\n");
+    }
+
+    public MobileDriver<MobileElement> getDriver() {
+        return driver;
+    }
+
+    public void setDriver(MobileDriver<MobileElement> driver) {
+        this.driver = driver;
+    }
+    @SuppressWarnings("unchecked")
+    public void setDriver(WebDriver driver) {
+        this.driver = (MobileDriver<MobileElement>) driver;
+    }
+
+    public long getTimeOutInSeconds() {
+        return timeOutInSeconds;
+    }
+
+    public void setTimeOutInSeconds(long timeOutInSeconds) {
+        this.timeOutInSeconds = timeOutInSeconds;
+    }
+
 
     /**
      * Launch Mobile App selected in capabilities.
@@ -55,13 +86,6 @@ public class MarkitoMobile extends MarkitoBaseUtils {
             printf(ANSI_RED + "failed! %s\n", e.getMessage());
             throw new WebDriverException(e.getMessage());
         }
-    }
-
-    /**
-     * Default constructor indicates to webdriver that platform is Mobile.
-     */
-    public MarkitoMobile() {
-        printf(ANSI_YELLOW + "Markito MobileDriver has born.\n");
     }
 
     /**
@@ -280,4 +304,5 @@ public class MarkitoMobile extends MarkitoBaseUtils {
         println(ANSI_YELLOW+"SetContextHandle "+ContextName); //prints out something like NATIVE_APP \n WEBVIEW_1
         driver.context(ContextName);
     }
+
 }

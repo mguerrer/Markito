@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +22,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
 
-
+@Deprecated
 public class MarkitoAndroid extends MarkitoWeb {
     public AndroidDriver<AndroidElement> adriver = null;
     public long timeOutInSeconds = 60;
@@ -31,6 +30,7 @@ public class MarkitoAndroid extends MarkitoWeb {
     /**
      * Launch ANDROID App selected in capabilities.
      */
+    @SuppressWarnings("unchecked")
     public void LaunchApp() {
         printf(ANSI_YELLOW + "Android LaunchApp...");
         try {
@@ -46,6 +46,7 @@ public class MarkitoAndroid extends MarkitoWeb {
     /**
      * Reset ANDROID App selected in capabilities.
      */
+    @SuppressWarnings("unchecked")
     public void ResetApp() {
         printf(ANSI_YELLOW + "Android ResetApp...");
         try {
@@ -62,6 +63,7 @@ public class MarkitoAndroid extends MarkitoWeb {
     /**
      * Close ANDROID App selected in capabilities.
      */
+    @SuppressWarnings("unchecked")
     public void CloseApp() {
         printf(ANSI_YELLOW + "Android CloseApp...");
         try {
@@ -89,10 +91,10 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param keys: Array of keys to be sent.
      */
     @Override
-    public void SendKeys(By locator, String keys) {
+    public void sendKeys(By locator, String keys) {
         printf(ANSI_YELLOW + "Android SendKeys %s ...", locator);
         try {
-            AndroidElement element = FindElement(locator);
+            AndroidElement element = findElement(locator);
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
                     .ignoring(WebDriverException.class).until(ExpectedConditions.elementToBeClickable(locator));
             element.sendKeys(keys);
@@ -116,7 +118,6 @@ public class MarkitoAndroid extends MarkitoWeb {
                 System.exit(-1);
             }
             js = (JavascriptExecutor) driver;
-            vars = new HashMap<String, Object>();
         } catch (Exception e) {
             printf(ANSI_RED
                     + "\nMarkito: ERROR on getting Android session. Is there an Appium server at %s?\nStack: %s\n",
@@ -143,7 +144,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param by
      * @return AndroidElement
      */
-    public AndroidElement FindElement(By by) {
+    public AndroidElement findElement(By by) {
         printf(ANSI_YELLOW + "Android FindElement %s ...", by);
         try {
             AndroidElement element = (AndroidElement) driver.findElement(by);
@@ -154,7 +155,7 @@ public class MarkitoAndroid extends MarkitoWeb {
             LocalDateTime ldt = LocalDateTime.now();
             String date = ldt.toString();
             try {
-                TakeScreenSnapshot("TestResults\\FindERROR-" + date.toString().replaceAll("\\W+", "") + ".png");
+                takeScreenSnapshot("TestResults\\FindERROR-" + date.toString().replaceAll("\\W+", "") + ".png");
             } catch (Exception e2) {
                 printf("ERROR al tomar snapshot. Stack:%s\n", e2.getMessage());
             }
@@ -169,7 +170,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param by
      * @return WebElement
      */
-    public List<WebElement> FindElements(By by) {
+    public List<WebElement> findElements(By by) {
         printf(ANSI_YELLOW + "Android FindElements %s ...", by);
         List<WebElement> elements;
         try {
@@ -190,7 +191,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      *                          interruption.
      */
     @Override
-    public void SetTimeouts(long timeOutInSeconds) {
+    public void setTimeouts(long timeOutInSeconds) {
         this.timeOutInSeconds = timeOutInSeconds;
         driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS); // Timeouts de waitFor*
         printf(ANSI_YELLOW + "SetTimeouts in %d seconds.\n", timeOutInSeconds);
@@ -202,7 +203,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param fileWithPath: Pathname of the file to be generated.
      */
     @Override
-    public void TakeScreenSnapshot(String fileWithPath) {
+    public void takeScreenSnapshot(String fileWithPath) {
         try {
             // Convert web driver object to TakeScreenshot
             TakesScreenshot scrShot = ((TakesScreenshot) driver);
@@ -223,7 +224,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param locator
      */
     @Override
-    public void Click(By locator) {
+    public void click(By locator) {
         printf(ANSI_YELLOW + "Clicking (And) %s...", locator);
         try {
             driver.findElement(locator).click();
@@ -240,10 +241,10 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param by
      */
     @Override
-    public String GetText(By by) {
+    public String getText(By by) {
         printf(ANSI_YELLOW + "GetText in object %s\n", by);
         try {
-            WebElement element = FindElement(by);
+            WebElement element = findElement(by);
             return element.getText();
         } catch (Exception e) {
             printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
@@ -257,7 +258,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * @param by
      */
     @Override
-    public void WaitForElementVisible(By by) {
+    public void waitForElementVisible(By by) {
         printf(ANSI_YELLOW + "Waiting for element %s...", by.toString());
         try {
             new WebDriverWait(driver, timeOutInSeconds).ignoring(StaleElementReferenceException.class)
@@ -291,6 +292,7 @@ public class MarkitoAndroid extends MarkitoWeb {
      * 
      * @return ContextNames: Obtained contexts from Android driver.
      */
+    @SuppressWarnings("unchecked")
     public Set<String> GetContextHandles() {
         adriver = (AndroidDriver<AndroidElement>) driver;
         Set<String> contextNames = adriver.getContextHandles();
@@ -299,14 +301,14 @@ public class MarkitoAndroid extends MarkitoWeb {
         }
         return contextNames;
     }
-
+    @SuppressWarnings("unchecked")
     public void SetContextHandle(String ContextName) {
         println(ANSI_YELLOW + "SetContextHandle " + ContextName); // prints out something like NATIVE_APP \n WEBVIEW_1
         adriver = (AndroidDriver<AndroidElement>) driver;
         adriver.context(ContextName);
         driver = adriver;
     }
-
+    @SuppressWarnings("unchecked")
     public void Tap(By locator) {
         printf(ANSI_YELLOW + "Tapping element %s...", locator.toString());
         try {
@@ -323,8 +325,9 @@ public class MarkitoAndroid extends MarkitoWeb {
         }
 
     }
+    @SuppressWarnings("unchecked")
     @Override
-    public void SetLocation( double x, double y, double z) {
+    public void setLocation( double x, double y, double z) {
         printf(ANSI_YELLOW + "Set location to %f, %f, %f...", x,y,z);
         try {
             adriver = (AndroidDriver<AndroidElement>) driver;

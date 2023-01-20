@@ -9,10 +9,17 @@ import java.net.UnknownHostException;
 /**
  * This class implements methods to manage OS processes.  Currently implemented only for Windows 10.
  */
-public class ProcessManager extends DebugManager implements IProcessManager {
+public class ProcessManager extends DebugManager implements ProcessManagement {
     private static final String TASKLIST = "tasklist";
     private static final String KILL = "taskkill /F /IM ";
-    private static String OS = System.getProperty("os.name").toLowerCase();
+    /**
+     * Current Operating System.
+     */
+    private final String OS = System.getProperty("os.name").toLowerCase();
+
+    public String getCurrentOS() {
+        return this.OS;
+    }
 
     public int killProcess(String processName) {
         println("Killing "+OS+" process: " + processName);
