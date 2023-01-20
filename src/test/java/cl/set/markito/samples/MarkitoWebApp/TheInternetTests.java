@@ -96,22 +96,4 @@ public class TheInternetTests extends MarkitoWebApp {
         }
         Assertions.assertTrue(true);
     }
-    @Test
-    @DisplayName("Test Windows management interface")
-    public void WindowsManagementTest(TestInfo testInfo) throws Exception {
-        setup(testInfo.getDisplayName());
-        setWindowSize( new Dimension(300,300));
-        setPosition(new Point(100, 100));
-        Point currentPosition = getPosition();
-        maximize(); // Tests zooming
-        setZoomLevelOfCurrentPage(30);
-        setZoomLevelOfCurrentPage(100);
-        setZoomLevelOfCurrentPage(200);
-        setZoomLevelOfCurrentPage(30);
-        
-        setPosition( currentPosition);
-
-        Assertions.assertEquals( currentPosition,  getPosition());
-        fullscreen();
-    }
 }

@@ -1,4 +1,4 @@
-package cl.set.markito.samples.MarkitoWebApp;
+package cl.set.markito.tests.MarkitoWebApp;
 
 import java.util.stream.Stream;
 
@@ -12,9 +12,8 @@ import cl.set.markito.framework.MarkitoWebApp;
 import cl.set.markito.framework.browsers.*;
 import cl.set.markito.framework.devices.*;
 import io.appium.java_client.appmanagement.ApplicationState;
-
 /**
- * Tests to demonstrate Markito capability to run tests for web app on different scenarios.
+ * This is an internal test class to verify implementation.  It is not intended to test Selenium or Appium.
  */
 public class MobileAppTests extends MarkitoWebApp {
     /**
@@ -30,16 +29,16 @@ public class MobileAppTests extends MarkitoWebApp {
         // Arrange
         setBrowserstackProjectInformation("Markito", "Markito "+getMarkitoVersion(), 
                                             "Manage Wikipedia App Test-"+browser.getName()+"-"+device.getName());
-        String sampleAppInBs="";
+        String wikipediaAppInBs="";
 
         if ( device.isAndroid()) {
-            sampleAppInBs = "bs://c700ce60cf13ae8ed97705a55b8e022f13c5827c";
+            wikipediaAppInBs = "bs://c700ce60cf13ae8ed97705a55b8e022f13c5827c";
         } else if ( device.isIOS() ) {
-            sampleAppInBs = "bs://444bd0308813ae0dc236f8cd461c02d3afa7901d";
-            getBrowserStack().SetAppUnderTesting( sampleAppInBs);
+            wikipediaAppInBs = "bs://444bd0308813ae0dc236f8cd461c02d3afa7901d";
+            getBrowserStack().SetAppUnderTesting( wikipediaAppInBs);
 
         } else Assertions.assertTrue(false, "OS not supported.");
-        getBrowserStack().SetAppUnderTesting(sampleAppInBs);
+        getBrowserStack().SetAppUnderTesting(wikipediaAppInBs);
         // Act: Open session and manage app
         setDriver(openBrowserSessionInDevice(browser, device)); // Open web session on device
         Thread.sleep(10000);
