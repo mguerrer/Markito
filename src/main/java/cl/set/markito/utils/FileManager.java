@@ -49,7 +49,7 @@ public class FileManager extends DebugManager implements FileManagement {
         try (Stream<String> stream = Files.lines(Paths.get(filePathname), StandardCharsets.UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s).append("\n"));
         } catch (Exception e) {
-            printf(ANSI_RED+"ERROR:%s", e.getMessage());
+            printf(ANSI_RED+"ERROR:%s\n", e.getMessage());
             return null;
         }
         printf("done.\n");
@@ -91,7 +91,8 @@ public class FileManager extends DebugManager implements FileManagement {
         return false;
     }
 
-    public void deleteDownloadedFileIfExists(String fileName) {
+    public int deleteDownloadedFileIfExists(String fileName) {
+        int retCode;
         printf(ANSI_YELLOW + "deleteDownloadedFileIfExists %s..", fileName);
 
         if (checkIfFileIsDownloaded(fileName)) {
@@ -99,9 +100,12 @@ public class FileManager extends DebugManager implements FileManagement {
             File file = new File(filePathname);
             file.delete();
             printf(ANSI_YELLOW + "done.\n");
+            retCode = 0;
         } else {
             printf(ANSI_YELLOW + "not found.\n");
+            retCode = 1;
         }
+        return retCode;
     }
 
     public File[] findFilesByNameRegex(String nameRegex, String folder) {

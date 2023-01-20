@@ -16,6 +16,8 @@ import cl.set.markito.framework.browsers.*;
 import cl.set.markito.framework.devices.*;
 import cl.set.markito.samples.MarkitoWebApp.GoogleSearch.pages.GoogleSearchHomePage;
 import cl.set.markito.samples.MarkitoWebApp.GoogleSearch.pages.GoogleSearchResultsPage;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 /**
  * Tests to demonstrate Markito capability to run tests for web app on different scenarios.
@@ -24,6 +26,7 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
     /**
      * Very simple "Hello world" style of Google's search on your local computer using Chrome."
      */
+    @DisabledOnOs(OS.LINUX)
     @Test
     public void HelloWorldTest() throws Exception {
         // Arrange

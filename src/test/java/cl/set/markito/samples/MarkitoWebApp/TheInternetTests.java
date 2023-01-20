@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.support.PageFactory;
 
 import cl.set.markito.framework.MarkitoWebApp;

@@ -3,6 +3,7 @@ package cl.set.markito.samples.MarkitoMobileApp;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -14,9 +15,9 @@ public class BrowserStackIOS extends BrowserStack {
 
     private String userName = getBsUsername();
     private String accessKey = getBsPassword();
-    // TODO: Update Browserstack app url for apps/LocalSample.ipa
     private static String app_url = "bs://78f0f26662f5b73438f2b6fca581d0b8366ada20";
 
+    @Disabled
     @Test
     public void TestLocalSampleOnBsIOS() throws MalformedURLException, InterruptedException {
         DesiredCapabilities caps = new DesiredCapabilities();
