@@ -4,7 +4,7 @@ Copyright (c) 2022, Marcos Guerrero. All Rights Reserved.
 Not for reuse without permission.
 */
 
-package cl.set.markito.samples.MarkitoWebApp.TheInternet.pages;
+package cl.set.markito.samples.MarkitoWebApp.TheInternet;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

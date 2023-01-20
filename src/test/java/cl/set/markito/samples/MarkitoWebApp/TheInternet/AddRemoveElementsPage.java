@@ -1,4 +1,4 @@
-package cl.set.markito.samples.MarkitoWebApp.TheInternet.pages;
+package cl.set.markito.samples.MarkitoWebApp.TheInternet;
 
 /*
 All the code that follow is

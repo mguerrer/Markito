@@ -1,4 +1,4 @@
-package cl.set.markito.samples.MarkitoWebApp.GoogleSearch;
+package cl.set.markito.samples.MarkitoWebApp;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -63,9 +63,10 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
         setDriver(openBrowserSessionInDevice(browser, device)); // Open web session on device
         GoogleSearchHomePage searchPage = new GoogleSearchHomePage( getDriver());
         get("https://www.google.cl");
-        if (isIOS() || isAndroid()) {
+        if (device.isMobile()) {
             rotate(ScreenOrientation.LANDSCAPE);
-            //rotate(new DeviceRotation(0, 0, 270));
+            if (device.isIOS())
+                rotate(new DeviceRotation(0, 0, 90));
         } else
             maximize();
 
@@ -78,13 +79,13 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
 
         // Print found titles
         GoogleSearchResultsPage resultsPage = new GoogleSearchResultsPage( getDriver());
-        setZoomLevelToPercentage(50); // Set zoom level to 50%
+        setZoomLevelOfCurrentPage(50); // Set zoom level to 50%
 
         for (WebElement result : resultsPage.queryResults) {
             getText( result );
         }
         // Assert 
-        if ( !isIOS())
+        if ( !device.isIOS())
             Assertions.assertTrue( resultsPage.queryResults.size() > 0);
     }
     @AfterEach

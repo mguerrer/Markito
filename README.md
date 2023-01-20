@@ -5,7 +5,7 @@ A Selenium/Appium Webdriver wrapper written in Java to make easiest:
    * Automator can run SAME script for WEB App on browsers (Chrome, Firefox, Edge, IE, Safari) running over Windows, Linux, Android and iOS.
    * Automator can run SAME script for NATIVE (or HYBRYD) App for Windows, Android and iOS.
 2. Make coding simple, concise and readable.
-   *  This wrapper has been designed to extend script style using [Selenese](https://ui.vision/rpa/docs/selenium-ide) alike commands. Similar ideas can be found on framework [Helium](https://github.com/mherrmann/selenium-python-helium)
+   *  This wrapper has been designed to extend script style using [Selenese](https://ui.vision/rpa/docs/selenium-ide) alike commands. Similar ideas can be found on framework [Helium](https://github.com/mherrmann/selenium-python-helium) and [Easyium](https://pypi.org/project/easyium/) for Python.
    *  Simplified timeout management.
       * W3C webdriver standard provides timeout management at session level, page level, JS script level and element level (implicit and explicit). Markito uses a single implicit timeout parameter to set all levels.
 3. Provide an extra layer of abstraction over webdriver and appium (or others in the future) to isolate your test code from changes on those frameworks.

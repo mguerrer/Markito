@@ -2,7 +2,7 @@
  * Tests different methods.
  */
 
-package cl.set.markito.samples.MarkitoWebApp.TheInternet;
+package cl.set.markito.samples.MarkitoWebApp;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -18,9 +18,9 @@ import org.openqa.selenium.support.PageFactory;
 
 import cl.set.markito.framework.MarkitoWebApp;
 import cl.set.markito.framework.devices.Device;
-import cl.set.markito.samples.MarkitoWebApp.TheInternet.pages.AddRemoveElementsPage;
-import cl.set.markito.samples.MarkitoWebApp.TheInternet.pages.DragAndDropPage;
-import cl.set.markito.samples.MarkitoWebApp.TheInternet.pages.HomePage;
+import cl.set.markito.samples.MarkitoWebApp.TheInternet.AddRemoveElementsPage;
+import cl.set.markito.samples.MarkitoWebApp.TheInternet.DragAndDropPage;
+import cl.set.markito.samples.MarkitoWebApp.TheInternet.HomePage;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @DisplayName("Test The Internet web page")
@@ -104,10 +104,10 @@ public class TheInternetTests extends MarkitoWebApp {
         setPosition(new Point(100, 100));
         Point currentPosition = getPosition();
         maximize(); // Tests zooming
-        setZoomLevelToPercentage(30);
-        setZoomLevelToPercentage(100);
-        setZoomLevelToPercentage(200);
-        setZoomLevelToPercentage(30);
+        setZoomLevelOfCurrentPage(30);
+        setZoomLevelOfCurrentPage(100);
+        setZoomLevelOfCurrentPage(200);
+        setZoomLevelOfCurrentPage(30);
         
         setPosition( currentPosition);
 

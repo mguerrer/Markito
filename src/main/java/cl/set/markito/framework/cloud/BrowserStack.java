@@ -5,9 +5,10 @@ import java.util.Map;
 import java.net.URL;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
+import com.google.common.collect.ImmutableMap;
 
 import cl.set.markito.framework.devices.OS;
 import cl.set.markito.utils.DebugManager;
@@ -22,12 +23,13 @@ public class BrowserStack extends DebugManager {
     DesiredCapabilities capabilities = null;
     HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
 
+
     public DesiredCapabilities getCapabilities() {
-        return capabilities;
+        return this.capabilities;
     }
 
     public BrowserStack() {
-        capabilities = new DesiredCapabilities();
+        this.capabilities = new DesiredCapabilities();
         setBsCredentials(getBsUsername(), getBsPassword());
     }
 
@@ -145,6 +147,8 @@ public class BrowserStack extends DebugManager {
 
     public void setDesiredMobileTechnicalCapabilities(String bsAppUrl, String deviceName, String platform,
             String os_version) {
+        HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
+
         // Set URL of the application under test or browser to use
         if (bsAppUrl != null)
             SetAppUnderTesting(bsAppUrl);
@@ -158,7 +162,6 @@ public class BrowserStack extends DebugManager {
         capabilities.setCapability("bstack:options", browserstackOptions);
         capabilities.setCapability("browserstack.appium_version", "1.21.0");
         capabilities.setCapability("browserstack.idleTimeout", "30");
-        //LogCapabilities(capabilities);
     }
 
     /** */
@@ -168,6 +171,7 @@ public class BrowserStack extends DebugManager {
         // General settings
         capabilities.setCapability("browserstack.idleTimeout", "30");
         capabilities.setCapability("browserstack.local", "false");
+        //capabilities.setCapability("device", deviceName);
         // Set browser
         capabilities.setCapability("browserName", browser);
         capabilities.setCapability("browserVersion", "latest");
@@ -175,34 +179,28 @@ public class BrowserStack extends DebugManager {
         // Settings to support Mobile web testing.
         if (platform.equals(OS.IOS.name)) {
             capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
-            HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
             browserstackOptions.put("deviceName", deviceName);
             browserstackOptions.put("osVersion", os_version);
             capabilities.setCapability("bstack:options", browserstackOptions);
-            capabilities.setCapability("browserstack.appium_version", "1.21.0");
+            //capabilities.setCapability("browserstack.appium_version", "1.21.0");
             capabilities.setCapability("connectHardwareKeyboard", false);
 
         } else if (platform.equals(OS.ANDROID.name)) {
             capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UIAutomator2");
             capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
-            HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
             browserstackOptions.put("deviceName", deviceName);
             browserstackOptions.put("osVersion", os_version);
             capabilities.setCapability("bstack:options", browserstackOptions);
-            // https://github.com/appium/java-client/issues/1242
-            ChromeOptions chromeOptions = new ChromeOptions();
-            chromeOptions.setExperimentalOption("w3c", false);
-            capabilities.merge(chromeOptions);
+            // Workaround for: unknown command: Cannot call non W3C standard command while in W3C mode -> https://github.com/appium/java-client/issues/1242
+            capabilities.setCapability("appium:chromeOptions", ImmutableMap.of("w3c", false));
         } else { // Settings for Desktop web testing
 
             // Set platform
             capabilities.setCapability("browserstack.seleniumVersion", "3.14.0");
-            HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
             browserstackOptions.put("os", platform);
             browserstackOptions.put("osVersion", os_version);
             capabilities.setCapability("bstack:options", browserstackOptions);
         }
-        //LogCapabilities(capabilities);
         return capabilities;
     }
 
@@ -216,6 +214,9 @@ public class BrowserStack extends DebugManager {
 
     public void SetAppUnderTesting(String appUrlInBs) {
         this.capabilities.setCapability("app", appUrlInBs);
+        //browserstackOptions.put("app", appUrlInBs);
+        //capabilities.setCapability("bstack:options", browserstackOptions);
+
     }
 
     public void setBsCredentials(String username, String key) {

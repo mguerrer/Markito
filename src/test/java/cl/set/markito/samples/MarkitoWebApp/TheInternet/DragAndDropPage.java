@@ -4,7 +4,7 @@ Copyright (c) 2022, Marcos Guerrero. All Rights Reserved.
 Not for reuse without permission.
 */
 
-package cl.set.markito.samples.MarkitoWebApp.TheInternet.pages;
+package cl.set.markito.samples.MarkitoWebApp.TheInternet;
 
 import java.util.Map;
 import org.openqa.selenium.support.CacheLookup;
