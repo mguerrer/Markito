@@ -105,6 +105,20 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
     public void setDebugManagerOutputStream(PrintStream output) {
         debugManager.setDebugManagerOutputStream(output);
     }
+    /**
+     * Return the colored output mode.
+     * @return true or false
+     */
+    public boolean isColoredOutput() {
+        return debugManager.isColoredOutput();
+    }
+    /**
+     * Set mode to colored output on console.
+     * @param coloredOutput: true colored are printed, false removes colors.
+     */
+    public void setColoredOutput(boolean coloredOutput) {
+        debugManager.setColoredOutput( coloredOutput );
+    }
 
     /**
      * Clears console output.

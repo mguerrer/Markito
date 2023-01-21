@@ -6,7 +6,8 @@ import java.io.PrintStream;
  * This class implements a simple facility to add debug or trace comments with the ability to enable or stop verbose on runtime.
  */
 public class DebugManager extends MarkitoBaseUtilsValues implements Debugger {
-    public boolean debug = true; // Indicates whether or not debug mode is ON or OFF.
+    private boolean debugMode = true; // Indicates whether or not debug mode is ON or OFF.
+    private boolean coloredOutput = true; // Indicates to print using console control codes.   Otherwise removes them.
     PrintStream output = System.out; // Defaults to console.
 
     public DebugManager() {
@@ -19,44 +20,92 @@ public class DebugManager extends MarkitoBaseUtilsValues implements Debugger {
     }
 
     public boolean getDebugMode() {
-        return debug;
+        return debugMode;
+    }
+    /**
+     * Return the colored output mode.
+     * @return true or false
+     */
+    public boolean isColoredOutput() {
+        return coloredOutput;
+    }
+    /**
+     * Set mode to colored output on console.
+     * @param coloredOutput: true colored are printed, false removes colors.
+     */
+    public void setColoredOutput(boolean coloredOutput) {
+        this.coloredOutput = coloredOutput;
     }
 
     /**
      * Clears console output.
      */
     public void clearConsole() {
-        output.print("\033[H\033[2J"); // Clears console
-        output.flush();
+        if ( coloredOutput ) {
+            output.print("\033[H\033[2J"); // Clears console
+            output.flush();
+        }
     }
 
     /**
      * Enables println and printf to write to console.
      */
     public void setDebugModeON() {
-        debug = true;
+        debugMode = true;
     }
 
     /**
      * Disable println and printf to write to console.
      */
     public void setDebugModeOFF() {
-        debug = false;
+        debugMode = false;
     }
 
     /**
      * Prints an string to console when debug mode is ON.
      */
     public void println(String x) {
-        if (debug)
-            output.println(x);
+        if (debugMode) {
+            if ( coloredOutput ) {
+                output.println(x);
+            } else {
+                output.println( removeControlChars(x));
+            }
+        }
     }
 
     /**
      * Prints an string using format string to console when debug mode is ON.
      */
     public void printf(String format, Object... args) {
-        if (debug)
-            output.printf(format, args);
+        if (debugMode) {
+            if (coloredOutput ) {
+                output.printf(format, args);
+            } else {
+                output.printf(removeControlChars(format), args);
+            }
+        }
     }
+
+    private String removeControlChars( String str ){
+
+        try{
+            //"\u001B[0m"
+            str = str.replaceAll("\\u001B", "");
+            str = str.replaceAll("\\[", "");
+            str = str.replaceAll("[0-9]{1,2}m", "");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return str;
+     }
+     private String removeControlChar( String str ){
+
+        try{
+            str = str.replaceAll("\\[", "\\\\["); 
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return str;
+     }
 }

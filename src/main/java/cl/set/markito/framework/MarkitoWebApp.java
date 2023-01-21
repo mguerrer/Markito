@@ -56,16 +56,22 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     private WebDriver driver = null;
     private long timeOutInSeconds = 60;
     private Boolean automaticDriverDownload = false;
-    private BrowserStack browserStack = new BrowserStack();
+    private BrowserStack browserStack = null;
     public  Map<String, Object> vars = new HashMap<String, Object>();
 
     public MarkitoWebApp() {
+        setColoredOutput(false);
         println(ANSI_GREEN + "\nMarkito Web App created. Thread=" + Thread.currentThread().getId());
+        browserStack = new BrowserStack();
+        browserStack.setColoredOutput(false);
     }
 
     public MarkitoWebApp(WebDriver driverObject) {
+        setColoredOutput(false);
         println(ANSI_GREEN + "\nMarkito Web App created. Thread=" + Thread.currentThread().getId());
         driver = driverObject;
+        browserStack = new BrowserStack();
+        browserStack.setColoredOutput(false);
     }
 
     public void finalize() throws Throwable {
