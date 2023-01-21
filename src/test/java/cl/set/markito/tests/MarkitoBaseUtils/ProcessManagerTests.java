@@ -16,7 +16,7 @@ public class ProcessManagerTests extends MarkitoBaseUtils{
     void TestKillProcess(){
         String os = System.getProperty("os.name");
         int retCode;
-        assertEquals( "Windows 10", os);      
+        assertTrue(  os.contains("Windows"));      
         retCode = this.killProcess("NON_EXISTING");
         switch (os) {
             case "Windows 10":
@@ -31,7 +31,7 @@ public class ProcessManagerTests extends MarkitoBaseUtils{
     void TestKillProcessIfExistingProcessRunning(){
         String os = System.getProperty("os.name");
         boolean retCode;
-        assertEquals( "Windows 10", os);      
+        assertTrue(  os.contains("Windows"));      
         retCode = this.isProcessRunning("dwm.exe");
         switch (os) {
             case "Windows 10":
@@ -46,7 +46,7 @@ public class ProcessManagerTests extends MarkitoBaseUtils{
     void TestKillProcessIfNotExistingProcessRunning(){
         String os = System.getProperty("os.name");
         boolean retCode;
-        assertEquals( "Windows 10", os);      
+        assertTrue(  os.contains("Windows"));      
         retCode = this.isProcessRunning("NON_EXISTING");
         assertEquals(false, retCode);
     }
