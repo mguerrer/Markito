@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -21,8 +21,16 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-    - name: Build with Maven
+    - name: Build Markito with Maven
       env: 
         BSUSERNAME: ${{ secrets.BSUSERNAME }}
         BSPASSWORD: ${{ secrets.BSPASSWORD }}
       run: mvn -B package --file pom.xml
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action/composite@v2
+      if: always()
+      with:
+        junit_files: "test-results/junit/**/*.xml"
+        nunit_files: "test-results/nunit/**/*.xml"
+        xunit_files: "test-results/xunit/**/*.xml"
+        trx_files: "test-results/**/*.trx"
