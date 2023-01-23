@@ -19,7 +19,8 @@ import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 
 public class BrowserStack extends DebugManager {
-
+    MobileDriver<MobileElement> mobiledriver;
+    WebDriver webdriver;
     DesiredCapabilities capabilities = null;
     HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
 
@@ -32,13 +33,16 @@ public class BrowserStack extends DebugManager {
         this.capabilities = new DesiredCapabilities();
         setBsCredentials(getBsUsername(), getBsPassword());
     }
+    public BrowserStack( Boolean colouredOutput ) {
+        this.capabilities = new DesiredCapabilities();
+        setBsCredentials(getBsUsername(), getBsPassword());
+        this.setColoredOutput(colouredOutput);
+    }
 
     public BrowserStack(DesiredCapabilities capabilities) {
         this.capabilities = capabilities;
         setBsCredentials(getBsUsername(), getBsPassword());
     }
-    MobileDriver<MobileElement> mobiledriver;
-    WebDriver webdriver;
 
     /**
      * Get BrowserStack's username from environment variable BSUSERNAME
@@ -68,20 +72,6 @@ public class BrowserStack extends DebugManager {
         return username;
     }
 
-    /**
-     * Logs in debug console the list of capabilities set with a pretty format.
-     * 
-     * @param caps
-     */
-    public void LogCapabilities(DesiredCapabilities caps) {
-        Map<String, Object> jsoncaps = caps.toJson();
-        println("\nCapabilities: ");
-        for (String key : jsoncaps.keySet()) {
-            if (!key.equals("browserstack.key") && !key.equals("browserstack.user")) {
-                printf("-%s: %s\n", ANSI_WHITE + key, ANSI_YELLOW + jsoncaps.get(key));
-            }
-        }
-    }
 
     public MobileDriver<MobileElement> openBrowserStackMobileSession() throws Exception {
         URL UrlAppiumServer = new URL("https://hub-cloud.browserstack.com/wd/hub");

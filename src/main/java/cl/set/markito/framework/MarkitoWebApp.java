@@ -60,18 +60,14 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public  Map<String, Object> vars = new HashMap<String, Object>();
 
     public MarkitoWebApp() {
-        setColoredOutput(false);
+        browserStack = new BrowserStack(getColoredOutput());
         println(ANSI_GREEN + "\nMarkito Web App created. Thread=" + Thread.currentThread().getId());
-        browserStack = new BrowserStack();
-        browserStack.setColoredOutput(false);
     }
 
     public MarkitoWebApp(WebDriver driverObject) {
-        setColoredOutput(false);
+        browserStack = new BrowserStack(getColoredOutput());
         println(ANSI_GREEN + "\nMarkito Web App created. Thread=" + Thread.currentThread().getId());
         driver = driverObject;
-        browserStack = new BrowserStack();
-        browserStack.setColoredOutput(false);
     }
 
     public void finalize() throws Throwable {
@@ -162,7 +158,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             if (device.equals(LOCAL_COMPUTER_DEVICE)) {
                 driver = setLocalWebDrivers(browser);
             } else {
-                browserStack.LogCapabilities(browserStack.getCapabilities());
+                LogCapabilities(browserStack.getCapabilities());
                 driver = setRemoteWebDrivers(device, browserStack.getCapabilities());
             }
         } catch (Exception e) {

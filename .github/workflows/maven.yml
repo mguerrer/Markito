@@ -23,6 +23,7 @@ jobs:
         distribution: 'adopt'
     - name: Build Markito with Maven
       env: 
+        ISCLOUD: "true"
         BSUSERNAME: ${{ secrets.BSUSERNAME }}
         BSPASSWORD: ${{ secrets.BSPASSWORD }}
       run: mvn -B package --file pom.xml

@@ -3,6 +3,9 @@ package cl.set.markito;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Map;
+
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import cl.set.markito.utils.DebugManager;
 import cl.set.markito.utils.FileManager;
@@ -26,6 +29,8 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
         this.fileManager = fileManager;
         this.debugManager = debugManager;
         this.randomUtils = randomUtils;
+        if ( isRunningInCloud() )
+            debugManager.setColoredOutput(false);
     }
 
     public MarkitoBaseUtils() {
@@ -33,7 +38,21 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
         this.fileManager = new FileManager();
         this.debugManager = new DebugManager();
         this.randomUtils = new RandomUtils();
+        if ( isRunningInCloud() )
+            debugManager.setColoredOutput(false);
+
     }
+    /**
+     * Indicates that ISCLOUD environment variable is set.  If so this means that is running in a cloud pipeline that set it.
+     * @return
+     */
+    public Boolean isRunningInCloud() {
+        return ( System.getProperty("ISCLOUD") != null);
+    }
+    /**
+     * Return the Markito version number.
+     * @return
+     */
     public String getMarkitoVersion() {
         return markitoVersion;
     }
@@ -109,8 +128,8 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
      * Return the colored output mode.
      * @return true or false
      */
-    public boolean isColoredOutput() {
-        return debugManager.isColoredOutput();
+    public boolean getColoredOutput() {
+        return debugManager.getColoredOutput();
     }
     /**
      * Set mode to colored output on console.
@@ -255,5 +274,19 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
         return stackTraceElements[1].getMethodName();
     }
 
+    /**
+     * Logs in debug console the list of capabilities set with a pretty format.
+     * 
+     * @param caps
+     */
+    public void LogCapabilities(DesiredCapabilities caps) {
+        Map<String, Object> jsoncaps = caps.toJson();
+        println("\nCapabilities: ");
+        for (String key : jsoncaps.keySet()) {
+            if (!key.equals("browserstack.key") && !key.equals("browserstack.user")) {
+                println(ANSI_WHITE + key + ": "+ ANSI_YELLOW + jsoncaps.get(key));
+            }
+        }
+    }
     
 }

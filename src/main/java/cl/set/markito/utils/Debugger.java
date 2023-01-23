@@ -10,7 +10,7 @@ public interface Debugger {
     public boolean getDebugMode();
     public PrintStream getDebugManagerOutputStream();
     public void setDebugManagerOutputStream( PrintStream output );
-    public boolean isColoredOutput();
+    public boolean getColoredOutput();
     public void setColoredOutput(boolean coloredOutput);
     public void clearConsole();
     public void setDebugModeON();

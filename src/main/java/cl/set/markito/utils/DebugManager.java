@@ -11,6 +11,7 @@ public class DebugManager extends MarkitoBaseUtilsValues implements Debugger {
     PrintStream output = System.out; // Defaults to console.
 
     public DebugManager() {
+        
     }
     public PrintStream getDebugManagerOutputStream() {
         return this.output;
@@ -26,7 +27,7 @@ public class DebugManager extends MarkitoBaseUtilsValues implements Debugger {
      * Return the colored output mode.
      * @return true or false
      */
-    public boolean isColoredOutput() {
+    public boolean getColoredOutput() {
         return coloredOutput;
     }
     /**
@@ -90,19 +91,7 @@ public class DebugManager extends MarkitoBaseUtilsValues implements Debugger {
     private String removeControlChars( String str ){
 
         try{
-            //"\u001B[0m"
-            str = str.replaceAll("\\u001B", "");
-            str = str.replaceAll("\\[", "");
-            str = str.replaceAll("[0-9]{1,2}m", "");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return str;
-     }
-     private String removeControlChar( String str ){
-
-        try{
-            str = str.replaceAll("\\[", "\\\\["); 
+            str = str.replaceAll("\\u001B\\[[0-9]{1,2}m", "");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
