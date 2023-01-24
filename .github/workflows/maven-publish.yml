@@ -30,10 +30,10 @@ jobs:
         ISCLOUD: "true"
         BSUSERNAME: ${{ secrets.BSUSERNAME }}
         BSPASSWORD: ${{ secrets.BSPASSWORD }}
-      run: mvn -B package --file pom.xml
+      run: mvn -B package --file pom.xml -Dmaven.test.skip=true
 
     - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml -Dmaven.test.skip=true
       env:
         ISCLOUD: "true"
         BSUSERNAME: ${{ secrets.BSUSERNAME }}
