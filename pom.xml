@@ -29,7 +29,7 @@
     <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
 
   </properties>
-  <repositories> 
+  <!--<repositories> 
     <repository>
       <id>SET</id>
       <url>https://marcosguerrerow.pkgs.visualstudio.com/_packaging/SET/maven/v1</url>
@@ -40,9 +40,9 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
-  </repositories> 
+  </repositories> -->
   <distributionManagement> 
-    <repository>
+    <!--<repository>
       <id>SET</id>
       <url>https://marcosguerrerow.pkgs.visualstudio.com/_packaging/SET/maven/v1</url>
       <releases>
@@ -51,6 +51,11 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
+    </repository> -->
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/mguerrer/markito</url>
     </repository>
   </distributionManagement> 
   <dependencies>
