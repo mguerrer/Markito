@@ -1,7 +1,7 @@
 package cl.set.markito.framework.devices;
 
 /**
- * Enum type for browser names.  Use it to avoid typing errors.
+ * Enum type for OS names.  Use it to avoid typing errors.
  */
 public enum OS {
     WINDOWS("Windows"), LINUX("Linux"), OSX("OS X"), ANDROID("Android"), IOS("iOS"), CURRENT("");

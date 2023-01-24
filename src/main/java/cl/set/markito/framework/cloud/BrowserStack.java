@@ -1,7 +1,6 @@
 package cl.set.markito.framework.cloud;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.net.URL;
 
 import org.openqa.selenium.WebDriver;

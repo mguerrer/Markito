@@ -1,10 +1,11 @@
 package cl.set.markito.framework.devices;
 
 public abstract class Device {
-    public String providerURL = "http://hub-cloud.browserstack.com/wd/hub";
-    public String name = "Google Pixel 3";
-    public OS platform = OS.ANDROID;
-    public String platform_version = "10.0";
+    public String providerURL = "";
+    public String name = "";
+    public OS platform = null;
+    public String platform_version = "";
+    
     public String getProviderURL() {
         return providerURL;
     }
