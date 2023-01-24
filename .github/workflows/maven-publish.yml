@@ -26,9 +26,16 @@ jobs:
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: Build with Maven
+      env: 
+        ISCLOUD: "true"
+        BSUSERNAME: ${{ secrets.BSUSERNAME }}
+        BSPASSWORD: ${{ secrets.BSPASSWORD }}
       run: mvn -B package --file pom.xml
 
     - name: Publish to GitHub Packages Apache Maven
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
+        ISCLOUD: "true"
+        BSUSERNAME: ${{ secrets.BSUSERNAME }}
+        BSPASSWORD: ${{ secrets.BSPASSWORD }}
         GITHUB_TOKEN: ${{ secrets.GTHB_TOKEN }}
