@@ -92,10 +92,11 @@ public class DebugManager extends MarkitoBaseUtilsValues implements Debugger {
      */
     public void printf(String format, Object... args) {
         if (debugMode) {
+            String msg = String.format( format, args );
             if (coloredOutput ) {
-                output.printf(format, args);
+                output.print( msg );
             } else {
-                output.printf(removeControlChars(format), args);
+                output.print(removeControlChars(msg));
             }
         }
     }

@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 
 import org.openqa.selenium.html5.Location;
+import org.openqa.selenium.html5.LocationContext;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -1054,6 +1055,9 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     }
 
     @Override
+    /***
+     * Allows user to change output stream device.
+     */
     public void setDebugManagerOutputStream(PrintStream output) {
         super.setDebugManagerOutputStream(output);
     }
@@ -1067,27 +1071,19 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         return super.waitForFileDownloaded(fileName, timeoutInSeconds);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        printf(ANSI_YELLOW + getMethodName() + "...");
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        printf(ANSI_YELLOW + getMethodName() + "...");
-        return super.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
+    /**
+     * Clears text of web element.
+     * @param element
+     */
     public void clear(WebElement element) {
-        printf(ANSI_YELLOW + getMethodName() + " [%s]...", getWebElementIdentification(element));
-        element.clear();
-        println(ANSI_YELLOW + " done.");
+        try {
+            printf(ANSI_YELLOW + getMethodName() + " [%s]...", getWebElementIdentification(element));
+            element.clear();
+            println(ANSI_YELLOW + "done.");
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
     }
 
     /**
@@ -1321,9 +1317,57 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         return getMobileDriver().getAutomationName();
     }
 
+    /**
+     * Gets the mobile device time.
+     * @return
+     */
     public String getDeviceTime() {
         println(ANSI_YELLOW + getMethodName() + "...");
         return getMobileDriver().getDeviceTime();
+    }
+
+    /**
+     * Override the current physical device's location.
+     * 
+     * @param latitude
+     * @param longitude
+     * @param altitude
+     */
+    public void setDeviceLocation(double latitude, double longitude, double altitude) {
+        printf(ANSI_YELLOW + getMethodName() + " to %f, %f, %f...", latitude, longitude, altitude);
+        try {
+            if (isIOSDriver() || isAndroidDriver()) {
+                ((LocationContext) getMobileDriver()).setLocation(new Location(latitude, longitude, altitude));
+            } else {
+                ((LocationContext) getDriver()).setLocation(new Location(latitude, longitude, altitude));
+            }
+
+            printf(ANSI_YELLOW + "done!!!\n");
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
+    /**
+     * Gets the physical location of the device.
+     * @return
+     */
+    public Location getDeviceLocation() {
+        Location location;
+        printf(ANSI_YELLOW + getMethodName() + "...");
+        try {
+            if (isIOSDriver() || isAndroidDriver()) {
+                location = ((LocationContext) getMobileDriver()).location();
+            } else {
+                location = ((LocationContext) getDriver()).location();
+            }
+            printf("done.  Lat=%f, Long=%f, Alt=%f...\n", location.getLatitude(), location.getLongitude(), location.getAltitude());
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+        return location;
     }
 
     @Nullable
@@ -1435,26 +1479,48 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         return getMobileDriver().isAppInstalled(bundleId);
     }
 
+    /**
+     * Gets the state of a mobile app.
+     * @param bundleId
+     * @return
+     */
     public ApplicationState queryAppState(String bundleId) {
         println(ANSI_YELLOW + getMethodName() + "...");
         return getMobileDriver().queryAppState(bundleId);
     }
 
+    /**
+     * Removes app from mobile device.
+     * @param bundleId
+     * @return
+     */
     public boolean removeApp(String bundleId) {
         println(ANSI_YELLOW + getMethodName() + "...");
         return getMobileDriver().removeApp(bundleId);
     }
 
+    /**
+     * Resets settings of a mobile app.
+     */
     public void resetApp() {
         println(ANSI_YELLOW + getMethodName() + "...");
         getMobileDriver().resetApp();
     }
 
+    /**
+     * Runs an app in background on mobile device.
+     * @param duration
+     */
     public void runAppInBackground(Duration duration) {
         println(ANSI_YELLOW + getMethodName() + "...");
         getMobileDriver().runAppInBackground(duration);
     }
 
+    /**
+     * Terminates a mobile app.
+     * @param bundleId
+     * @return
+     */
     public boolean terminateApp(String bundleId) {
         println(ANSI_YELLOW + getMethodName() + "...");
         return getMobileDriver().terminateApp(bundleId);
@@ -1588,11 +1654,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
             printf(ANSI_RED + "failed! %s\n", e.getMessage());
             throw new WebDriverException(e.getMessage());
         }
-    }
-
-    public void setLocation(Location location) {
-        println(ANSI_YELLOW + getMethodName() + "...");
-        getMobileDriver().setLocation(location);
     }
 
     /**
@@ -2607,18 +2668,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
 
     }
 
-    public void setLocation(double x, double y, double z) {
-        printf(ANSI_YELLOW + getMethodName() + " to %f, %f, %f...", x, y, z);
-        try {
-            ((ChromeDriver) getDriver()).setLocation(new Location(x, y, z));
-
-            printf(ANSI_YELLOW + "done!!!\n");
-        } catch (Exception e) {
-            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
-            throw new WebDriverException(e.getMessage());
-        }
-    }
-
     /**
      * Waits for a a full page load by reading document.readyState.
      */
@@ -2638,17 +2687,18 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     }
 
     /**
-     * Waits till element by is invisible.
+     * Waits for timeOutInSeconds till element by is invisible, fails on timeout
+     * period expired.
      * 
-     * @param element
+     * @param by
      */
-    public void waitForElementInvisibility(By element) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", element);
+    public void waitForElementInvisibility(By by) {
+        printf(ANSI_YELLOW + getMethodName() + " %s...", by);
         long currentTimeout = getTimeouts();
         try {
             getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds)
-                    .until(ExpectedConditions.invisibilityOf(getDriver().findElement(element)));
+                    .until(ExpectedConditions.invisibilityOf(getDriver().findElement(by)));
             printf(ANSI_YELLOW + "invisible!!!\n");
             setTimeouts(currentTimeout);
         } catch (Exception e) {
@@ -2659,7 +2709,8 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     }
 
     /**
-     * Waits till element by is invisible.
+     * Waits for timeOutInSeconds till element is invisible, fails on timeout period
+     * expired.
      * 
      * @param element
      */
@@ -2678,13 +2729,19 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         }
     }
 
+    /**
+     * Waits for timeOutInSeconds till element is clickable, fails on timeout period
+     * expired.
+     * 
+     * @param element
+     */
     public void waitForElementToBeClickable(By by) {
         printf(ANSI_YELLOW + getMethodName() + " %s...", by);
         long currentTimeout = getTimeouts();
         try {
             getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOutInSeconds).until(ExpectedConditions.elementToBeClickable(by));
-            printf(ANSI_YELLOW + "Clickeable!!!\n");
+            printf(ANSI_YELLOW + "clickable!!!\n");
             setTimeouts(currentTimeout);
         } catch (Exception e) {
             printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
@@ -2693,13 +2750,19 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         }
     }
 
+    /**
+     * Waits for timeOutInSeconds till element is selected, fails on timeout period
+     * expired.
+     * 
+     * @param element
+     */
     public boolean waitForWebElementSelected(By chkDO, long timeOut) {
         printf(ANSI_YELLOW + getMethodName() + " %s...", chkDO);
         long currentTimeout = getTimeouts();
         try {
             getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
             new WebDriverWait(driver, timeOut).until(ExpectedConditions.elementSelectionStateToBe(chkDO, true));
-            printf(ANSI_YELLOW + "Seleccionado!!!\n");
+            printf(ANSI_YELLOW + "selected!!!\n");
             setTimeouts(currentTimeout);
             return true;
         } catch (Exception e) {
@@ -3211,36 +3274,59 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         }
     }
 
+    /**
+     * Gets the current session of webdriver.
+     * 
+     * @return
+     */
     public WebDriver getDriver() {
         return driver;
     }
 
+    /**
+     * Allows to change the current session of webdriver (Dependency injection).
+     * 
+     * @return
+     */
     public void setDriver(WebDriver driver) {
         this.driver = driver;
     }
 
+    /**
+     * Gets the current default timeout parameter in seconds.
+     * 
+     * @return
+     */
     public long getTimeOutInSeconds() {
         return timeOutInSeconds;
     }
+
+    /**
+     * Sets the current default timeout parameter in seconds.
+     * 
+     * @return
+     */
 
     public void setTimeOutInSeconds(long timeOutInSeconds) {
         this.timeOutInSeconds = timeOutInSeconds;
     }
 
+    /**
+     * Gets the current BrowserStack object created by Markito.
+     * 
+     * @return
+     */
     public BrowserStack getBrowserStack() {
         return browserStack;
     }
 
+    /**
+     * Sets the current BrowserStack object created by Markito.
+     * 
+     * @return
+     */
     public void setBrowserStack(BrowserStack browserStack) {
         this.browserStack = browserStack;
-    }
-
-    public Map<String, Object> getVars() {
-        return vars;
-    }
-
-    public void setVars(Map<String, Object> vars) {
-        this.vars = vars;
     }
 
     @Override
