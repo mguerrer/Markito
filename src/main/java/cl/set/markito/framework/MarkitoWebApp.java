@@ -905,21 +905,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
         return getMobileDriver().getSessionDetails();
     }
 
-    public Dimension getSize() {
-        println(ANSI_YELLOW + getMethodName() + "...");
-        return ((RemoteWebElement) getDriver()).getSize();
-    }
-
-    public String getTagName() {
-        println(ANSI_YELLOW + getMethodName() + "...");
-        return ((RemoteWebElement) getDriver()).getTagName();
-    }
-
-    public String getText() {
-        println(ANSI_YELLOW + getMethodName() + "...");
-        return ((RemoteWebElement) getDriver()).getText();
-    }
-
     public void hideKeyboard() {
         println(ANSI_YELLOW + getMethodName() + "...");
         getMobileDriver().hideKeyboard();
@@ -1018,6 +1003,40 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
             return element.isSelected();
         } else {
             return false;
+        }
+    }
+    
+    /**
+     * What is the width and height of the rendered element?   
+     * Method will fail if element not found.
+     * @param locator
+     * @return
+     * @throws Exception
+     */
+    public Dimension getSize( By locator ) throws Exception {
+        println(ANSI_YELLOW + getMethodName() + "...");
+        WebElement element = getDriver().findElement(locator);
+        if ( element != null ) {
+            return element.getSize();
+        } else {
+            throw new Exception("ERROR: Element "+ locator + "not found.");
+        }
+    }
+
+    /**
+     * Get the tag name of this element. Not the value of the name attribute: will return "input" for the element <input name="foo" />.
+     * Method will fail if element not found.
+     * @param locator
+     * @return
+     * @throws Exception
+     */
+    public String getTagName( By locator ) throws Exception {
+        println(ANSI_YELLOW + getMethodName() + "...");
+        WebElement element = getDriver().findElement(locator);
+        if ( element != null ) {
+            return element.getTagName();
+        } else {
+            throw new Exception("ERROR: Element "+ locator + "not found.");
         }
     }
 
