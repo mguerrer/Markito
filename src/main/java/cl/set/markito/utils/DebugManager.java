@@ -65,6 +65,18 @@ public class DebugManager extends MarkitoBaseUtilsValues implements Debugger {
     /**
      * Prints an string to console when debug mode is ON.
      */
+    public void print(String x) {
+        if (debugMode) {
+            if ( coloredOutput ) {
+                output.print(x);
+            } else {
+                output.print( removeControlChars(x));
+            }
+        }
+    }
+    /**
+     * Prints an string as line to console when debug mode is ON.
+     */
     public void println(String x) {
         if (debugMode) {
             if ( coloredOutput ) {
@@ -80,10 +92,11 @@ public class DebugManager extends MarkitoBaseUtilsValues implements Debugger {
      */
     public void printf(String format, Object... args) {
         if (debugMode) {
+            String msg = String.format( format, args );
             if (coloredOutput ) {
-                output.printf(format, args);
+                output.print( msg );
             } else {
-                output.printf(removeControlChars(format), args);
+                output.print(removeControlChars(msg));
             }
         }
     }

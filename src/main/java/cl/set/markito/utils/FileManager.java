@@ -15,33 +15,39 @@ public class FileManager extends DebugManager implements FileManagement {
     public String userHomeFolder = System.getProperty("user.home");
     public String userDownloadsFolder = userHomeFolder + "/Downloads/";
 
+    /**
+     * Downloads a file from URL to a local file with targetFilePathname.
+     */
     public int downloadFile(String URL, String targetFilePathname) {
-        Boolean found=false;
-        printf(ANSI_YELLOW + "downloadFile from %s to %s", URL, targetFilePathname);
+        Boolean found = false;
+        print(ANSI_YELLOW + "downloadFile from " + URL + " to " + targetFilePathname);
 
         try (BufferedInputStream in = new BufferedInputStream(new URL(URL).openStream());
-            FileOutputStream fileOutputStream = new FileOutputStream(targetFilePathname)) {
+                FileOutputStream fileOutputStream = new FileOutputStream(targetFilePathname)) {
             byte dataBuffer[] = new byte[1024];
             int bytesRead;
             while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
-                if ( !found ) {
+                if (!found) {
                     found = true;
                 }
-                printf(".");
+                print(".");
             }
-            printf("done.\n");
-            if ( found ) {
+            println("done.");
+            if (found) {
                 return 0;
             } else {
                 return 1;
             }
         } catch (Exception e) {
-            printf(ANSI_RED+"failed.\n");
+            println(ANSI_RED + "failed.");
             return -1;
         }
     }
 
+    /**
+     * Reads the filePathname file's content and returns it in a String.
+     */
     public String readFileToString(String filePathname) {
         printf(ANSI_YELLOW + "readFileToString %s...", filePathname);
         StringBuilder contentBuilder = new StringBuilder();
@@ -49,32 +55,39 @@ public class FileManager extends DebugManager implements FileManagement {
         try (Stream<String> stream = Files.lines(Paths.get(filePathname), StandardCharsets.UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s).append("\n"));
         } catch (Exception e) {
-            printf(ANSI_RED+"ERROR:%s\n", e.getMessage());
+            printf(ANSI_RED + "ERROR:%s\n", e.getMessage());
             return null;
         }
         printf("done.\n");
         return contentBuilder.toString();
     }
 
+    /**
+     * Check if fileName exists in ~/Downloads folder.
+     */
     public boolean checkIfFileIsDownloaded(String fileName) {
-        printf(ANSI_YELLOW + "checkIfFileIsDownloaded %s..", fileName);
+        print(ANSI_YELLOW + "checkIfFileIsDownloaded " + fileName + "...");
 
         String filePathname = userDownloadsFolder + fileName;
         File file = new File(filePathname);
         if (file.exists() && !file.isDirectory()) {
-            printf(ANSI_YELLOW + "found.\n");
+            println(ANSI_YELLOW + "found.");
             return true;
         } else {
-            printf(ANSI_YELLOW + "not found.\n");
+            println(ANSI_YELLOW + "not found.");
             return false;
         }
     }
 
+    /**
+     * Waits for fileName file to be present in folder ~/Downloads for
+     * timeoutInSeconds seconds. After that period fails.
+     */
     public boolean waitForFileDownloaded(String fileName, long timeoutInSeconds) {
         int i = 0;
         String filePathname = FileSystems.getDefault().getPath(userDownloadsFolder, fileName).toString();
 
-        printf(ANSI_YELLOW + "WaitForFileDownloaded %s..", filePathname);
+        print(ANSI_YELLOW + "WaitForFileDownloaded" + filePathname + "...");
         do {
             try {
                 Thread.sleep(1000);
@@ -82,35 +95,41 @@ public class FileManager extends DebugManager implements FileManagement {
                 e.printStackTrace();
             }
             if (checkIfFileIsDownloaded(fileName)) {
-                printf(ANSI_YELLOW + "found.\n");
+                println(ANSI_YELLOW + "found.");
                 return true;
             }
             printf(ANSI_YELLOW + ".");
         } while (i++ < timeoutInSeconds);
-        printf(ANSI_RED + "ERROR: File %s not found in %d\n", filePathname, timeoutInSeconds);
+        printf(ANSI_RED + "ERROR: File " + filePathname + " not found in " + timeoutInSeconds + "seconds.");
         return false;
     }
 
+    /**
+     * Deletes a fileName file if it exists in ~/Downloads folder.
+     */
     public int deleteDownloadedFileIfExists(String fileName) {
         int retCode;
-        printf(ANSI_YELLOW + "deleteDownloadedFileIfExists %s..", fileName);
+        print(ANSI_YELLOW + "deleteDownloadedFileIfExists..." + fileName);
 
         if (checkIfFileIsDownloaded(fileName)) {
             String filePathname = System.getProperty("user.home") + "/Downloads/" + fileName;
             File file = new File(filePathname);
             file.delete();
-            printf(ANSI_YELLOW + "done.\n");
+            println(ANSI_YELLOW + "done.");
             retCode = 0;
         } else {
-            printf(ANSI_YELLOW + "not found.\n");
+            println(ANSI_YELLOW + "not found.");
             retCode = 1;
         }
         return retCode;
     }
 
+    /**
+     * Find a list of files with names matching nameRegex in folder.
+     */
     public File[] findFilesByNameRegex(String nameRegex, String folder) {
         File[] files;
-        printf(ANSI_YELLOW + "findFilesByNameRegex regEx=%s in folder=%s..", nameRegex, folder);
+        print(ANSI_YELLOW + "findFilesByNameRegex regEx=" + nameRegex + " in folder=" + folder + "...");
 
         try {
             File f = new File(folder);
@@ -122,24 +141,27 @@ public class FileManager extends DebugManager implements FileManagement {
                 }
             };
             files = f.listFiles(filter);
-            printf(ANSI_YELLOW + "done.\n");
+            println(ANSI_YELLOW + "done.");
             return files;
         } catch (Exception e) {
-            printf(ANSI_RED + "ERROR:%s.\n", e.getMessage());
+            println(ANSI_RED + "ERROR:" + e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
-    public boolean deleteFile( String filename) { 
-        printf(ANSI_YELLOW+"DeleteFile %s\n", filename);
+    /**
+     * Deletes a fileName file.
+     * @return 
+     */
+    public boolean deleteFile(String filename) {
+        print(ANSI_YELLOW + "DeleteFile " + filename +"...");
         try {
-            File myObj = new File(filename); 
+            File myObj = new File(filename);
+            println("done.");
             return myObj.delete();
-        }
-        catch (Exception e){
-            printf(ANSI_RED+"failed!!! %s\n", e.getMessage());
+        } catch (Exception e) {
+            println(ANSI_RED + "failed!!! " + e.getMessage());
             return false;
         }
-
-    } 
+    }
 }

@@ -24,12 +24,13 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
     private RandomDataManagement randomUtils = null;
     private String markitoVersion = "v0.7";
 
-    public MarkitoBaseUtils(ProcessManagement processManager, FileManagement fileManager, DebugManager debugManager, RandomDataManagement randomUtils) {
+    public MarkitoBaseUtils(ProcessManagement processManager, FileManagement fileManager, DebugManager debugManager,
+            RandomDataManagement randomUtils) {
         this.processManager = processManager;
         this.fileManager = fileManager;
         this.debugManager = debugManager;
         this.randomUtils = randomUtils;
-        if ( isRunningInCloud() )
+        if (isRunningInCloud())
             debugManager.setColoredOutput(false);
     }
 
@@ -38,24 +39,30 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
         this.fileManager = new FileManager();
         this.debugManager = new DebugManager();
         this.randomUtils = new RandomUtils();
-        if ( isRunningInCloud() )
+        if (isRunningInCloud())
             debugManager.setColoredOutput(false);
 
     }
+
     /**
-     * Indicates that ISCLOUD environment variable is set.  If so this means that is running in a cloud pipeline that set it.
+     * Indicates that ISCLOUD environment variable is set. If so this means that is
+     * running in a cloud pipeline that set it.
+     * 
      * @return
      */
     public Boolean isRunningInCloud() {
-        return ( System.getProperty("ISCLOUD") != null);
+        return (System.getProperty("ISCLOUD") != null);
     }
+
     /**
      * Return the Markito version number.
+     * 
      * @return
      */
     public String getMarkitoVersion() {
         return markitoVersion;
     }
+
     /* This is a group of simple methods to manage OS processes. */
     /**
      * Kill a process by name.
@@ -103,11 +110,13 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
     /* This group of methods to manage provide a simple debug tool. */
     /**
      * Get the current debug mode.
+     * 
      * @return true: Debug mode is ON, false otherwise.
      */
     public boolean getDebugMode() {
         return debugManager.getDebugMode();
     }
+
     /**
      * Get current output stream.
      * 
@@ -124,19 +133,23 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
     public void setDebugManagerOutputStream(PrintStream output) {
         debugManager.setDebugManagerOutputStream(output);
     }
+
     /**
      * Return the colored output mode.
+     * 
      * @return true or false
      */
     public boolean getColoredOutput() {
         return debugManager.getColoredOutput();
     }
+
     /**
      * Set mode to colored output on console.
+     * 
      * @param coloredOutput: true colored are printed, false removes colors.
      */
     public void setColoredOutput(boolean coloredOutput) {
-        debugManager.setColoredOutput( coloredOutput );
+        debugManager.setColoredOutput(coloredOutput);
     }
 
     /**
@@ -158,6 +171,13 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
      */
     public void SetDebugModeOFF() {
         debugManager.setDebugModeOFF();
+    }
+
+    /**
+     * Prints an string to console when debug mode is ON.
+     */
+    public void print(String x) {
+        debugManager.print(x);
     }
 
     /**
@@ -248,26 +268,29 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
         return fileManager.deleteFile(filename);
     }
 
-     /**
+    /**
      * Generates a random String of size length.
+     * 
      * @param size
      * @return
      */
-    public String RandomString(int size){
+    public String RandomString(int size) {
         return randomUtils.randomString(size);
     }
 
     /**
      * Generates a random integer in range [min, max].
+     * 
      * @param min
      * @param max
      * @return
      */
-    public int RandomNumber(int min, int max){
+    public int RandomNumber(int min, int max) {
         return randomUtils.randomNumber(min, max);
     }
 
-    /** Return the name of the calling method.
+    /**
+     * Return the name of the calling method.
      */
     public String getMethodName() {
         StackTraceElement stackTraceElements[] = (new Throwable()).getStackTrace();
@@ -284,9 +307,9 @@ public class MarkitoBaseUtils extends MarkitoBaseUtilsValues {
         println("\nCapabilities: ");
         for (String key : jsoncaps.keySet()) {
             if (!key.equals("browserstack.key") && !key.equals("browserstack.user")) {
-                println(ANSI_WHITE + key + ": "+ ANSI_YELLOW + jsoncaps.get(key));
+                println(ANSI_WHITE + key + ": " + ANSI_YELLOW + jsoncaps.get(key));
             }
         }
     }
-    
+
 }

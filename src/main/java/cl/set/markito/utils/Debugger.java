@@ -15,6 +15,7 @@ public interface Debugger {
     public void clearConsole();
     public void setDebugModeON();
     public void setDebugModeOFF();
+    public void print(String x);
     public void println(String x);
     public void printf(String format, Object... args);
 }
