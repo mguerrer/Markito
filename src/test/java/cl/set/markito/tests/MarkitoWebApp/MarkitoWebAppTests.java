@@ -94,6 +94,8 @@ public class MarkitoWebAppTests extends MarkitoWebApp {
     @Disabled("Pending for Selenium 4 and DevTools")
     @DisplayName("Test physical location")
     public void LocationTest(TestInfo testInfo) throws Exception {
+        ClearConsole();
+        SetDebugModeON();
         setup(testInfo.getDisplayName());
         get( "https://www.amazon.com/");
         WebElement delivery = findElement(By.cssSelector("#glow-ingress-line2"));
