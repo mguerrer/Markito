@@ -36,6 +36,10 @@ import io.appium.java_client.ios.IOSDriver;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.WebDriver.Navigation;
+import org.openqa.selenium.WebDriver.Options;
+import org.openqa.selenium.WebDriver.TargetLocator;
+import org.openqa.selenium.WebDriver.Timeouts;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -49,10 +53,10 @@ import org.openqa.selenium.remote.RemoteWebElement;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Generic interface to drive browsers in desktop and mobile devices.
+ * Generic class to drive browsers in desktop and mobile devices.
  * Marcos Guerrero: 12-01-2023
  */
-public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebElement {
+public class MarkitoWebApp extends MarkitoBaseUtils  {
     private WebDriver driver = null;
     private long timeOutInSeconds = 60;
     private Boolean automaticDriverDownload = false;
@@ -70,9 +74,11 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         driver = driverObject;
     }
 
+    @Deprecated
     public void finalize() throws Throwable {
     }
 
+    @Deprecated
     public Object clone() throws CloneNotSupportedException {
         return driver;
     }
@@ -162,7 +168,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
                 driver = setRemoteWebDrivers(device, browserStack.getCapabilities());
             }
         } catch (Exception e) {
-
             println("\n" + ANSI_RED + "ERROR on creating session on device "+device.getName() + " Stack:" + e.getMessage());
             throw new Exception(e.getMessage());
         }
@@ -178,7 +183,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         println(ANSI_YELLOW + getMethodName() + "...");
         try {
             if (driver != null) {
-                // getDriver().close();
                 getDriver().quit();
                 setDriver(null);
                 println(ANSI_WHITE + "Markito Web App is destroyed.");
@@ -197,7 +201,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @param by
      * @return WebElement
      */
-    @Override
     public WebElement findElement(By by) {
         printf(ANSI_YELLOW + getMethodName() + " %s...", by);
         try {
@@ -211,47 +214,17 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         }
     }
 
-    public WebElement findElementByClassName(String className) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", className);
-        return getMobileDriver().findElementByClassName(className);
-    }
-
-    public WebElement findElementByCssSelector(String cssSelector) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", cssSelector);
-        return getMobileDriver().findElementByCssSelector(cssSelector);
-    }
-
-    public WebElement findElementById(String id) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", id);
-        return getMobileDriver().findElementById(id);
-    }
-
-    public WebElement findElementByLinkText(String linkText) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", linkText);
-        return getMobileDriver().findElementByLinkText(linkText);
-    }
-
-    public WebElement findElementByName(String name) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", name);
-        return getMobileDriver().findElementByName(name);
-    }
-
-    public WebElement findElementByPartialLinkText(String partialLinkText) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", partialLinkText);
-        return getMobileDriver().findElementByPartialLinkText(partialLinkText);
-    }
-
-    public WebElement findElementByTagName(String tagName) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", tagName);
-        return getMobileDriver().findElementByTagName(tagName);
-    }
-
-    public WebElement findElementByXPath(String xPath) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", xPath);
-        return getMobileDriver().findElementByXPath(xPath);
-    }
-
-    @Override
+    /**
+     * Find all elements within the current page using the given mechanism.
+     * This method is affected by the 'implicit wait' times in force at the time of execution. When
+     * implicitly waiting, this method will return as soon as there are more than 0 items in the
+     * found collection, or will return an empty list if the timeout is reached.
+     *
+     * @param by The locating mechanism to use
+     * @return A list of all {@link WebElement}s, or an empty list if nothing matches
+     * @see org.openqa.selenium.By
+     * @see org.openqa.selenium.WebDriver.Timeouts
+     */
     public List<WebElement> findElements(By by) {
         printf(ANSI_YELLOW + getMethodName() + " %s...", by);
         try {
@@ -273,51 +246,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         }
     }
 
-    public List<WebElement> findElementsByClassName(String className) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", className);
-        return getMobileDriver().findElementsByClassName(className);
-    }
-
-    public List<WebElement> findElementsByCssSelector(String cssSelector) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", cssSelector);
-        return getMobileDriver().findElementsByCssSelector(cssSelector);
-    }
-
-    public List<WebElement> findElementsById(String id) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", id);
-        return getMobileDriver().findElementsById(id);
-    }
-
-    public List<WebElement> findElementsByLinkText(String linkText) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", linkText);
-        return getMobileDriver().findElementsByLinkText(linkText);
-    }
-
-    public List<WebElement> findElementsByName(String name) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", name);
-        return getMobileDriver().findElementsByName(name);
-    }
-
-    public List<WebElement> findElementsByPartialLinkText(String partialLinkText) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", partialLinkText);
-        return getMobileDriver().findElementsByPartialLinkText(partialLinkText);
-    }
-
-    public List<WebElement> findElementsByTagName(String tagName) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", tagName);
-        return getMobileDriver().findElementsByTagName(tagName);
-    }
-
-    public List<WebElement> findElementsByXPath(String xPath) {
-        printf(ANSI_YELLOW + getMethodName() + " %s...", xPath);
-        return getMobileDriver().findElementsByXPath(xPath);
-    }
-
-    @Override
-    public void close() {
-        closeCurrentWindow();
-    }
-
     /**
      * Load a new web page in the current browser window. This is done using an HTTP
      * GET operation,
@@ -334,7 +262,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @param url The URL to load. It is best to use a fully qualified URL
      */
-    @Override
     public void get(String url) {
         printf(ANSI_YELLOW + getMethodName() + " [%s]...", url);
         try {
@@ -351,7 +278,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @return The URL of the page currently loaded in the browser
      */
-    @Override
     public String getCurrentUrl() {
         printf(ANSI_YELLOW + getMethodName() + " [%s]...", getDriver().getCurrentUrl());
         return getDriver().getCurrentUrl();
@@ -374,7 +300,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *
      * @return The source of the current page
      */
-    @Override
     public String getPageSource() {
         printf(ANSI_YELLOW + getMethodName() + " [%s]...", getDriver().getPageSource());
         return getDriver().getPageSource();
@@ -387,7 +312,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      *         stripped, or null
      *         if one is not already set
      */
-    @Override
     public String getTitle() {
         printf(ANSI_YELLOW + getMethodName() + " [%s]...", getDriver().getTitle());
         return getDriver().getTitle();
@@ -396,7 +320,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     /**
      * Obtains the string handle be used to select the current window.
      */
-    @Override
     public String getWindowHandle() {
         printf(ANSI_YELLOW + getMethodName() + "...");
 
@@ -448,25 +371,21 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         println(ANSI_YELLOW + "done...");
     }
 
-    @Override
     public Options manage() {
         printf(ANSI_YELLOW + getMethodName() + "...");
         return getDriver().manage();
     }
 
-    @Override
     public Navigation navigate() {
         printf(ANSI_YELLOW + getMethodName() + "...");
         return getDriver().navigate();
     }
 
-    @Override
     public void quit() {
         printf(ANSI_YELLOW + getMethodName() + "...");
         getDriver().quit();
     }
 
-    @Override
     public TargetLocator switchTo() {
         printf(ANSI_YELLOW + getMethodName() + "...");
         return getDriver().switchTo();
@@ -748,8 +667,9 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * @param appPath
      */
     public void installApp(String appPath) {
-        println(ANSI_YELLOW + getMethodName() + "...");
+        printf(ANSI_YELLOW + getMethodName() + "...");
         getMobileDriver().installApp(appPath);
+        println(ANSI_YELLOW + " done.");
     }
 
     /**
@@ -848,7 +768,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     public String getContextHandle() {
         printf(ANSI_YELLOW + getMethodName() + "...");
         String contextName = getMobileDriver().getContext();
-        println(ANSI_YELLOW + contextName); // prints out something like NATIVE_APP \n WEBVIEW_1
+        println(ANSI_YELLOW + contextName); // prints out something like NATIVE_APP or WEBVIEW_1
         println(ANSI_YELLOW + " done.");
         return contextName;
     }
@@ -917,13 +837,16 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         return getMobileDriver().getPlatformName();
     }
 
-    @Override
     public Rectangle getRect() {
         println(ANSI_YELLOW + getMethodName() + "...");
         return ((RemoteWebElement) getDriver()).getRect();
     }
 
-    @Override
+    /**
+     * Gets an screen snapshot and saves to a target outpùt type.
+     * 
+     * @param fileWithPath: Pathname of the file to be generated.
+     */
     public <X> X getScreenshotAs(OutputType<X> target) {
         return ((RemoteWebDriver) getDriver()).getScreenshotAs(target);
     }
@@ -945,7 +868,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         // Copy file at destination
         FileUtils.copyFile(SrcFile, DestFile);
         println(ANSI_YELLOW + " done.");
-
     }
 
     /***
@@ -970,7 +892,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         if (currentDebug)
             SetDebugModeON();
         println(ANSI_YELLOW + " done.");
-
     }
 
     @Nullable
@@ -984,19 +905,16 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         return getMobileDriver().getSessionDetails();
     }
 
-    @Override
     public Dimension getSize() {
         println(ANSI_YELLOW + getMethodName() + "...");
         return ((RemoteWebElement) getDriver()).getSize();
     }
 
-    @Override
     public String getTagName() {
         println(ANSI_YELLOW + getMethodName() + "...");
         return ((RemoteWebElement) getDriver()).getTagName();
     }
 
-    @Override
     public String getText() {
         println(ANSI_YELLOW + getMethodName() + "...");
         return ((RemoteWebElement) getDriver()).getText();
@@ -1046,7 +964,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     }
 
     /**
-     * https://appium.github.io/java-client/io/appium/java_client/HasSessionDetails.html
+     * https://appium.github.io/java-client/io/appium/java_client/AppiumDriver.html#isBrowser--
      * 
      * @return
      */
@@ -1056,77 +974,122 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
     }
 
     /**
-     * https://appium.github.io/java-client/io/appium/java_client/HasSessionDetails.html
-     * 
+     * Is this element displayed or not? This method avoids the problem of having to parse an element's "style" attribute.
+     * This method will not fail if element is not found, instead will return false.
+     * @param locator
      * @return
      */
-    @Override
-    public boolean isDisplayed() {
+    public boolean isDisplayed( By locator ) {
         println(ANSI_YELLOW + getMethodName() + "...");
-        return ((RemoteWebElement) getDriver()).isDisplayed();
+        WebElement element = getDriver().findElement(locator);
+        if ( element != null ) {
+            return element.isDisplayed();
+        } else {
+            return false;
+        }
     }
 
     /**
-     * https://appium.github.io/java-client/io/appium/java_client/HasSessionDetails.html
-     * 
+     * Is the element currently enabled or not? This will generally return true for everything but disabled input elements.
+     * This method will not fail if element is not found, instead will return false.
+     * @param locator
      * @return
      */
-    @Override
-    public boolean isEnabled() {
+    public boolean isEnabled( By locator ) {
         println(ANSI_YELLOW + getMethodName() + "...");
-        return ((RemoteWebElement) getDriver()).isEnabled();
+        WebElement element = getDriver().findElement(locator);
+        if ( element != null ) {
+            return element.isEnabled();
+        } else {
+            return false;
+        }
     }
 
     /**
-     * https://appium.github.io/java-client/io/appium/java_client/HasSessionDetails.html
-     * 
+     * Determine whether or not this element is selected or not. This operation only applies to input elements such as checkboxes, options in a select and radio buttons. 
+     * For more information on which elements this method supports, refer to the specification.
+     * @param locator
      * @return
      */
-    @Override
-    public boolean isSelected() {
+    public boolean isSelected( By locator ) {
         println(ANSI_YELLOW + getMethodName() + "...");
-        return ((RemoteWebElement) getDriver()).isSelected();
+        WebElement element = getDriver().findElement(locator);
+        if ( element != null ) {
+            return element.isSelected();
+        } else {
+            return false;
+        }
     }
 
+    /**
+     * Gets the physical location (geoloc) of the browser.
+     * @return
+     */
     public Location location() {
         println(ANSI_YELLOW + getMethodName() + "...");
         return getMobileDriver().location();
     }
 
+    /**
+     * Performs multiple TouchAction gestures at the same time, to simulate multiple fingers/touch inputs. 
+     * See the Webriver 3 spec https://dvcs.w3.org/hg/webdriver/raw-file/default/webdriver-spec.html 
+     * It's more convenient to call the perform() method of the MultiTouchAction object. 
+     * All the existing multi touch actions will be wiped out after this method is called.
+     * @param multiAction
+     */
     public void performMultiTouchAction(MultiTouchAction multiAction) {
         println(ANSI_YELLOW + getMethodName() + "...");
         getMobileDriver().performMultiTouchAction(multiAction);
     }
 
+    /**
+     * Pull a file from the simulator/device. On iOS the server should have ifuse libraries installed and configured properly for this feature to work on real devices. 
+     * On Android the application under test should be built with debuggable flag enabled in order to get access to its container on the internal file system.
+     * @param remotePath
+     * @return
+     */
     public byte[] pullFile(String remotePath) {
         println(ANSI_YELLOW + getMethodName() + "...");
         return getMobileDriver().pullFile(remotePath);
     }
 
+    /**
+     * Pull a folder content from the simulator/device. On iOS the server should have ifuse libraries installed and configured properly for this feature to work on real devices. 
+     * On Android the application under test should be built with debuggable flag enabled in order to get access to its container on the internal file system.
+     * @param remotePath
+     * @return
+     */
     public byte[] pullFolder(String remotePath) {
         println(ANSI_YELLOW + getMethodName() + "...");
         return getMobileDriver().pullFolder(remotePath);
     }
 
+    /**
+     * Set the current browser rotation on device.
+     * @return
+     */
     public void rotate(ScreenOrientation orientation) {
         println(ANSI_YELLOW + getMethodName() + "..." + orientation);
         getMobileDriver().rotate(orientation);
     }
 
+    /**
+     * Set the current browser rotation on device.
+     * @return
+     */
     public void rotate(DeviceRotation rotation) {
         println(ANSI_YELLOW + getMethodName() + "...X=" + rotation.getX() + " Y=" + rotation.getY() + " Z="
                 + rotation.getZ());
         getMobileDriver().rotate(rotation);
     }
 
+    /**
+     * Get the current browser rotation on device.
+     * @return
+     */
     public DeviceRotation rotation() {
         println(ANSI_YELLOW + getMethodName() + "...");
         return getMobileDriver().rotation();
-    }
-
-    public void sendKeys(CharSequence... keysToSend) {
-        println(ANSI_YELLOW + getMethodName() + "..." + keysToSend);
-        ((RemoteWebElement) getDriver()).sendKeys(keysToSend);
     }
 
     /**
@@ -1175,6 +1138,10 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
         }
     }
 
+    /**
+     * Sets the physical location.
+     * @param location
+     */
     public void setLocation(Location location) {
         println(ANSI_YELLOW + getMethodName() + "...");
         getMobileDriver().setLocation(location);
@@ -2422,22 +2389,11 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
 
     /** Timeouts interface */
     /**
-     * Specifies the amount of time the driver should wait when searching for an
-     * element if it is
-     * not immediately present.
-     * <p>
-     * When searching for a single element, the driver should poll the page until
-     * the element has
-     * been found, or this timeout expires before throwing a
-     * {@link NoSuchElementException}. When
-     * searching for multiple elements, the driver should poll the page until at
-     * least one element
-     * has been found or this timeout has expired.
-     * <p>
-     * Increasing the implicit wait timeout should be used judiciously as it will
-     * have an adverse
-     * effect on test run time, especially when used with slower location strategies
-     * like XPath.
+     * Specifies the amount of time the driver should wait when searching for an element if it is not immediately present.
+     * When searching for a single element, the driver should poll the page until the element has been found, or this timeout expires before throwing a {@link NoSuchElementException}. 
+     * When searching for multiple elements, the driver should poll the page until at least one element has been found or this timeout has expired.
+     * 
+     * Increasing the implicit wait timeout should be used judiciously as it will have an adverse effect on test run time, especially when used with slower location strategies like XPath.
      *
      * @param time The amount of time to wait.
      * @param unit The unit of measure for {@code time}.
@@ -2784,13 +2740,12 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
      * 
      * @return
      */
-    @Override
     public Set<String> getWindowHandles() {
         printf(ANSI_YELLOW + getMethodName() + "...");
         try {
-            Set<String> ventanasPrevias = new HashSet<String>(getDriver().getWindowHandles());
+            Set<String> priorWindows = new HashSet<String>(getDriver().getWindowHandles());
             printf(ANSI_YELLOW + "done...\n");
-            return ventanasPrevias;
+            return priorWindows;
         } catch (Exception e) {
             printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
             throw new WebDriverException(e.getMessage());
@@ -2827,39 +2782,6 @@ public class MarkitoWebApp extends MarkitoBaseUtils implements WebDriver, WebEle
 
     public void setVars(Map<String, Object> vars) {
         this.vars = vars;
-    }
-
-    @Override
-    public void click() {
-        println(ANSI_RED + "Can't use " + getMethodName() + "() prefer " + getMethodName() + "( element ).");
-    }
-
-    @Override
-    public String getAttribute(String name) {
-        println(ANSI_RED + "Can't use " + getMethodName() + "() prefer " + getMethodName() + "( element ).");
-        return null;
-    }
-
-    @Override
-    public Point getLocation() {
-        println(ANSI_RED + "Can't use " + getMethodName() + "() prefer " + getMethodName() + "( element ).");
-        return null;
-    }
-
-    @Override
-    public String getCssValue(String propertyName) {
-        println(ANSI_RED + "Can't use " + getMethodName() + "() prefer " + getMethodName() + "( element ).");
-        return null;
-    }
-
-    @Override
-    public void clear() {
-        println(ANSI_RED + "Can't use " + getMethodName() + "() prefer " + getMethodName() + "( element ).");
-    }
-
-    @Override
-    public void submit() {
-        println(ANSI_RED + "Can't use " + getMethodName() + "() prefer " + getMethodName() + "( element ).");
     }
 
     /**
