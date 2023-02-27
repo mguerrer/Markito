@@ -258,7 +258,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils {
      * @param cssSelector
      * @return
      */
-    WebElement findShadowElementByCssSelector(String cssSelector) {
+    public WebElement findShadowElementByCssSelector(String cssSelector) {
         printf(ANSI_YELLOW + getMethodName() + " %s...", cssSelector);
         try {
             Shadow shadow = new Shadow(getDriver());
