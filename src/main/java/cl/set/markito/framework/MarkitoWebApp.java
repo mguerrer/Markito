@@ -19,7 +19,7 @@ import org.openqa.selenium.html5.Location;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import io.github.sukgu.Shadow;
 import com.google.common.base.Stopwatch;
 
 import cl.set.markito.MarkitoBaseUtils;
@@ -54,12 +54,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * Generic class to drive browsers in desktop and mobile devices.
  * Marcos Guerrero: 12-01-2023
  */
-public class MarkitoWebApp extends MarkitoBaseUtils  {
+public class MarkitoWebApp extends MarkitoBaseUtils {
     private WebDriver driver = null;
     private long timeOutInSeconds = 60;
     private Boolean automaticDriverDownload = false;
     private BrowserStack browserStack = null;
-    public  Map<String, Object> vars = new HashMap<String, Object>();
+    public Map<String, Object> vars = new HashMap<String, Object>();
 
     public MarkitoWebApp() {
         browserStack = new BrowserStack(getColoredOutput());
@@ -82,15 +82,15 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
     }
 
     public boolean isIOSDriver() throws Exception {
-        if ( getDriver() == null) {
-            throw new Exception(ANSI_RED+"isIOSDriver ERROR: Markito Web App is null.");
+        if (getDriver() == null) {
+            throw new Exception(ANSI_RED + "isIOSDriver ERROR: Markito Web App is null.");
         }
         return getDriver().toString().contains("io.appium.java_client.ios.IOSDriver");
     }
 
     public boolean isAndroid() throws Exception {
-        if ( getDriver() == null) {
-            throw new Exception(ANSI_RED+"isAndroid ERROR: Markito Web App is null.");
+        if (getDriver() == null) {
+            throw new Exception(ANSI_RED + "isAndroid ERROR: Markito Web App is null.");
         }
         return getDriver().toString().contains("automationName=UIAutomator2");
     }
@@ -166,7 +166,8 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
                 driver = setRemoteWebDrivers(device, browserStack.getCapabilities());
             }
         } catch (Exception e) {
-            println("\n" + ANSI_RED + "ERROR on creating session on device "+device.getName() + " Stack:" + e.getMessage());
+            println("\n" + ANSI_RED + "ERROR on creating session on device " + device.getName() + " Stack:"
+                    + e.getMessage());
             throw new Exception(e.getMessage());
         }
         return driver;
@@ -214,12 +215,15 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
 
     /**
      * Find all elements within the current page using the given mechanism.
-     * This method is affected by the 'implicit wait' times in force at the time of execution. When
-     * implicitly waiting, this method will return as soon as there are more than 0 items in the
+     * This method is affected by the 'implicit wait' times in force at the time of
+     * execution. When
+     * implicitly waiting, this method will return as soon as there are more than 0
+     * items in the
      * found collection, or will return an empty list if the timeout is reached.
      *
      * @param by The locating mechanism to use
-     * @return A list of all {@link WebElement}s, or an empty list if nothing matches
+     * @return A list of all {@link WebElement}s, or an empty list if nothing
+     *         matches
      * @see org.openqa.selenium.By
      * @see org.openqa.selenium.WebDriver.Timeouts
      */
@@ -237,6 +241,111 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
                 highlightElement(element);
             });
             printf(ANSI_YELLOW + "found %d elements.\n", elements.size());
+            return elements;
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
+    /**
+     * Find an element in DOM using CSS selector supporting custom tags and SHADOW
+     * roots.
+     * See https://github.com/sukgu/shadow-automation-selenium/wiki for explanation
+     * and examples.
+     * When debug mode is ON highlights the element to help visual debug.
+     * 
+     * @param cssSelector
+     * @return
+     */
+    WebElement findShadowElementByCssSelector(String cssSelector) {
+        printf(ANSI_YELLOW + getMethodName() + " %s...", cssSelector);
+        try {
+            Shadow shadow = new Shadow(getDriver());
+            shadow.setExplicitWait((int) getTimeOutInSeconds(), 5); // will wait for maximum secs and will check after
+                                                                    // every 5 secs.
+            WebElement element = null;
+            element = shadow.findElement(cssSelector);
+            highlightElement(element);
+            println(ANSI_YELLOW + "found.");
+            return element;
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
+    /**
+     * Find an element in DOM using xpath supporting custom tags and SHADOW roots.
+     * See https://github.com/sukgu/shadow-automation-selenium/wiki for explanation
+     * and examples.
+     * When debug mode is ON highlights the element to help visual debug.
+     * 
+     * @param xpath
+     * @return WebElement
+     */
+    public WebElement findShadowElementByXPath(String xpath) {
+        printf(ANSI_YELLOW + getMethodName() + " %s...", xpath);
+        try {
+            Shadow shadow = new Shadow(getDriver());
+            shadow.setExplicitWait((int) getTimeOutInSeconds(), 5); // will wait for maximum secs and will check after
+                                                                    // every 5 secs.
+            WebElement element = null;
+            element = shadow.findElementByXPath(xpath);
+            highlightElement(element);
+            println(ANSI_YELLOW + "found.");
+            return element;
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
+    /**
+     * Find a list of elements in DOM using CSS selector supporting custom tags and
+     * SHADOW roots.
+     * See https://github.com/sukgu/shadow-automation-selenium/wiki for explanation
+     * and examples.
+     * When debug mode is ON highlights the element to help visual debug.
+     * 
+     * @param cssSelector
+     * @return
+     */
+    List<WebElement> findShadowElementsByCssSelector(String cssSelector) {
+        printf(ANSI_YELLOW + getMethodName() + " %s...", cssSelector);
+        try {
+            Shadow shadow = new Shadow(getDriver());
+            shadow.setExplicitWait((int) getTimeOutInSeconds(), 5); // will wait for maximum secs and will check after
+                                                                    // every 5 secs.
+            List<WebElement> elements = null;
+            elements = shadow.findElements(cssSelector);
+            println(ANSI_YELLOW + "found.");
+            return elements;
+        } catch (Exception e) {
+            printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
+    /**
+     * Find a list of elements in DOM using xpath supporting custom tags and SHADOW
+     * roots.
+     * See https://github.com/sukgu/shadow-automation-selenium/wiki for explanation
+     * and examples.
+     * When debug mode is ON highlights the element to help visual debug.
+     * 
+     * @param xpath
+     * @return WebElement
+     */
+    public List<WebElement> findShadowElementsByXPath(String xpath) {
+        printf(ANSI_YELLOW + getMethodName() + " %s...", xpath);
+        try {
+            Shadow shadow = new Shadow(getDriver());
+            shadow.setExplicitWait((int) getTimeOutInSeconds(), 5); // will wait for maximum secs and will check after
+                                                                    // every 5 secs.
+            List<WebElement> elements = null;
+            elements = shadow.findElementsByXPath(xpath);
+            println(ANSI_YELLOW + "found.");
             return elements;
         } catch (Exception e) {
             printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
@@ -310,7 +419,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
      *         stripped, or null
      *         if one is not already set
      */
-    public String getTitle() {
+    public String getCurrentWindowTitle() {
         printf(ANSI_YELLOW + getMethodName() + " [%s]...", getDriver().getTitle());
         return getDriver().getTitle();
     }
@@ -318,7 +427,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
     /**
      * Obtains the string handle be used to select the current window.
      */
-    public String getWindowHandle() {
+    public String getCurrentWindowHandle() {
         printf(ANSI_YELLOW + getMethodName() + "...");
 
         try {
@@ -462,11 +571,16 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
     }
 
     /**
-     * If this element is a text entry element, this will clear the value. Has no effect on other elements. 
-     * Text entry elements are INPUT and TEXTAREA elements. Note that the events fired by this event may not be as you'd expect. 
-     * In particular, we don't fire any keyboard or mouse events. If you want to ensure keyboard events are fired, consider using 
-     * something like sendKeys(CharSequence) with the backspace key. 
-     * To ensure you get a change event, consider following with a call to sendKeys(CharSequence) with the tab key.
+     * If this element is a text entry element, this will clear the value. Has no
+     * effect on other elements.
+     * Text entry elements are INPUT and TEXTAREA elements. Note that the events
+     * fired by this event may not be as you'd expect.
+     * In particular, we don't fire any keyboard or mouse events. If you want to
+     * ensure keyboard events are fired, consider using
+     * something like sendKeys(CharSequence) with the backspace key.
+     * To ensure you get a change event, consider following with a call to
+     * sendKeys(CharSequence) with the tab key.
+     * 
      * @param element
      */
     public void clear(WebElement element) {
@@ -758,14 +872,14 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
      * @throws Exception
      */
     public void getScreenSnapshotWithDate(String name) throws Exception {
-        printf(ANSI_YELLOW + "getScreenSnapshotWithDate..." );
+        printf(ANSI_YELLOW + "getScreenSnapshotWithDate...");
         Boolean currentDebug = getDebugMode();
         SetDebugModeOFF();
 
         LocalDateTime ldt = LocalDateTime.now();
         String date = ldt.toString().replaceAll("\\W+", "");
         try {
-            printf(ANSI_YELLOW+"TestResults\\" + name + "-" + date + ".png");
+            printf(ANSI_YELLOW + "TestResults\\" + name + "-" + date + ".png");
             getScreenshotAs("TestResults\\" + name + "-" + date + ".png");
         } catch (Exception e) {
             throw new Exception(ANSI_RED + "ERROR on snapshot. Stack:" + e.getMessage());
@@ -823,7 +937,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
         println(ANSI_YELLOW + getMethodName() + "...");
         getMobileDriver().runAppInBackground(duration);
     }
-    
+
     public boolean terminateApp(String bundleId) {
         println(ANSI_YELLOW + getMethodName() + "...");
         return getMobileDriver().terminateApp(bundleId);
@@ -840,15 +954,17 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
     }
 
     /**
-     * Is this element displayed or not? This method avoids the problem of having to parse an element's "style" attribute.
+     * Is this element displayed or not? This method avoids the problem of having to
+     * parse an element's "style" attribute.
      * This method will not fail if element is not found, instead will return false.
+     * 
      * @param locator
      * @return
      */
-    public boolean isDisplayed( By locator ) {
+    public boolean isDisplayed(By locator) {
         println(ANSI_YELLOW + getMethodName() + "...");
         WebElement element = getDriver().findElement(locator);
-        if ( element != null ) {
+        if (element != null) {
             return element.isDisplayed();
         } else {
             return false;
@@ -856,15 +972,17 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
     }
 
     /**
-     * Is the element currently enabled or not? This will generally return true for everything but disabled input elements.
+     * Is the element currently enabled or not? This will generally return true for
+     * everything but disabled input elements.
      * This method will not fail if element is not found, instead will return false.
+     * 
      * @param locator
      * @return
      */
-    public boolean isEnabled( By locator ) {
+    public boolean isEnabled(By locator) {
         println(ANSI_YELLOW + getMethodName() + "...");
         WebElement element = getDriver().findElement(locator);
-        if ( element != null ) {
+        if (element != null) {
             return element.isEnabled();
         } else {
             return false;
@@ -872,57 +990,65 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
     }
 
     /**
-     * Determine whether or not this element is selected or not. This operation only applies to input elements such as checkboxes, options in a select and radio buttons. 
-     * For more information on which elements this method supports, refer to the specification.
+     * Determine whether or not this element is selected or not. This operation only
+     * applies to input elements such as checkboxes, options in a select and radio
+     * buttons.
+     * For more information on which elements this method supports, refer to the
+     * specification.
+     * 
      * @param locator
      * @return
      */
-    public boolean isSelected( By locator ) {
+    public boolean isSelected(By locator) {
         println(ANSI_YELLOW + getMethodName() + "...");
         WebElement element = getDriver().findElement(locator);
-        if ( element != null ) {
+        if (element != null) {
             return element.isSelected();
         } else {
             return false;
         }
     }
-    
+
     /**
-     * What is the width and height of the rendered element?   
+     * What is the width and height of the rendered element?
      * Method will fail if element not found.
+     * 
      * @param locator
      * @return
      * @throws Exception
      */
-    public Dimension getSize( By locator ) throws Exception {
+    public Dimension getSize(By locator) throws Exception {
         println(ANSI_YELLOW + getMethodName() + "...");
         WebElement element = getDriver().findElement(locator);
-        if ( element != null ) {
+        if (element != null) {
             return element.getSize();
         } else {
-            throw new Exception("ERROR: Element "+ locator + "not found.");
+            throw new Exception("ERROR: Element " + locator + "not found.");
         }
     }
 
     /**
-     * Get the tag name of this element. Not the value of the name attribute: will return "input" for the element <input name="foo" />.
+     * Get the tag name of this element. Not the value of the name attribute: will
+     * return "input" for the element <input name="foo" />.
      * Method will fail if element not found.
+     * 
      * @param locator
      * @return
      * @throws Exception
      */
-    public String getTagName( By locator ) throws Exception {
+    public String getTagName(By locator) throws Exception {
         println(ANSI_YELLOW + getMethodName() + "...");
         WebElement element = getDriver().findElement(locator);
-        if ( element != null ) {
+        if (element != null) {
             return element.getTagName();
         } else {
-            throw new Exception("ERROR: Element "+ locator + "not found.");
+            throw new Exception("ERROR: Element " + locator + "not found.");
         }
     }
 
     /**
      * Gets the physical location (geoloc) of the browser.
+     * 
      * @return
      */
     public Location location() {
@@ -931,10 +1057,15 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
     }
 
     /**
-     * Performs multiple TouchAction gestures at the same time, to simulate multiple fingers/touch inputs. 
-     * See the Webriver 3 spec https://dvcs.w3.org/hg/webdriver/raw-file/default/webdriver-spec.html 
-     * It's more convenient to call the perform() method of the MultiTouchAction object. 
-     * All the existing multi touch actions will be wiped out after this method is called.
+     * Performs multiple TouchAction gestures at the same time, to simulate multiple
+     * fingers/touch inputs.
+     * See the Webriver 3 spec
+     * https://dvcs.w3.org/hg/webdriver/raw-file/default/webdriver-spec.html
+     * It's more convenient to call the perform() method of the MultiTouchAction
+     * object.
+     * All the existing multi touch actions will be wiped out after this method is
+     * called.
+     * 
      * @param multiAction
      */
     public void performMultiTouchAction(MultiTouchAction multiAction) {
@@ -943,8 +1074,12 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
     }
 
     /**
-     * Pull a file from the simulator/device. On iOS the server should have ifuse libraries installed and configured properly for this feature to work on real devices. 
-     * On Android the application under test should be built with debuggable flag enabled in order to get access to its container on the internal file system.
+     * Pull a file from the simulator/device. On iOS the server should have ifuse
+     * libraries installed and configured properly for this feature to work on real
+     * devices.
+     * On Android the application under test should be built with debuggable flag
+     * enabled in order to get access to its container on the internal file system.
+     * 
      * @param remotePath
      * @return
      */
@@ -954,8 +1089,12 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
     }
 
     /**
-     * Pull a folder content from the simulator/device. On iOS the server should have ifuse libraries installed and configured properly for this feature to work on real devices. 
-     * On Android the application under test should be built with debuggable flag enabled in order to get access to its container on the internal file system.
+     * Pull a folder content from the simulator/device. On iOS the server should
+     * have ifuse libraries installed and configured properly for this feature to
+     * work on real devices.
+     * On Android the application under test should be built with debuggable flag
+     * enabled in order to get access to its container on the internal file system.
+     * 
      * @param remotePath
      * @return
      */
@@ -966,6 +1105,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
 
     /**
      * Set the current browser rotation on device.
+     * 
      * @return
      */
     public void rotate(ScreenOrientation orientation) {
@@ -975,6 +1115,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
 
     /**
      * Set the current browser rotation on device.
+     * 
      * @return
      */
     public void rotate(DeviceRotation rotation) {
@@ -985,6 +1126,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
 
     /**
      * Get the current browser rotation on device.
+     * 
      * @return
      */
     public DeviceRotation rotation() {
@@ -1040,13 +1182,13 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
 
     /**
      * Sets the physical location.
+     * 
      * @param location
      */
     public void setLocation(Location location) {
         println(ANSI_YELLOW + getMethodName() + "...");
         getMobileDriver().setLocation(location);
     }
-
 
     /**
      * Get the value of a given CSS property.
@@ -2062,6 +2204,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
 
     /**
      * Sets the physical location.
+     * 
      * @param x
      * @param y
      * @param z
@@ -2139,6 +2282,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
 
     /**
      * Waits till an element is clickable and fail if timeout is reached.
+     * 
      * @param by
      */
     public void waitForElementToBeClickable(By by) {
@@ -2158,6 +2302,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
 
     /**
      * Waits a selectable element (e.g. a list option) is in state of selected.
+     * 
      * @param chkDO
      * @param timeOut
      * @return
@@ -2305,11 +2450,17 @@ public class MarkitoWebApp extends MarkitoBaseUtils  {
 
     /** Timeouts interface */
     /**
-     * Specifies the amount of time the driver should wait when searching for an element if it is not immediately present.
-     * When searching for a single element, the driver should poll the page until the element has been found, or this timeout expires before throwing a {@link NoSuchElementException}. 
-     * When searching for multiple elements, the driver should poll the page until at least one element has been found or this timeout has expired.
+     * Specifies the amount of time the driver should wait when searching for an
+     * element if it is not immediately present.
+     * When searching for a single element, the driver should poll the page until
+     * the element has been found, or this timeout expires before throwing a
+     * {@link NoSuchElementException}.
+     * When searching for multiple elements, the driver should poll the page until
+     * at least one element has been found or this timeout has expired.
      * 
-     * Increasing the implicit wait timeout should be used judiciously as it will have an adverse effect on test run time, especially when used with slower location strategies like XPath.
+     * Increasing the implicit wait timeout should be used judiciously as it will
+     * have an adverse effect on test run time, especially when used with slower
+     * location strategies like XPath.
      *
      * @param time The amount of time to wait.
      * @param unit The unit of measure for {@code time}.

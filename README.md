@@ -1,32 +1,29 @@
 ![Markito logo](/images/Markito-100.png)
 # Markito v0.7 (Work in progress towards v1.0)
-A Selenium/Appium Webdriver wrapper written in Java to make easiest:
-## 1. Support web, native and hybrid app automation on different platforms.
+A Selenium/Appium Webdriver wrapper written in Java to:
+### 1. Support web, native and hybrid app automation on different platforms.
    * Automator can run SAME script for WEB App on browsers (Chrome, Firefox, Edge, IE, Safari) running over Windows, Linux, Android and iOS. _Implemented in v0.7_
    * Automator can run SAME script for NATIVE (or HYBRYD) App for Windows, Android and iOS. _v0.8_
 
-## 2. Make coding simple, maintainable, concise and readable.
-   *  This wrapper has been designed to provide script style using [Selenese](https://ui.vision/rpa/docs/selenium-ide) alike commands. Similar ideas can be found on [Helium](https://github.com/mherrmann/selenium-python-helium) and [Easyium](https://pypi.org/project/easyium/) for Python.
-   *  Simplified timeout management.
-      * W3C webdriver standard provides timeout management at session level, page level, JS script level and element level (implicit and explicit). Markito uses a single implicit timeout parameter to set all levels. _Implemented in v0.7_
+### 2. Make coding simple, maintainable, concise and readable.  _Implemented in v0.7_
+   * Automator can write test cases using script style in the form [command, element] 
+   * Automator can use a simplified timeout management. 
+   * Automator can use extensions to webdriver and appium driver. 
 
-## 3. Improved maintenance and usage through:
-   * Isolation if test code from changes on Java, Selenium and Appium frameworks providing an extra layer of abstraction.
-   * Automatic drivers update and download during local testing. _Implemented in v0.7_
-   * Easy debug: Colorful text logging in console and highlighting for web elements helps on rapid debug.  Both can be disabled for runtime. _Implemented in v0.7_
-   * Flakyness reduction with multiple locators and retry disciplines. _v1.0_
+>>> Access shadow elements
+
+### 3. Improved maintenance and usage through:
+   * **Isolation of test code** from changes on Java, Selenium and Appium frameworks providing an extra layer of abstraction.
+   * **Automatic drivers update** and download during local testing. _Implemented in v0.7_
+   * **Easy debug**: Colorful text logging in console and highlighting for web elements helps on rapid debug.  Both can be disabled for runtime. _Implemented in v0.7_
+   * **Flakyness reduction** with multiple locators and retry disciplines. _v1.0_
    * Garbage collection and thread safety. _v1.0_
-   * Native support for cloud browsers and devices providers:
+   * **Native support for cloud browsers and devices providers**:
       * Browserstack support. _Implemented in v0.7_
       * Saucelabs support. (TBD)
       * Others
 
-It is an implementation of the [Bot pattern](https://www.selenium.dev/documentation/test_practices/design_strategies/#bot-pattern) Inspired by Selenese concise grammar and written in Java 11, using Selenium Java client 3.141.59, and Appium client 6.0.0. 
-
-Testing has been made in local Windows 10/Ubuntu and Chrome browser, also Android and iOS by using BrowserStack.
-
-It is an implementation of the [Bot pattern](https://www.selenium.dev/documentation/test_practices/design_strategies/#bot-pattern) Inspired by Selenese concise grammar and written in Java 11, using Selenium Java client 3.141.59, and Appium client 6.0.0.  
-Testing has been made in local Windows 10/Ubuntu and Chrome browser, also Android and iOS by using BrowserStack.
+For more details please read [Markito wiki](https://github.com/mguerrer/Markito/wiki)
 
 ## Sponsors
 This project is tested using [BrowserStack](https://www.browserstack.com/) on Web and Mobile automation.

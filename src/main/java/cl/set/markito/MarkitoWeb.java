@@ -630,6 +630,7 @@ public class MarkitoWeb extends MarkitoBaseUtils implements WebDriver, IMarkitoW
                     .ignoring(WebDriverException.class)
                     .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameHandle));
             setTimeouts(currentTimeout);
+            printf(ANSI_YELLOW + "done...\n");
         } catch (Exception e) {
             setTimeouts(currentTimeout);
             printf(ANSI_RED + "failed!!! %s\n", e.getMessage());
