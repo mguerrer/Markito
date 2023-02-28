@@ -1949,7 +1949,7 @@ public class MarkitoWebApp extends MarkitoBaseUtils {
     }
 
     /**
-     * Waits for text in element.
+     * Waits for text in element located by.
      * 
      * @param text:    Text to wait for
      * @param locator: Locator to element.
@@ -1968,6 +1968,57 @@ public class MarkitoWebApp extends MarkitoBaseUtils {
                             ExpectedConditions.textToBe(locator, text)));
             setTimeouts(currentTimeout);
             printf(ANSI_YELLOW + "visible!!!\n");
+        } catch (Exception e) {
+            setTimeouts(currentTimeout);
+            printf(ANSI_YELLOW + "failed after %d seconds!!!\n", timeOutInSeconds);
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
+    /**
+     * Waits for text in element.
+     * 
+     * @param text:    Text to wait for
+     * @param element: Web element.
+     * @throws WebDriverException when not found in timeoutInSeconds.
+     */
+    public void waitForTextInElement(String text, WebElement element) {
+        printf(ANSI_YELLOW + getMethodName() + " %s in element %s...", text, element.toString());
+        long currentTimeout = getTimeouts();
+        try {
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            new WebDriverWait(driver, timeOutInSeconds)
+                    .ignoring(StaleElementReferenceException.class)
+                    .ignoring(WebDriverException.class)
+                    .until(ExpectedConditions.and(
+                            ExpectedConditions.not(ExpectedConditions.invisibilityOf(element)),
+                            ExpectedConditions.textToBePresentInElement(element, text)));
+            setTimeouts(currentTimeout);
+            printf(ANSI_YELLOW + "visible!!!\n");
+        } catch (Exception e) {
+            setTimeouts(currentTimeout);
+            printf(ANSI_YELLOW + "failed after %d seconds!!!\n", timeOutInSeconds);
+            throw new WebDriverException(e.getMessage());
+        }
+    }
+
+    /**
+     *  Waits for text to change in element.
+     * @param currentText: Text value prior to action that changes the value.
+     * @param element: Text web element.
+     */
+    public void waitForTextToChangeInElement(String currentText, WebElement element) {
+        
+        printf(ANSI_YELLOW + getMethodName() + " in element %s...", element.toString());
+        long currentTimeout = getTimeouts();
+        try {
+            getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            new WebDriverWait(driver, getTimeOutInSeconds())
+                    .ignoring(StaleElementReferenceException.class)
+                    .ignoring(WebDriverException.class)
+                    .until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(element, currentText)));
+            setTimeouts(currentTimeout);
+            printf(ANSI_YELLOW + "changed!!!\n");
         } catch (Exception e) {
             setTimeouts(currentTimeout);
             printf(ANSI_YELLOW + "failed after %d seconds!!!\n", timeOutInSeconds);

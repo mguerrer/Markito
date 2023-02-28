@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 import cl.set.markito.framework.MarkitoWebApp;
@@ -25,7 +27,8 @@ import cl.set.markito.samples.MarkitoWebApp.TheInternet.HomePage;
 public class TheInternetTests extends MarkitoWebApp {
     HomePage homePage = null;
     String hostUrl = "http://the-internet.herokuapp.com";
-    Device device = WINDOWS11_COMPUTER_DEVICE;
+    //Device device = WINDOWS11_COMPUTER_DEVICE;
+    Device device = LOCAL_COMPUTER_DEVICE;
 
     @BeforeAll
     public void beforeAll() throws Exception {
