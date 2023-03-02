@@ -23,24 +23,21 @@ public class BrowserStack extends DebugManager {
     DesiredCapabilities capabilities = null;
     HashMap<String, Object> browserstackOptions = new HashMap<String, Object>();
 
-
     public DesiredCapabilities getCapabilities() {
         return this.capabilities;
     }
 
     public BrowserStack() {
         this.capabilities = new DesiredCapabilities();
-        setBsCredentials(getBsUsername(), getBsPassword());
     }
-    public BrowserStack( Boolean colouredOutput ) {
+
+    public BrowserStack(Boolean colouredOutput) {
         this.capabilities = new DesiredCapabilities();
-        setBsCredentials(getBsUsername(), getBsPassword());
         this.setColoredOutput(colouredOutput);
     }
 
     public BrowserStack(DesiredCapabilities capabilities) {
         this.capabilities = capabilities;
-        setBsCredentials(getBsUsername(), getBsPassword());
     }
 
     /**
@@ -71,7 +68,6 @@ public class BrowserStack extends DebugManager {
         return username;
     }
 
-
     public MobileDriver<MobileElement> openBrowserStackMobileSession() throws Exception {
         URL UrlAppiumServer = new URL("https://hub-cloud.browserstack.com/wd/hub");
         String platform = capabilities.getCapability("platformName").toString();
@@ -82,6 +78,7 @@ public class BrowserStack extends DebugManager {
             app = capabilities.getCapability("app").toString();
             printf(ANSI_WHITE + " on app " + app);
         }
+        setBsCredentials(getBsUsername(), getBsPassword());
 
         try {
             switch (platform) {
@@ -113,6 +110,7 @@ public class BrowserStack extends DebugManager {
             browser = capabilities.getCapability("browserName").toString();
             printf(ANSI_WHITE + " on browser " + browser);
         }
+        setBsCredentials(getBsUsername(), getBsPassword());
 
         try {
             switch (platform) {
@@ -160,7 +158,7 @@ public class BrowserStack extends DebugManager {
         // General settings
         capabilities.setCapability("browserstack.idleTimeout", "30");
         capabilities.setCapability("browserstack.local", "false");
-        //capabilities.setCapability("device", deviceName);
+        // capabilities.setCapability("device", deviceName);
         // Set browser
         capabilities.setCapability("browserName", browser);
         capabilities.setCapability("browserVersion", "latest");
@@ -171,7 +169,7 @@ public class BrowserStack extends DebugManager {
             browserstackOptions.put("deviceName", deviceName);
             browserstackOptions.put("osVersion", os_version);
             capabilities.setCapability("bstack:options", browserstackOptions);
-            //capabilities.setCapability("browserstack.appium_version", "1.21.0");
+            // capabilities.setCapability("browserstack.appium_version", "1.21.0");
             capabilities.setCapability("connectHardwareKeyboard", false);
 
         } else if (platform.equals(OS.ANDROID.name)) {
@@ -180,7 +178,8 @@ public class BrowserStack extends DebugManager {
             browserstackOptions.put("deviceName", deviceName);
             browserstackOptions.put("osVersion", os_version);
             capabilities.setCapability("bstack:options", browserstackOptions);
-            // Workaround for: unknown command: Cannot call non W3C standard command while in W3C mode -> https://github.com/appium/java-client/issues/1242
+            // Workaround for: unknown command: Cannot call non W3C standard command while
+            // in W3C mode -> https://github.com/appium/java-client/issues/1242
             capabilities.setCapability("appium:chromeOptions", ImmutableMap.of("w3c", false));
         } else { // Settings for Desktop web testing
 
@@ -203,12 +202,13 @@ public class BrowserStack extends DebugManager {
 
     public void SetAppUnderTesting(String appUrlInBs) {
         this.capabilities.setCapability("app", appUrlInBs);
-        //browserstackOptions.put("app", appUrlInBs);
-        //capabilities.setCapability("bstack:options", browserstackOptions);
+        // browserstackOptions.put("app", appUrlInBs);
+        // capabilities.setCapability("bstack:options", browserstackOptions);
 
     }
 
     public void setBsCredentials(String username, String key) {
+        println(ANSI_YELLOW+"Setting Browserstack's cloud credentials.");
         this.capabilities.setCapability("browserstack.user", username);
         this.capabilities.setCapability("browserstack.key", key);
     }

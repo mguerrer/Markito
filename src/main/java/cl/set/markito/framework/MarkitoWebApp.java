@@ -511,6 +511,9 @@ public class MarkitoWebApp extends MarkitoBaseUtils {
             throws MalformedURLException, Exception {
         WebDriver driver;
 
+        if ( device.providerURL != null && device.providerURL.contains("browserstack")) {
+            browserStack.setBsCredentials(browserStack.getBsUsername(), browserStack.getBsPassword());
+        }
         switch (device.getPlatform()) {
             case ANDROID:
                 driver = new AndroidDriver<WebElement>(new URL(device.getProviderURL()), caps);
@@ -2517,8 +2520,8 @@ public class MarkitoWebApp extends MarkitoBaseUtils {
      * @param unit The unit of measure for {@code time}.
      * @return A self reference.
      */
-    public Timeouts implicitlyWait(long time, TimeUnit unit) {
-        println(ANSI_YELLOW + getMethodName() + "..." + time + " " + unit);
+    private Timeouts implicitlyWait(long time, TimeUnit unit) {
+        //printf(ANSI_YELLOW + getMethodName() + "..." + time + " " + unit);
         return getDriver().manage().timeouts().implicitlyWait(time, unit);
     }
 

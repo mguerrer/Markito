@@ -27,8 +27,8 @@ import cl.set.markito.samples.MarkitoWebApp.TheInternet.HomePage;
 public class TheInternetTests extends MarkitoWebApp {
     HomePage homePage = null;
     String hostUrl = "http://the-internet.herokuapp.com";
-    //Device device = WINDOWS11_COMPUTER_DEVICE;
-    Device device = LOCAL_COMPUTER_DEVICE;
+    Device device = WINDOWS11_COMPUTER_DEVICE;
+    //Device device = LOCAL_COMPUTER_DEVICE;
 
     @BeforeAll
     public void beforeAll() throws Exception {
