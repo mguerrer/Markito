@@ -33,7 +33,7 @@ jobs:
       run: mvn -B package --file pom.xml -Dmaven.test.skip=true
 
     - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml -Dmaven.test.skip=true
+      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml -Dmaven.test.skip=true -X
       env:
         ISCLOUD: "true"
         BSUSERNAME: ${{ secrets.BSUSERNAME }}
