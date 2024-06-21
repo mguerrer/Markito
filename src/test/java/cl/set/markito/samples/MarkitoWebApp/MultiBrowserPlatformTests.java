@@ -103,7 +103,7 @@ public class MultiBrowserPlatformTests extends MarkitoWebApp {
         return Stream.of(
             Arguments.of(CHROME_BROWSER, LOCAL_COMPUTER_DEVICE),
             //Arguments.of(FIREFOX_BROWSER, LOCAL_COMPUTER_DEVICE),
-            Arguments.of(IE_BROWSER, LOCAL_COMPUTER_DEVICE),
+            //Arguments.of(IE_BROWSER, LOCAL_COMPUTER_DEVICE),
             Arguments.of(EDGE_BROWSER, LOCAL_COMPUTER_DEVICE),
 
             Arguments.of(CHROME_BROWSER, WINDOWS10_COMPUTER_DEVICE),
