@@ -61,7 +61,7 @@ public class MarkitoiOS extends MarkitoBaseUtils{
             println("Markito is destroyed.");
         }
     }
-        /**
+    /**
      * Simulates typing Keys over an editable element located By.
      * 
      * @param locator:   Element locator.
